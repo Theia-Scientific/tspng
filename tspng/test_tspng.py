@@ -7,4 +7,3 @@ def test_hello_world():
 
 def test_add():
     assert add(1,1)==2
-    

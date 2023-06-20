@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-from . import add
+from extraction import extraction
 
 def test_hello_world():
     print('Hello World!')
 
-def test_add():
-    assert add(1,1)==2
+def test_extraction():
+    test_data = extraction('tests/assets/example_file.ts.png')
+    assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']

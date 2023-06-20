@@ -4,7 +4,7 @@ from PIL import Image
 import json
 import os
 
-def extraction(path):
+def extract(path):
     #open
     abs_path=os.path.abspath(path)
     im=Image.open(abs_path)

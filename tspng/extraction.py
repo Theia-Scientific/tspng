@@ -2,10 +2,12 @@
 from PIL import Image
 
 import json
+import os
 
-def extraction(fname):
+def extraction(path):
     #open
-    im=Image.open(fname)
+    abs_path=os.path.abspath(path)
+    im=Image.open(abs_path)
     meta=im.text
     #load
     dict=json.loads(meta['application/vnd.theiascope.io+json'])

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from extraction import extraction
+from .extraction import extraction
 
 def test_hello_world():
     print('Hello World!')

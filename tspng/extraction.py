@@ -16,5 +16,5 @@ def extract(path):
     im=Image.open(abs_path)
     meta=im.text
     #load
-    dict=json.loads(meta[config(MIME_TYPE)])
+    dict=json.loads(meta[MIME_TYPE])
     return dict

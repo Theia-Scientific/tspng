@@ -1,4 +1,5 @@
 #import statements
+from decouple import config
 from PIL import Image
 
 import json
@@ -10,5 +11,5 @@ def extract(path):
     im=Image.open(abs_path)
     meta=im.text
     #load
-    dict=json.loads(meta['application/vnd.theiascope.io+json'])
+    dict=json.loads(meta[config('TSPNG_MIME_TYPE')])
     return dict

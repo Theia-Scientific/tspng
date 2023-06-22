@@ -26,3 +26,6 @@ the package source code tree and are defined on a per-module basis with a
 `test_<module>.py` format, while the integration tests are defined in the
 `tests` directory.
 
+## License
+
+- [LICENSE](https://github.com/Theia-Scientific/theia-png/blob/main/LICENSE).

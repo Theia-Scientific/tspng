@@ -11,5 +11,13 @@ A Python package for manipulating PNG files exported or imported using the Theia
 
 A Python package for manipulating PNG files exported or imported using the Theia web application. These files have data embedded in the PNG, and this package unpacks and makes the data readily usable.
 
+## Getting Started
+
+1. Clone this repository.
+
+   ```sh
+   git clone https://github.com/Theia-Scientific/theia-png.git && cd theia-png
+   ```
+
 
 A Python package for manipulating PNG files exported or imported using the Theia web application

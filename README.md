@@ -1,8 +1,6 @@
 # Theia PNG
 
 ![CI](https://github.com/Theia-Scientific/theia-png/workflows/CI/badge.svg)
-![Docker](https://github.com/Theia-Scientific/theia-png/workflows/Docker/badge.svg)
-![Release](https://github.com/Theia-Scientific/theia-png/workflows/Release/badge.svg)
 
 A Python package for manipulating PNG files exported or imported using the 
 Theia web application.

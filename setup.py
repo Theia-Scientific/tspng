@@ -14,7 +14,7 @@ setuptools.setup(
     author="Theia Scientific",
  
     # your Email address
-    author_email="gabriella.bruno@theiascientific.com",
+    author_email="support@theiascientific.com",
  
     # #Small Description about module
     # description="adding number",
@@ -36,8 +36,7 @@ setuptools.setup(
  
  
          install_requires=[
-          "Pillow",
-        "Twine",
+          "Pillow"
         ],
  
  

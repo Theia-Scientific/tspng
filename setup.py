@@ -37,7 +37,8 @@ setuptools.setup(
  
          install_requires=[
           "Pillow",
-          "Twine"
+          "Twine",
+          "Build"
         ],
  
  

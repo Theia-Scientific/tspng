@@ -18,5 +18,5 @@ classifiers = [
 "Bug Tracker" = "https://github.com/Theia-Scientific/theia-png/issues"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["build","hatchling","twine"]
 build-backend = "hatchling.build"

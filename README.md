@@ -19,6 +19,18 @@ package unpacks and makes the data readily usable.
    git clone https://github.com/Theia-Scientific/theia-png.git && cd theia-png
    ```
 
+2. Install the dependencies.
+
+   ```sh
+   python3 -m pip install .[dev]
+   ```
+
+3. Build the package.
+
+   ```sh
+   python3 -m build
+   ```
+
 ## Testing
 
 Testing is divided into unit and integration tests. Unit tests are located in

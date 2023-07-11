@@ -1,6 +1,6 @@
 # Theia PNG
 
-![CI](https://github.com/Theia-Scientific/theia-png/actions/workflows/python-package.yml/badge.svg)
+[![CI](https://github.com/Theia-Scientific/theia-png/actions/workflows/python-package.yml/badge.svg)](https://github.com/Theia-Scientific/theia-png/actions/workflows/python-package.yml)
 [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1iC5KLoQUY4D54D9SH4YB2pJ0rTXXq2Fs?usp=sharing)
 
 A Python package for manipulating PNG files exported or imported using the 

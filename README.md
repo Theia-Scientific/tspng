@@ -11,6 +11,16 @@ A Python package for manipulating PNG files exported or imported using the
 Theia web application. These files have data embedded in the PNG, and this 
 package unpacks and makes the data readily usable.
 
+## Quick Start
+
+1. Import function to python script.
+
+from extraction import *
+
+2. Use function to extract image data.
+
+extract(PATH_TO_DATA)
+
 ## Getting Started
 
 1. Clone this repository.

@@ -41,3 +41,5 @@ the package source code tree and are defined on a per-module basis with a
 ## License
 
 - [LICENSE](https://github.com/Theia-Scientific/theia-png/blob/main/LICENSE).
+
+This material is based upon work supported by the U.S. Department of Energy, Office of Nuclear Energy under Award Number DE-SC0021529.

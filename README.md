@@ -13,7 +13,7 @@ Theia web application. These files have data embedded in the PNG in a [COCO JSON
    python3 -m venv .venv
    ```
 
-2. Activate virtual environment.
+2. Activate the virtual environment.
 
    ```sh
    source .venv/bin/activate
@@ -25,7 +25,7 @@ Theia web application. These files have data embedded in the PNG in a [COCO JSON
    python3 -m pip install tspng
    ```
 
-4. Create a `png_dump.py` script to extract inference results from a png,
+4. Create a `png_dump.py` script to extract inference results from a PNG file,
 
    ```python
    import json
@@ -35,7 +35,7 @@ Theia web application. These files have data embedded in the PNG in a [COCO JSON
    print(json.dumps(extract(PATH_TO_FILE), indent=2))
    ```
 
-   where `PATH_TO_FILE` is replaced with the path to your `.ts.png` file on disk.
+   where `PATH_TO_FILE` is replaced with the path to a `.ts.png` file on disk.
 
 5. Run the `png_dump.py` script.
 

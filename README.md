@@ -19,7 +19,7 @@ Theia web application. These files have data embedded in the PNG in a [COCO JSON
    source .venv/bin/activate
    ```
 
-3. Install tspng
+3. Install tspng.
 
    ```sh
    python3 -m pip install tspng

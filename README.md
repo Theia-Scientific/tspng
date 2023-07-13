@@ -134,19 +134,31 @@ Theia web application. These files have data embedded in the PNG in a [COCO JSON
 
 ## Contributing
 
-1. Clone this repository.
+1. Create a virtual environment.
+
+   ```sh
+   python3 -m venv .venv
+   ```
+
+2. Activate the virtual environment.
+
+   ```sh
+   source .venv/bin/activate
+   ```
+
+3. Clone this repository.
 
    ```sh
    git clone https://github.com/Theia-Scientific/theia-png.git && cd theia-png
    ```
 
-2. Install the dependencies.
+4. Install the dependencies.
 
    ```sh
    python3 -m pip install .[dev]
    ```
 
-3. Build the package.
+5. Build the package.
 
    ```sh
    python3 -m build

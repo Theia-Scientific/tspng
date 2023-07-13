@@ -5,7 +5,7 @@ from tspng import MIME_TYPE
 import json
 import os
 
-def extract(path,mime_type=MIME_TYPE):
+def extract_from_file(path,mime_type=MIME_TYPE):
     #open
     abs_path=os.path.abspath(path)
     im=Image.open(abs_path)

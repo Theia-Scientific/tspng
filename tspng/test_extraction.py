@@ -2,9 +2,6 @@
 
 from tspng.extraction import extract_from_file,extract_from_files
 
-def test_hello_world():
-    print('Hello World!')
-
 def test_extract_from_file():
     '''
     Tests the dictionary keys from an example TSPNG file path.

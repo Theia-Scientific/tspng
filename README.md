@@ -31,9 +31,9 @@ Theia web application. These files have data embedded in the PNG in a [COCO JSON
    ```python
    import json
 
-   from tspng.extraction import extract
+   from tspng.extraction import extract_from_file
 
-   print(json.dumps(extract(PATH_TO_FILE), indent=2))
+   print(json.dumps(extract_from_file(PATH_TO_FILE), indent=2))
    ```
 
    where `PATH_TO_FILE` is replaced with the path to a `.ts.png` file on disk.

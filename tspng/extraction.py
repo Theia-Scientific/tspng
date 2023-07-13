@@ -13,3 +13,9 @@ def extract_from_file(path, mime_type=MIME_TYPE):
     #load
     dict=json.loads(meta[mime_type])
     return dict
+
+def extract_from_files(paths, mime_type=MIME_TYPE):
+    nested_dict = {}
+    for path in paths:
+        nested_dict[path] = extract_from_file(path, mime_type)
+    return nested_dict

@@ -1,11 +1,12 @@
 #import statements
-from PIL import Image
-from tspng import MIME_TYPE
-
 import json
 import os
 
-def extract_from_file(path, mime_type=MIME_TYPE):
+from PIL import Image
+from tspng import MIME_TYPE
+from typing import Dict, List
+
+def extract_from_file(path: str, mime_type: str=MIME_TYPE) -> Dict:
     '''
     Returns the metadata from a TSPNG file as a dictionary.
 
@@ -25,7 +26,7 @@ def extract_from_file(path, mime_type=MIME_TYPE):
     dict=json.loads(meta[mime_type])
     return dict
 
-def extract_from_files(paths, mime_type=MIME_TYPE):
+def extract_from_files(paths: List, mime_type: str=MIME_TYPE) -> Dict:
     '''
     Returns a nested dictionary of metadata from a list of TSPNG file paths.
 

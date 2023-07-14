@@ -11,7 +11,8 @@ def extract_from_file(path, mime_type=MIME_TYPE):
 
         Parameters:
                 path (str): Path to a file as a string
-                mime_type (str): Optional; Media type of file
+                mime_type (str): Optional; Media type of file,
+                    default is 'application/vnd.theiascope.io+json'
 
         Returns:
                 dict (dict): Dictionary containing file metadata
@@ -30,7 +31,8 @@ def extract_from_files(paths, mime_type=MIME_TYPE):
 
         Parameters:
                 path (list[str]): List of file paths
-                mime_type (str): Optional; Media type of file
+                mime_type (str): Optional; Media type of file,
+                    default is 'application/vnd.theiascope.io+json'
 
         Returns:
                 nested_dict (dict): Dictionary containing metadata of each file

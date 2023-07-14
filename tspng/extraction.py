@@ -1,10 +1,10 @@
 #import statements
+import json
+import os
+
 from PIL import Image
 from tspng import MIME_TYPE
 from typing import List
-
-import json
-import os
 
 def extract_from_file(path: str, mime_type: str=MIME_TYPE):
     '''

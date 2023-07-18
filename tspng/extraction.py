@@ -18,9 +18,15 @@ def extract_from_file(path: str, mime_type: str=MIME_TYPE) -> Dict:
         Returns:
                 dict (dict): Dictionary containing file metadata
     '''
+    #checks if path exists
+    if os.path.exists(path)==False:
+        raise Exception(f"{path} does not exist.")
+    #check if file is TSPNG file
+    fname = os.path.split(os.path.abspath(path))[1]
+    if fname[-6:] != 'ts.png':
+        raise TypeError(f"{fname} is not a TSPNG file.")
     #open
-    abs_path=os.path.abspath(path)
-    im=Image.open(abs_path)
+    im=Image.open(path)
     meta=im.text
     #load
     dict=json.loads(meta[mime_type])

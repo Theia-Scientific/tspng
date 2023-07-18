@@ -1,6 +1,7 @@
 #import statements
 import json
 import os
+import warnings
 
 from PIL import Image
 from tspng import MIME_TYPE
@@ -17,6 +18,10 @@ def extract_from_file(path: str, mime_type: str=MIME_TYPE) -> Dict:
 
         Returns:
                 dict (dict): Dictionary containing file metadata
+
+        Raises:
+                Exception: If path does not exist
+                TypeError: If file is not PNG format
     '''
     #checks if path exists
     if not os.path.exists(path):
@@ -28,8 +33,14 @@ def extract_from_file(path: str, mime_type: str=MIME_TYPE) -> Dict:
     #open
     im=Image.open(path)
     meta=im.text
+
     #load
-    dict=json.loads(meta[mime_type])
+    if mime_type in meta.keys():
+        dict=json.loads(meta[mime_type])
+    else:
+        #warn if file has no embedded data
+        warnings.warn(f"{fname} has no embedded TS metadata.")
+        dict={}
     return dict
 
 def extract_from_files(paths: List, mime_type: str=MIME_TYPE) -> Dict:

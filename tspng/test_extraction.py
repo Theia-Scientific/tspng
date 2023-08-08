@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 
-from tspng.extraction import extract_from_file,extract_from_files
+from io import BytesIO
+from tspng.extraction import extract_from_bytes,extract_from_file,extract_from_files
+
+def test_extract_from_bytes():
+    '''
+    Tests the dictionary keys from an example TS byte stream.
+    '''
+    with open('tests/assets/example_file_1.ts.png', 'rb') as fh:
+        buf = BytesIO(fh.read())
+        test_data = extract_from_bytes(buf)
+        assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
 
 def test_extract_from_file():
     '''

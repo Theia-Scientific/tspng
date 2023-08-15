@@ -50,6 +50,18 @@ def test_extract_from_file():
     test_data = extract_from_file('tests/assets/example_file_1.ts.png')
     assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
 
+def test_extract_from_file_fails():
+    #test path does not exist
+    try:
+        extract_from_file('Random/path.png')
+    except Exception as e:
+        assert str(e)=="Random/path.png does not exist."
+    #test file does not exist
+    try:
+        extract_from_file('tests/assets')
+    except Exception as e:
+        assert str(e)=="tests/assets is not a file."
+
 def test_extract_from_files():
     '''
     Tests the dictionary keys from a list of example TSPNG file paths.

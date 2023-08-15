@@ -23,6 +23,31 @@ def _open_image(file_or_bytes: Union[str, io.BytesIO], mime_type: str=MIME_TYPE)
         d={}
     return d
 
+def extract(file_bytes_or_files: Union[str, io.BytesIO, List[str]], mime_type: str=MIME_TYPE) -> Dict:
+    '''
+    Returns the metadata from a TSPNG file as a dictionary.
+
+        Parameters:
+                file_bytes_or_files (str, io.BytesIO, List[str]): Path to a file, byte stream, or files
+                mime_type (str): Optional; Media type of file,
+                    default is 'application/vnd.theiascope.io+json'
+
+        Returns:
+                (dict): Dictionary containing file metadata
+
+        Raises:
+                TypeError: If not a BytesIO object, file, or list of files
+    '''
+    #call appropriate function
+    if os.path.exists(file_bytes_or_files):
+        return extract_from_file(file_bytes_or_files, MIME_TYPE)
+    elif isinstance(file_bytes_or_files, io.BytesIO):
+        return extract_from_bytes(file_bytes_or_files, MIME_TYPE)
+    elif isinstance(file_bytes_or_files, list):
+        return extract_from_files(file_bytes_or_files, MIME_TYPE)
+    else:
+        raise TypeError(f"{file_bytes_or_files} is not a BytesIO object, file, or list of file.")
+
 def extract_from_bytes(buffer: io.BytesIO, mime_type: str=MIME_TYPE) -> Dict:
     '''
     Returns the metadata from a TS byte stream as a dictionary.

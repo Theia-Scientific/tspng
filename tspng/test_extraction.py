@@ -37,6 +37,12 @@ def test_extract_from_bytes():
         test_data = extract_from_bytes(buf)
         assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
 
+def test_extract_from_bytes_fails():
+    try:
+        extract_from_bytes('tests/assets/example_file_1.ts.png')
+    except TypeError as e:
+        assert str(e)=="tests/assets/example_file_1.ts.png is not a BytesIO object."
+
 def test_extract_from_file():
     '''
     Tests the dictionary keys from an example TSPNG file path.

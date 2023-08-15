@@ -16,10 +16,10 @@ def test_extract():
     test_data = extract('tests/assets/example_file_1.ts.png')
     assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
     #test list of files
-    test_data = extract_from_files(['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png'])
+    test_data = extract(['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png'])
     assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
     #test folder
-    test_data = extract_from_folder('tests/assets')
+    test_data = extract('tests/assets')
     assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
 
 def test_extract_fails():

@@ -41,7 +41,7 @@ def extract(file_bytes_or_files: Union[str, io.BytesIO, List[str]], mime_type: s
     #call appropriate function
     if isinstance(file_bytes_or_files, io.BytesIO):
         return extract_from_bytes(file_bytes_or_files, MIME_TYPE)
-    elif os.path.isfile(file_bytes_or_files):
+    elif type(file_bytes_or_files) == str and os.path.isfile(file_bytes_or_files):
         return extract_from_file(file_bytes_or_files, MIME_TYPE)
     elif isinstance(file_bytes_or_files, list):
         return extract_from_files(file_bytes_or_files, MIME_TYPE)

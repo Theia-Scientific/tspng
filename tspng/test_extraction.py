@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import pytest
+
 from io import BytesIO
 from tspng.extraction import extract,extract_from_bytes,extract_from_file,extract_from_files,extract_from_folder
 
@@ -23,10 +25,8 @@ def test_extract():
     assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
 
 def test_extract_fails():
-    try:
+    with pytest.raises(TypeError):
         extract('Test for failure')
-    except TypeError as e:
-        assert str(e)=="Test for failure is not a BytesIO object, file, list of files, or folder."
 
 def test_extract_from_bytes():
     '''
@@ -38,10 +38,8 @@ def test_extract_from_bytes():
         assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
 
 def test_extract_from_bytes_fails():
-    try:
+    with pytest.raises(TypeError):
         extract_from_bytes('tests/assets/example_file_1.ts.png')
-    except TypeError as e:
-        assert str(e)=="tests/assets/example_file_1.ts.png is not a BytesIO object."
 
 def test_extract_from_file():
     '''
@@ -52,15 +50,11 @@ def test_extract_from_file():
 
 def test_extract_from_file_fails():
     #test path does not exist
-    try:
+    with pytest.raises(Exception):
         extract_from_file('Random/path.png')
-    except Exception as e:
-        assert str(e)=="Random/path.png does not exist."
     #test file does not exist
-    try:
+    with pytest.raises(Exception):
         extract_from_file('tests/assets')
-    except Exception as e:
-        assert str(e)=="tests/assets is not a file."
 
 def test_extract_from_files():
     '''
@@ -78,13 +72,9 @@ def test_extract_from_folder():
 
 def test_extract_from_folder_fails():
     #test if directory
-    try:
+    with pytest.raises(Exception):
         extract_from_folder('tests/assets/example_file_1.ts.png')
-    except Exception as e:
-        assert str(e)=="The tests/assets/example_file_1.ts.png is not to a directory."
     #test if PNG files in directory
-    try:
+    with pytest.raises(Exception):
         extract_from_folder('tests')
-    except Exception as e:
-        assert str(e)=="The tests does not contain a PNG file."
     

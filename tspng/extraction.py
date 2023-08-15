@@ -46,7 +46,7 @@ def extract(file_bytes_or_files: Union[str, io.BytesIO, List[str]], mime_type: s
     elif isinstance(file_bytes_or_files, list):
         return extract_from_files(file_bytes_or_files, MIME_TYPE)
     else:
-        raise TypeError(f"{file_bytes_or_files} is not a BytesIO object, file, or list of file.")
+        raise TypeError(f"{file_bytes_or_files} is not a BytesIO object, file, or list of files.")
 
 def extract_from_bytes(buffer: io.BytesIO, mime_type: str=MIME_TYPE) -> Dict:
     '''

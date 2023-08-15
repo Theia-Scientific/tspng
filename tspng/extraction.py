@@ -41,7 +41,7 @@ def extract(file_bytes_or_files: Union[str, io.BytesIO, List[str]], mime_type: s
     #call appropriate function
     if isinstance(file_bytes_or_files, io.BytesIO):
         return extract_from_bytes(file_bytes_or_files, MIME_TYPE)
-    elif os.path.isfile(file_bytes_or_files):
+    elif type(file_bytes_or_files) == str and os.path.isfile(file_bytes_or_files):
         return extract_from_file(file_bytes_or_files, MIME_TYPE)
     elif isinstance(file_bytes_or_files, list):
         return extract_from_files(file_bytes_or_files, MIME_TYPE)
@@ -85,15 +85,15 @@ def extract_from_file(path: str, mime_type: str=MIME_TYPE) -> Dict:
 
         Raises:
                 Exception: If path does not exist
-                Exception: If path is a directory
+                Exception: If path is not a file
                 Exception: If image is not a PNG
     '''
     #checks if path exists
     if not os.path.exists(path):
         raise Exception(f"{path} does not exist.")
     #check if file exists
-    if os.path.isdir(path):
-        raise Exception(f"{path} is to a directory.")
+    if not os.path.isfile(path):
+        raise Exception(f"The {path} is not a file.")
     return _open_image(path,mime_type)
 
 def extract_from_files(paths: List[str], mime_type: str=MIME_TYPE) -> Dict:

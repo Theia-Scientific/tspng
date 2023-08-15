@@ -22,6 +22,12 @@ def test_extract():
     test_data = extract_from_folder('tests/assets')
     assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
 
+def test_extract_fails():
+    try:
+        extract('Test for failure')
+    except TypeError as e:
+        assert str(e)=="Test for failure is not a BytesIO object, file, list of files, or folder."
+
 def test_extract_from_bytes():
     '''
     Tests the dictionary keys from an example TS byte stream.

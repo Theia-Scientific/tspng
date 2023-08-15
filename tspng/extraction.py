@@ -92,8 +92,8 @@ def extract_from_file(path: str, mime_type: str=MIME_TYPE) -> Dict:
     if not os.path.exists(path):
         raise Exception(f"{path} does not exist.")
     #check if file exists
-    if os.path.isdir(path):
-        raise Exception(f"{path} is to a directory.")
+    if not os.path.isfile(path):
+        raise Exception(f"{path} is not a file.")
     return _open_image(path,mime_type)
 
 def extract_from_files(paths: List[str], mime_type: str=MIME_TYPE) -> Dict:

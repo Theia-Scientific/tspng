@@ -68,10 +68,23 @@ def test_extract_from_files():
     '''
     test_data = extract_from_files(['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png'])
     assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
-    
+
 def test_extract_from_folder():
     '''
     Tests the dictionary keys from a list of example TSPNG file paths.
     '''
     test_data = extract_from_folder('tests/assets')
     assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
+
+def test_extract_from_folder_fails():
+    #test if directory
+    try:
+        extract_from_folder('tests/assets/example_file_1.ts.png')
+    except Exception as e:
+        assert str(e)=="The tests/assets/example_file_1.ts.png is not to a directory."
+    #test if PNG files in directory
+    try:
+        extract_from_folder('tests')
+    except Exception as e:
+        assert str(e)=="The tests does not contain a PNG file."
+    

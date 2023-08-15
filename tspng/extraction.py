@@ -36,17 +36,19 @@ def extract(file_bytes_or_files: Union[str, io.BytesIO, List[str]], mime_type: s
                 (dict): Dictionary containing file metadata
 
         Raises:
-                TypeError: If not a BytesIO object, file, or list of files
+                TypeError: If not a BytesIO object, file, list of files, or folder
     '''
     #call appropriate function
-    if os.path.exists(file_bytes_or_files):
-        return extract_from_file(file_bytes_or_files, MIME_TYPE)
-    elif isinstance(file_bytes_or_files, io.BytesIO):
+    if isinstance(file_bytes_or_files, io.BytesIO):
         return extract_from_bytes(file_bytes_or_files, MIME_TYPE)
+    elif os.path.isfile(file_bytes_or_files):
+        return extract_from_file(file_bytes_or_files, MIME_TYPE)
     elif isinstance(file_bytes_or_files, list):
         return extract_from_files(file_bytes_or_files, MIME_TYPE)
+    elif os.path.isdir(file_bytes_or_files):
+        return extract_from_folder(file_bytes_or_files, MIME_TYPE)
     else:
-        raise TypeError(f"{file_bytes_or_files} is not a BytesIO object, file, or list of files.")
+        raise TypeError(f"{file_bytes_or_files} is not a BytesIO object, file, list of files, or folder.")
 
 def extract_from_bytes(buffer: io.BytesIO, mime_type: str=MIME_TYPE) -> Dict:
     '''

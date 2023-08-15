@@ -118,7 +118,7 @@ def extract_from_folder(path: str, mime_type: str=MIME_TYPE) -> Dict:
     Returns a nested dictionary of metadata from a folder of TSPNG file paths.
 
         Parameters:
-                path (list[str]): List of file paths
+                path (str): A path to a folder
                 mime_type (str): Optional; Media type of file,
                     default is 'application/vnd.theiascope.io+json'
 
@@ -131,15 +131,16 @@ def extract_from_folder(path: str, mime_type: str=MIME_TYPE) -> Dict:
     '''
     #check if directory
     if not os.path.isdir(path):
-        raise Exception(f"{path} is not to a directory.")
+        raise Exception(f"The {path} is not to a directory.")
     # return all files as a list
     file_list = []
     for file in os.listdir(path):
         # check the files which are end with specific extension
-        if file.endswith(".png"):
+        root_ext = os.path.splitext(file)
+        if root_ext[1] == '.png':
             # print path name of selected files
             file_list.append(os.path.join(path, file))
     #check if any PNG files in directory
     if file_list == []:
-        raise Exception(f"{path} does not contain a PNG file.")
+        raise Exception(f"The {path} does not contain a PNG file.")
     return extract_from_files(file_list, mime_type)

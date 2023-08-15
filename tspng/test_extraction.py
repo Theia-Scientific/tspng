@@ -49,7 +49,7 @@ def test_extract_from_file():
     assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
 
 def test_extract_from_file_fails():
-    #test path does not exist
+    #test folder instead of file
     with pytest.raises(Exception):
         extract_from_file('Random/path.png')
     #test file does not exist

@@ -36,17 +36,19 @@ def extract(file_bytes_or_files: Union[str, io.BytesIO, List[str]], mime_type: s
                 (dict): Dictionary containing file metadata
 
         Raises:
-                TypeError: If not a BytesIO object, file, or list of files
+                TypeError: If not a BytesIO object, file, list of files, or folder
     '''
     #call appropriate function
-    if os.path.exists(file_bytes_or_files):
-        return extract_from_file(file_bytes_or_files, MIME_TYPE)
-    elif isinstance(file_bytes_or_files, io.BytesIO):
+    if isinstance(file_bytes_or_files, io.BytesIO):
         return extract_from_bytes(file_bytes_or_files, MIME_TYPE)
+    elif os.path.isfile(file_bytes_or_files):
+        return extract_from_file(file_bytes_or_files, MIME_TYPE)
     elif isinstance(file_bytes_or_files, list):
         return extract_from_files(file_bytes_or_files, MIME_TYPE)
+    elif os.path.isdir(file_bytes_or_files):
+        return extract_from_folder(file_bytes_or_files, MIME_TYPE)
     else:
-        raise TypeError(f"{file_bytes_or_files} is not a BytesIO object, file, or list of files.")
+        raise TypeError(f"{file_bytes_or_files} is not a BytesIO object, file, list of files, or folder.")
 
 def extract_from_bytes(buffer: io.BytesIO, mime_type: str=MIME_TYPE) -> Dict:
     '''
@@ -110,3 +112,35 @@ def extract_from_files(paths: List[str], mime_type: str=MIME_TYPE) -> Dict:
     for path in paths:
         nested_dict[path] = extract_from_file(path, mime_type)
     return nested_dict
+
+def extract_from_folder(path: str, mime_type: str=MIME_TYPE) -> Dict:
+    '''
+    Returns a nested dictionary of metadata from a folder of TSPNG file paths.
+
+        Parameters:
+                path (str): A path to a folder
+                mime_type (str): Optional; Media type of file,
+                    default is 'application/vnd.theiascope.io+json'
+
+        Returns:
+                (dict): Dictionary containing metadata of each file
+
+        Raises:
+                Exception: If path is not a directory
+                Exception: If path does not contain a PNG file
+    '''
+    #check if directory
+    if not os.path.isdir(path):
+        raise Exception(f"The {path} is not to a directory.")
+    # return all files as a list
+    file_list = []
+    for file in os.listdir(path):
+        # check the files which are end with specific extension
+        root_ext = os.path.splitext(file)
+        if root_ext[1] == '.png':
+            # print path name of selected files
+            file_list.append(os.path.join(path, file))
+    #check if any PNG files in directory
+    if file_list == []:
+        raise Exception(f"The {path} does not contain a PNG file.")
+    return extract_from_files(file_list, mime_type)

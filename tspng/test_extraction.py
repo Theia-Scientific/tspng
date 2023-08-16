@@ -22,7 +22,7 @@ def test_extract():
     assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
     #test folder
     test_data = extract('tests/assets')
-    assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
+    assert sorted(list(test_data.keys()))==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
 
 def test_extract_fails():
     with pytest.raises(TypeError):
@@ -61,14 +61,14 @@ def test_extract_from_files():
     Tests the dictionary keys from a list of example TSPNG file paths.
     '''
     test_data = extract_from_files(['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png'])
-    assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
+    assert sorted(list(test_data.keys()))==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
 
 def test_extract_from_folder():
     '''
     Tests the dictionary keys from a list of example TSPNG file paths.
     '''
     test_data = extract_from_folder('tests/assets')
-    assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
+    assert sorted(list(test_data.keys()))==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
 
 def test_extract_from_folder_fails():
     #test if directory

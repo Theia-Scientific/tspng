@@ -1,6 +1,6 @@
 # Change log
 
-## 0.0.2 (IN PROGRESS)
+## 0.0.2 (2023-08-18)
 
 ### Features and enhancements
 

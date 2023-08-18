@@ -8,7 +8,7 @@ setuptools.setup(
     name="tspng",
  
     # version of the module
-    version="0.0.1",
+    version="0.0.2",
  
     # Name of Author
     author="Theia Scientific",

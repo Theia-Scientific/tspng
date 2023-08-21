@@ -1,6 +1,6 @@
 # TS PNG Release Procedure
 
-Procedure for releasing a new TS PNG package on GitHub and on PyPi.
+Procedure for releasing a new TS PNG package on GitHub and on PyPI.
 
 ## GitHub Release
 
@@ -18,7 +18,7 @@ Procedure for releasing a new TS PNG package on GitHub and on PyPi.
 
 7. Publish the branch and create the pull request.
 
-8. When the PR is approved, merge the branch and locally pull the updated repository.
+8. When the PR is approved, squash and merge to the branch and locally pull the updated repository.
 
    ```sh
    git checkout main && git pull
@@ -40,7 +40,7 @@ Procedure for releasing a new TS PNG package on GitHub and on PyPi.
 
 12. Create the next milestone, move open issues to the next milestone, and close the previous milestone.
 
-## PyPi Release
+## PyPI Release
 
 1. Pull the latest changes from the repository.
 
@@ -62,7 +62,7 @@ Procedure for releasing a new TS PNG package on GitHub and on PyPi.
    python3 -m build ./
    ```
 
-5. Upload the build and enter PyPi credentials when prompted.
+5. Upload the build and enter PyPI credentials when prompted.
 
    ```sh
    twine upload dist/*

@@ -164,6 +164,3 @@ def extract_from_url(url: str, mime_type: str=MIME_TYPE) -> Dict:
     '''
     urllib.request.urlretrieve(url,'url')
     return _open_image('url',mime_type)
-
-#test_data = extract_from_folder('tests/assets')
-#print(sorted(list(test_data.keys())))

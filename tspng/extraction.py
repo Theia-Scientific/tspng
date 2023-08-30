@@ -2,11 +2,14 @@
 import io
 import json
 import os
+import pathlib
 import warnings
+import urllib.request
 
 from PIL import Image
 from tspng import MIME_TYPE
 from typing import Dict, List, Union
+from urllib.parse import urlparse
 
 def _open_image(file_or_bytes: Union[str, io.BytesIO], mime_type: str=MIME_TYPE) -> Dict:
     #open
@@ -23,7 +26,7 @@ def _open_image(file_or_bytes: Union[str, io.BytesIO], mime_type: str=MIME_TYPE)
         d={}
     return d
 
-def extract(file_bytes_or_files: Union[str, io.BytesIO, List[str]], mime_type: str=MIME_TYPE) -> Dict:
+def extract(file_bytes_files_or_url: Union[str, io.BytesIO, List[str]], mime_type: str=MIME_TYPE) -> Dict:
     '''
     Returns the metadata from a TSPNG file as a dictionary.
 
@@ -39,16 +42,18 @@ def extract(file_bytes_or_files: Union[str, io.BytesIO, List[str]], mime_type: s
                 TypeError: If not a BytesIO object, file, list of files, or folder
     '''
     #call appropriate function
-    if isinstance(file_bytes_or_files, io.BytesIO):
-        return extract_from_bytes(file_bytes_or_files, MIME_TYPE)
-    elif type(file_bytes_or_files) == str and os.path.isfile(file_bytes_or_files):
-        return extract_from_file(file_bytes_or_files, MIME_TYPE)
-    elif isinstance(file_bytes_or_files, list):
-        return extract_from_files(file_bytes_or_files, MIME_TYPE)
-    elif os.path.isdir(file_bytes_or_files):
-        return extract_from_folder(file_bytes_or_files, MIME_TYPE)
+    if isinstance(file_bytes_files_or_url, io.BytesIO):
+        return extract_from_bytes(file_bytes_files_or_url, MIME_TYPE)
+    elif type(file_bytes_files_or_url) == str and os.path.isfile(file_bytes_files_or_url):
+        return extract_from_file(file_bytes_files_or_url, MIME_TYPE)
+    elif isinstance(file_bytes_files_or_url, list):
+        return extract_from_files(file_bytes_files_or_url, MIME_TYPE)
+    elif os.path.isdir(file_bytes_files_or_url):
+        return extract_from_folder(file_bytes_files_or_url, MIME_TYPE)
+    elif urlparse(file_bytes_files_or_url)[0] != '':
+        return extract_from_url(file_bytes_files_or_url, MIME_TYPE)
     else:
-        raise TypeError(f"{file_bytes_or_files} is not a BytesIO object, file, list of files, or folder.")
+        raise TypeError(f"{file_bytes_files_or_url} is not a BytesIO object, file, list of files, or folder.")
 
 def extract_from_bytes(buffer: io.BytesIO, mime_type: str=MIME_TYPE) -> Dict:
     '''
@@ -144,3 +149,21 @@ def extract_from_folder(path: str, mime_type: str=MIME_TYPE) -> Dict:
     if file_list == []:
         raise Exception(f"The {path} does not contain a PNG file.")
     return extract_from_files(file_list, mime_type)
+
+def extract_from_url(url: str, mime_type: str=MIME_TYPE) -> Dict:
+    '''
+    Returns the metadata from a TS byte stream as a dictionary.
+
+        Parameters:
+                url (str): URL to a TS PNG file
+                mime_type (str): Optional; Media type of file,
+                    default is 'application/vnd.theiascope.io+json'
+
+        Returns:
+                (dict): Dictionary containing file metadata
+    '''
+    urllib.request.urlretrieve(url,'url')
+    return _open_image('url',mime_type)
+
+#test_data = extract_from_folder('tests/assets')
+#print(sorted(list(test_data.keys())))

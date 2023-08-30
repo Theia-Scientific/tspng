@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+import os
+import pathlib
 import pytest
 
 from io import BytesIO
-from tspng.extraction import extract,extract_from_bytes,extract_from_file,extract_from_files,extract_from_folder
+from tspng.extraction import extract,extract_from_bytes,extract_from_file,extract_from_files,extract_from_folder,extract_from_url
 
 def test_extract():
     '''
@@ -22,7 +24,11 @@ def test_extract():
     assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
     #test folder
     test_data = extract('tests/assets')
-    assert sorted(list(test_data.keys()))==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
+    assert sorted(list(test_data.keys()))==['tests/assets\\example_file_1.ts.png','tests/assets\\example_file_2.ts.png']
+    #test url
+    abs_path = os.path.abspath('tests/assets/example_file_1.ts.png')
+    test_data = extract(pathlib.Path(abs_path).as_uri())
+    assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
 
 def test_extract_fails():
     with pytest.raises(TypeError):
@@ -68,7 +74,7 @@ def test_extract_from_folder():
     Tests the dictionary keys from a list of example TSPNG file paths.
     '''
     test_data = extract_from_folder('tests/assets')
-    assert sorted(list(test_data.keys()))==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
+    assert sorted(list(test_data.keys()))==['tests/assets\\example_file_1.ts.png','tests/assets\\example_file_2.ts.png']
 
 def test_extract_from_folder_fails():
     #test if directory
@@ -77,4 +83,11 @@ def test_extract_from_folder_fails():
     #test if PNG files in directory
     with pytest.raises(Exception):
         extract_from_folder('tests')
-    
+
+def test_extract_from_url():
+    '''
+    Tests the dictionary keys from a list of example TSPNG url.
+    '''
+    abs_path = os.path.abspath('tests/assets/example_file_1.ts.png')
+    test_data = extract_from_url(pathlib.Path(abs_path).as_uri())
+    assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']

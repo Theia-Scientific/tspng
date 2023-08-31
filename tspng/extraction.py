@@ -2,7 +2,7 @@
 import io
 import json
 import os
-import requests
+import urllib.request
 import warnings
 
 from PIL import Image
@@ -164,9 +164,9 @@ def extract_from_url(url: str, mime_type: str=MIME_TYPE) -> Dict:
         Raises:
                 Exception: If cannot get image from url
     '''
-    response = requests.get(url, stream=True)
-    if response.status_code == 200:
-        img_data = response.content
+    response = urllib.request.urlopen(url)
+    if response.getcode() == 200:
+        img_data = response.read()
     else:
-        raise Exception(f"Failed to fetch image from {url}. Status code: {response.status_code}")
+        raise Exception(f"Failed to fetch image from {url}. Status code: {response.getcode()}")
     return _open_image(io.BytesIO(img_data), mime_type)

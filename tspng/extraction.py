@@ -143,7 +143,7 @@ def extract_from_folder(path: str, mime_type: str=MIME_TYPE) -> Dict:
         root_ext = os.path.splitext(file)
         if root_ext[1] == '.png':
             # print path name of selected files
-            file_list.append(path+'/'+file)
+            file_list.append(os.path.join(path, file))
     #check if any PNG files in directory
     if file_list == []:
         raise Exception(f"The {path} does not contain a PNG file.")

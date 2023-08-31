@@ -2,7 +2,7 @@
 import io
 import json
 import os
-import pathlib
+import requests
 import warnings
 import urllib.request
 
@@ -144,7 +144,7 @@ def extract_from_folder(path: str, mime_type: str=MIME_TYPE) -> Dict:
         root_ext = os.path.splitext(file)
         if root_ext[1] == '.png':
             # print path name of selected files
-            file_list.append(os.path.join(path, file))
+            file_list.append(path+'/'+file)
     #check if any PNG files in directory
     if file_list == []:
         raise Exception(f"The {path} does not contain a PNG file.")
@@ -162,5 +162,12 @@ def extract_from_url(url: str, mime_type: str=MIME_TYPE) -> Dict:
         Returns:
                 (dict): Dictionary containing file metadata
     '''
-    urllib.request.urlretrieve(url,'url')
-    return _open_image('url',mime_type)
+    #with urllib.request.urlopen(url) as response:
+    #    read_url = response.read()
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        img_data = response.content
+    #urllib.request.urlopen(url)
+    #return _open_image(io.BytesIO(response.content),mime_type)
+    return _open_image(io.BytesIO(img_data),mime_type)
+    #return _open_image(response.content,mime_type)

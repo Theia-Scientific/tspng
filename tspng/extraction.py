@@ -151,7 +151,7 @@ def extract_from_folder(path: str, mime_type: str=MIME_TYPE) -> Dict:
 
 def extract_from_url(url: str, mime_type: str=MIME_TYPE) -> Dict:
     '''
-    Returns the metadata from a TS byte stream as a dictionary.
+    Returns the metadata from a TS url as a dictionary.
 
         Parameters:
                 url (str): URL to a TS PNG file

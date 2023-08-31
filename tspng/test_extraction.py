@@ -26,9 +26,8 @@ def test_extract():
     test_data = extract('tests/assets')
     assert sorted(list(test_data.keys()))==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
     #test url
-    #abs_path = os.path.abspath('tests/assets/example_file_1.ts.png')
-    #test_data = extract(pathlib.Path(abs_path).as_uri())
-    #assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
+    test_data = extract('https://bounding-box-instructions.s3.amazonaws.com/example_file_1.ts.png')
+    assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
 
 def test_extract_fails():
     with pytest.raises(TypeError):
@@ -88,5 +87,5 @@ def test_extract_from_url():
     '''
     Tests the dictionary keys from an example TSPNG url.
     '''
-    test_data = extract_from_url('https://github.com/Theia-Scientific/theia-png/blob/main/tests/assets/example_file_1.ts.png')
+    test_data = extract_from_url('https://bounding-box-instructions.s3.amazonaws.com/example_file_1.ts.png')
     assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']

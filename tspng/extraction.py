@@ -4,7 +4,6 @@ import json
 import os
 import requests
 import warnings
-import urllib.request
 
 from PIL import Image
 from tspng import MIME_TYPE
@@ -161,13 +160,13 @@ def extract_from_url(url: str, mime_type: str=MIME_TYPE) -> Dict:
 
         Returns:
                 (dict): Dictionary containing file metadata
+
+        Raises:
+                Exception: If cannot get image from url
     '''
-    #with urllib.request.urlopen(url) as response:
-    #    read_url = response.read()
     response = requests.get(url, stream=True)
     if response.status_code == 200:
         img_data = response.content
-    #urllib.request.urlopen(url)
-    #return _open_image(io.BytesIO(response.content),mime_type)
-    return _open_image(io.BytesIO(img_data),mime_type)
-    #return _open_image(response.content,mime_type)
+    else:
+        raise Exception(f"Failed to fetch image from {url}. Status code: {response.status_code}")
+    return _open_image(io.BytesIO(img_data), mime_type)

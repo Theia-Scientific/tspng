@@ -40,7 +40,7 @@ def implant(file: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
     """
     # call appropriate function
     if type(file) == str and os.path.isfile(file):
-        return implant_to_file(file, image, MIME_TYPE)
+        return implant_to_file(file, image, mime_type)
     else:
         raise TypeError(
             f"{file} is not a BytesIO object, file, list of files, or folder."

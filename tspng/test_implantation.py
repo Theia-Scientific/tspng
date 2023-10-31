@@ -10,7 +10,7 @@ def test_implant():
     """
     Tests the dictionary keys from an example TSPNG file path.
     """
-    # test file
+
     implant("tests/assets/coco_data.json", "tests/assets/empty.png")
     test_data = extract("tests/assets/empty.png_MOD")
     assert list(test_data.keys()) == [
@@ -25,15 +25,15 @@ def test_implant():
 
 def test_implant_fails():
     with pytest.raises(TypeError):
-        implant("Test for failure")
+        implant("Test for failure", "tests/assets/empty.png")
 
 
 def test_implant_from_file():
     """
     Tests the dictionary keys from an example TSPNG file path.
     """
+
     implant_from_file("tests/assets/coco_data.json", "tests/assets/empty.png")
-    # test_data = extract('tests/assets/coco_data.txt+tests/assets/empty.png')
     test_data = extract("tests/assets/empty.png_MOD")
     assert list(test_data.keys()) == [
         "info",
@@ -45,10 +45,11 @@ def test_implant_from_file():
     ]
 
 
-def test_implant_from_file_fails():
-    # test folder instead of file
+def test_implant_from_file_fails_with_folder():
     with pytest.raises(Exception):
-        implant_from_file("Random/path.png")
-    # test file does not exist
+        implant_from_file("tests/assets", "tests/assets/empty.png")
+
+
+def test_implant_from_file_fails_existence():
     with pytest.raises(Exception):
-        implant_from_file("tests/assets")
+        implant_from_file("tests/assets/no_such_file.json", "tests/assets/empty.png")

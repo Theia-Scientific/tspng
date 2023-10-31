@@ -1,5 +1,6 @@
 # import statements
 import os
+import json
 
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
@@ -7,27 +8,25 @@ from tspng import MIME_TYPE
 from typing import Dict
 
 
-def _implant_data(file: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
+def _implant_data(data: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
     # open image
     target_im = Image.open(image)
     if target_im.format != "PNG":
         raise Exception("Image is not a PNG.")
-    # load metadata
-    meta = open(file, "r").read()
     # implant data
     metadata = PngInfo()
-    metadata.add_text(mime_type, meta)
+    metadata.add_text(mime_type,data)
     # save file with implanted data
-    mod_file = target_im.save(file + "+" + image, format="PNG", pnginfo=metadata)
+    mod_file = target_im.save(image+'_MOD', format="PNG", pnginfo=metadata)
     return mod_file
 
 
-def implant(file: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
+def implant(data: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
     """
     Returns the metadata from a TSPNG file as a dictionary.
 
         Parameters:
-                file (str): Path to a file
+                data (str): Path to a file
                 image (str): Path to a png file as a string
                 mime_type (str): Optional; Media type of file,
                     default is 'application/vnd.theiascope.io+json'
@@ -39,15 +38,15 @@ def implant(file: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
                 TypeError: If not a BytesIO object, file, list of files, or folder
     """
     # call appropriate function
-    if type(file) == str and os.path.isfile(file):
-        return implant_to_file(file, image, mime_type)
+    if type(data) == str and os.path.isfile(data):
+        return implant_from_file(data, image, mime_type)
     else:
         raise TypeError(
-            f"{file} is not a BytesIO object, file, list of files, or folder."
+            f"{data} is not a file."
         )
 
 
-def implant_to_file(path: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
+def implant_from_file(path: str, image: str, mime_type: str=MIME_TYPE) -> Dict:
     """
     Returns the metadata from a TSPNG file as a dictionary.
 
@@ -71,4 +70,13 @@ def implant_to_file(path: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
     # check if file exists
     if not os.path.isfile(path):
         raise Exception(f"The {path} is not a file.")
-    return _implant_data(path, image, mime_type)
+    #open file
+    data = open(path, "r").read()
+    #check if data is JSON string
+    if json.loads(data):
+        #pass JSON string to _implant_data
+        return _implant_data(data, image, mime_type)
+    else:
+        raise TypeError(
+            f"{data} is not a JSON string."
+        )

@@ -24,8 +24,8 @@ def test_extract():
     assert list(test_data.keys())==['tests/assets/example_file_1.ts.png','tests/assets/example_file_2.ts.png']
     #test folder
     test_data = extract('tests/assets')
-    assert 'example_file_1.ts.png' in sorted(list(test_data.keys()))[0]
-    assert 'example_file_2.ts.png' in sorted(list(test_data.keys()))[1]
+    assert 'example_file_1.ts.png' in sorted(list(test_data.keys()))[1]
+    assert 'example_file_2.ts.png' in sorted(list(test_data.keys()))[2]
     #test url
     test_data = extract('https://bounding-box-instructions.s3.amazonaws.com/example_file_1.ts.png')
     assert list(test_data.keys())==['info','licenses','images','annotations','models','categories']
@@ -74,8 +74,8 @@ def test_extract_from_folder():
     Tests the dictionary keys from a list of example TSPNG file paths.
     '''
     test_data = extract_from_folder('tests/assets')
-    assert 'example_file_1.ts.png' in sorted(list(test_data.keys()))[0]
-    assert 'example_file_2.ts.png' in sorted(list(test_data.keys()))[1]
+    assert 'example_file_1.ts.png' in sorted(list(test_data.keys()))[1]
+    assert 'example_file_2.ts.png' in sorted(list(test_data.keys()))[2]
 
 def test_extract_from_folder_fails():
     #test if directory

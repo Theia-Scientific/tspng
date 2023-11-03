@@ -1,0 +1,293 @@
+{
+    "info": {
+        "description": "Theiascope image",
+        "url": "http://www.theiascientific.com",
+        "version": "1.0",
+        "year": 2023,
+        "contributor": "Theia Scientific, LLC",
+        "date_created": "2023-05-10 19:17:59.891603+00:00"
+    },
+    "licenses": {
+        "url": "http://www.theiascientific.com",
+        "id": 1,
+        "name": "Proprietary"
+    },
+    "images": [
+        {
+            "license": 1,
+            "file_name": "20230510T191759Z.891_crimson-notebook (PML).ts.png",
+            "height": 512,
+            "width": 512,
+            "date_captured": "2023-05-10 19:17:59.891603+00:00",
+            "id": 3782,
+            "field_of_view": [0, 0, 512, 512],
+            "scale_bar": {
+                "dimensions": [25, 501, 128, 1],
+                "length": 100.0,
+                "units_abbr": "nm",
+                "units_name": "nanometers"
+            }
+        }
+    ],
+    "annotations": [
+        {
+            "segmentation": [[]],
+            "area": 261121,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [0, 0, 511, 511],
+            "category_id": 1,
+            "id": 150133,
+            "model_id": 17,
+            "score": 0.9934123754501343
+        },
+        {
+            "segmentation": [[]],
+            "area": 2304,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [17, 196, 48, 48],
+            "category_id": 1,
+            "id": 150134,
+            "model_id": 17,
+            "score": 0.9693130850791931
+        },
+        {
+            "segmentation": [[]],
+            "area": 1560,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [12, 85, 40, 39],
+            "category_id": 1,
+            "id": 150135,
+            "model_id": 17,
+            "score": 0.9622271656990051
+        },
+        {
+            "segmentation": [[]],
+            "area": 624,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [62, 487, 26, 24],
+            "category_id": 1,
+            "id": 150136,
+            "model_id": 17,
+            "score": 0.9507161378860474
+        },
+        {
+            "segmentation": [[]],
+            "area": 2310,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [476, 15, 35, 66],
+            "category_id": 1,
+            "id": 150137,
+            "model_id": 17,
+            "score": 0.9466661214828491
+        },
+        {
+            "segmentation": [[]],
+            "area": 170,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [501, 364, 10, 17],
+            "category_id": 1,
+            "id": 150138,
+            "model_id": 17,
+            "score": 0.9420112371444702
+        },
+        {
+            "segmentation": [[]],
+            "area": 600,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [278, 218, 24, 25],
+            "category_id": 1,
+            "id": 150139,
+            "model_id": 17,
+            "score": 0.9417718648910522
+        },
+        {
+            "segmentation": [[]],
+            "area": 416,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [498, 267, 13, 32],
+            "category_id": 1,
+            "id": 150140,
+            "model_id": 17,
+            "score": 0.9402319192886353
+        },
+        {
+            "segmentation": [[]],
+            "area": 960,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [275, 214, 32, 30],
+            "category_id": 1,
+            "id": 150141,
+            "model_id": 17,
+            "score": 0.9378848075866699
+        },
+        {
+            "segmentation": [[]],
+            "area": 500,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [281, 0, 25, 20],
+            "category_id": 1,
+            "id": 150142,
+            "model_id": 17,
+            "score": 0.9377606511116028
+        },
+        {
+            "segmentation": [[]],
+            "area": 1088,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [154, 67, 32, 34],
+            "category_id": 1,
+            "id": 150143,
+            "model_id": 17,
+            "score": 0.9277265071868896
+        },
+        {
+            "segmentation": [[]],
+            "area": 858,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [84, 13, 26, 33],
+            "category_id": 1,
+            "id": 150144,
+            "model_id": 17,
+            "score": 0.9270777702331543
+        },
+        {
+            "segmentation": [[]],
+            "area": 1394,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [185, 132, 41, 34],
+            "category_id": 1,
+            "id": 150145,
+            "model_id": 17,
+            "score": 0.9232087135314941
+        },
+        {
+            "segmentation": [[]],
+            "area": 90,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [323, 164, 9, 10],
+            "category_id": 1,
+            "id": 150146,
+            "model_id": 17,
+            "score": 0.9219958782196045
+        },
+        {
+            "segmentation": [[]],
+            "area": 434,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [284, 497, 31, 14],
+            "category_id": 1,
+            "id": 150147,
+            "model_id": 17,
+            "score": 0.9173544049263
+        },
+        {
+            "segmentation": [[]],
+            "area": 702,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [457, 484, 26, 27],
+            "category_id": 1,
+            "id": 150148,
+            "model_id": 17,
+            "score": 0.9146182537078857
+        },
+        {
+            "segmentation": [[]],
+            "area": 48,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [421, 1, 6, 8],
+            "category_id": 1,
+            "id": 150149,
+            "model_id": 17,
+            "score": 0.9078335762023926
+        },
+        {
+            "segmentation": [[]],
+            "area": 893,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [492, 464, 19, 47],
+            "category_id": 1,
+            "id": 150150,
+            "model_id": 17,
+            "score": 0.8994919657707214
+        },
+        {
+            "segmentation": [[]],
+            "area": 336,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [0, 318, 12, 28],
+            "category_id": 1,
+            "id": 150151,
+            "model_id": 17,
+            "score": 0.8928455114364624
+        },
+        {
+            "segmentation": [[]],
+            "area": 2352,
+            "iscrowd": 0,
+            "image_id": 3782,
+            "bbox": [255, 89, 49, 48],
+            "category_id": 1,
+            "id": 150152,
+            "model_id": 17,
+            "score": 0.8918660879135132
+        }
+    ],
+    "models": [
+        {
+            "id": 17,
+            "configuration": {
+                "image_processing": {
+                    "brightness": 0,
+                    "clahe": false,
+                    "contrast": 1.0,
+                    "gamma": 1.0,
+                    "gray": false,
+                    "invert": false
+                },
+                "max_concurrency": 2,
+                "num_cpus": 0,
+                "num_gpus": 1.0,
+                "box_nms_thresh": 0.7,
+                "crop_n_layers": 0,
+                "crop_nms_thresh": 0.7,
+                "crop_overlap_ratio": 0.3413333333333333,
+                "crop_n_points_downscale_factor": 1,
+                "min_mask_region_area": 0,
+                "points_per_side": 32,
+                "points_per_batch": 64,
+                "pred_iou_thresh": 0.88,
+                "stability_score_thresh": 0.95,
+                "stability_score_offset": 1.0,
+                "weights_file": {
+                    "filename": "sam_vit_b_01ec64.pth",
+                    "version": "default",
+                    "path": "/sam/vit-b"
+                }
+            },
+            "created": "2023-05-09 19:46:18.309323+00:00",
+            "family": "SAM",
+            "name": "vit-b",
+            "pid": 1
+        }
+    ],
+    "categories": [{ "supercategory": "defect", "id": 1, "name": "" }]
+}

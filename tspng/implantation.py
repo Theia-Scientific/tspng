@@ -8,7 +8,7 @@ from tspng import MIME_TYPE
 from typing import Dict
 
 
-def _implant_data(data: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
+def _implant_data(data: str, image: str, mime_type: str = MIME_TYPE, dst: str = None):
     # open image
     target_im = Image.open(image)
     if target_im.format != "PNG":
@@ -17,11 +17,11 @@ def _implant_data(data: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
     metadata = PngInfo()
     metadata.add_text(mime_type,data)
     # save file with implanted data
-    mod_file = target_im.save(image+'_MOD', format="PNG", pnginfo=metadata)
+    mod_file = target_im.save(image[:-4]+'.ts.png', format="PNG", pnginfo=metadata)
     return mod_file
 
 
-def implant(data: str, image: str, mime_type: str = MIME_TYPE) -> Dict:
+def implant(data: str, image: str, mime_type: str = MIME_TYPE):
     """
     Returns the metadata from a TSPNG file as a dictionary.
 

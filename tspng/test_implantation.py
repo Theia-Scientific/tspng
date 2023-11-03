@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import pytest
 
 from tspng.implantation import implant, implant_from_file
@@ -12,7 +13,7 @@ def test_implant():
     """
 
     implant("tests/assets/coco_data.json", "tests/assets/empty.png")
-    test_data = extract("tests/assets/empty.png_MOD")
+    test_data = extract("tests/assets/empty.ts.png")
     assert list(test_data.keys()) == [
         "info",
         "licenses",
@@ -21,6 +22,7 @@ def test_implant():
         "models",
         "categories",
     ]
+    os.remove("tests/assets/empty.ts.png")
 
 
 def test_implant_fails():
@@ -34,7 +36,7 @@ def test_implant_from_file():
     """
 
     implant_from_file("tests/assets/coco_data.json", "tests/assets/empty.png")
-    test_data = extract("tests/assets/empty.png_MOD")
+    test_data = extract("tests/assets/empty.ts.png")
     assert list(test_data.keys()) == [
         "info",
         "licenses",
@@ -43,6 +45,7 @@ def test_implant_from_file():
         "models",
         "categories",
     ]
+    os.remove("tests/assets/empty.ts.png")
 
 
 def test_implant_from_file_fails_with_folder():

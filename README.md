@@ -177,7 +177,7 @@ the package source code tree and are defined on a per-module basis with a
 
 ## License
 
-- [LICENSE](https://github.com/Theia-Scientific/theia-png/blob/main/LICENSE).
+- [LICENSE](https://github.com/Theia-Scientific/tspng/blob/main/LICENSE).
 
 ## Acknowledgments
 

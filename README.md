@@ -1,11 +1,14 @@
-# tspng: A Python package for TS PNG files
+# tspng: A Python package for Computer Vision and Machine Learning metadata manipulation
 
 [![CI](https://github.com/Theia-Scientific/theia-png/actions/workflows/ci.yml/badge.svg)](https://github.com/Theia-Scientific/theia-png/actions/workflows/ci.yml)
 [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1iC5KLoQUY4D54D9SH4YB2pJ0rTXXq2Fs?usp=sharing)
 
-A Python package for manipulating PNG files exported or imported using the Theia
-web application. These files have data embedded in the PNG in a [COCO JSON
-format] compatible form. This package unpacks and makes the data readily usable.
+A Python package for manipulating Portable Network Graphics (PNG) files with
+embedded JavaScript Object Notation (JSON) metadata from Machine Learning (ML)
+applications, such as the Theiascope&trade; platform for microscopy image
+analysis and quantitation. These files have data embedded in the PNG in a [COCO
+JSON format] compatible form. This package provides extraction of the JSON data
+and implantation of JSON data into existing PNGs.
 
 ## Quick Start
 

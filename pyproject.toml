@@ -4,7 +4,7 @@ version = "0.0.3"
 authors = [
   { name="Theia Scientific", email="support@theiascientific.com" },
 ]
-description = "A Python package for manipulating PNG files exported or imported using the Theia web application"
+description = "A Python package for manipulating PNG files with embedded JSON related to Machine Learning."
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
@@ -14,8 +14,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/Theia-Scientific/theia-png"
-"Bug Tracker" = "https://github.com/Theia-Scientific/theia-png/issues"
+"Homepage" = "https://github.com/Theia-Scientific/tspng"
+"Bug Tracker" = "https://github.com/Theia-Scientific/tspng/issues"
 
 [build-system]
 requires = ["hatchling"]

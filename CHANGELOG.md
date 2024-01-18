@@ -8,7 +8,7 @@
 - Added create and pushing package to PyPI.org to release workflow ([#68](https://github.com/Theia-Scientific/tspng/pull/68))
 - Changed name field in workflow configuration ([#70](https://github.com/Theia-Scientific/tspng/pull/70))
 - Changed name of repository ([#74](https://github.com/Theia-Scientific/tspng/pull/74))
-- Renamed `python-package.yml` to `ci.yml` ([#69](https://github.com/Theia-Scientific/tspng/pull/69))
+- Changed `python-package.yml` to `ci.yml` ([#69](https://github.com/Theia-Scientific/tspng/pull/69))
 
 ## 0.0.3 (2023-09-01)
 

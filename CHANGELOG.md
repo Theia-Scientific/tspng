@@ -1,6 +1,6 @@
 # Change log
 
-## 0.0.4 (IN PROGRESS)
+## 0.0.4 (2024-01-18)
 
 ### Features and enhancements
 

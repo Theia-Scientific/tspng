@@ -1,10 +1,14 @@
-# Theia PNG
+# tspng: A Python package for Computer Vision and Machine Learning metadata manipulation
 
 [![CI](https://github.com/Theia-Scientific/theia-png/actions/workflows/ci.yml/badge.svg)](https://github.com/Theia-Scientific/theia-png/actions/workflows/ci.yml)
 [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1iC5KLoQUY4D54D9SH4YB2pJ0rTXXq2Fs?usp=sharing)
 
-A Python package for manipulating PNG files exported or imported using the 
-Theia web application. These files have data embedded in the PNG in a [COCO JSON format] compatible form. This package unpacks and makes the data readily usable.
+A Python package for manipulating Portable Network Graphics (PNG) files with
+embedded JavaScript Object Notation (JSON) metadata from Machine Learning (ML)
+applications, such as the Theiascope&trade; platform for microscopy image
+analysis and quantitation. These files have data embedded in the PNG in a [COCO
+JSON format] compatible form. This package provides extraction of the JSON data
+and implantation of JSON data into existing PNGs.
 
 ## Quick Start
 
@@ -149,7 +153,7 @@ Theia web application. These files have data embedded in the PNG in a [COCO JSON
 3. Clone this repository.
 
    ```sh
-   git clone https://github.com/Theia-Scientific/theia-png.git && cd theia-png
+   git clone https://github.com/Theia-Scientific/tspng.git && cd tspng
    ```
 
 4. Install the dependencies.
@@ -173,10 +177,11 @@ the package source code tree and are defined on a per-module basis with a
 
 ## License
 
-- [LICENSE](https://github.com/Theia-Scientific/theia-png/blob/main/LICENSE).
+- [LICENSE](https://github.com/Theia-Scientific/tspng/blob/main/LICENSE).
 
 ## Acknowledgments
 
-This material is based upon work supported by the U.S. Department of Energy, Office of Nuclear Energy under Award Number DE-SC0021529.
+This material is based upon work supported by the U.S. Department of Energy,
+Office of Nuclear Energy under Award Number DE-SC0021529.
 
 [coco json format]: https://cocodataset.org/#format-data

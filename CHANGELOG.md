@@ -4,7 +4,7 @@
 
 ### Features and enhancements
 
-- Added extract_from_url function ([#65](https://github.com/Theia-Scientific/theia-png/pull/65))
+- Added `extract_from_url` function ([#65](https://github.com/Theia-Scientific/theia-png/pull/65))
 - Created a release procedure ([#64](https://github.com/Theia-Scientific/theia-png/pull/64))
 
 ## 0.0.2 (2023-08-18)

@@ -5,6 +5,7 @@ import os
 import urllib.request
 import warnings
 
+from pathlib import Path
 from PIL import Image
 from tspng import MIME_TYPE
 from typing import Dict, List, Union
@@ -12,7 +13,7 @@ from urllib.parse import urlparse
 
 
 def _open_image(
-    file_or_bytes: Union[str, io.BytesIO], mime_type: str = MIME_TYPE
+    file_or_bytes: Union[Path, str, io.BytesIO], mime_type: str = MIME_TYPE
 ) -> Dict:
     # open
     im = Image.open(file_or_bytes)
@@ -30,7 +31,7 @@ def _open_image(
 
 
 def extract(
-    file_bytes_files_or_url: Union[str, io.BytesIO, List[str]],
+    file_bytes_files_or_url: Union[str, Path, io.BytesIO, List[Path]],
     mime_type: str = MIME_TYPE,
 ) -> Dict:
     """
@@ -50,16 +51,16 @@ def extract(
     # call appropriate function
     if isinstance(file_bytes_files_or_url, io.BytesIO):
         return extract_from_bytes(file_bytes_files_or_url, mime_type)
-    elif type(file_bytes_files_or_url) == str and os.path.isfile(
+    elif type(file_bytes_files_or_url) == Path and os.path.isfile(
         file_bytes_files_or_url
     ):
         return extract_from_file(file_bytes_files_or_url, mime_type)
     elif isinstance(file_bytes_files_or_url, list):
         return extract_from_files(file_bytes_files_or_url, mime_type)
     elif os.path.isdir(file_bytes_files_or_url):
-        return extract_from_folder(file_bytes_files_or_url, mime_type)
-    elif urlparse(file_bytes_files_or_url)[0] != "":
-        return extract_from_url(file_bytes_files_or_url, mime_type)
+        return extract_from_folder(Path(file_bytes_files_or_url), mime_type)
+    elif urlparse(str(file_bytes_files_or_url))[0] != "":
+        return extract_from_url(str(file_bytes_files_or_url), mime_type)
     else:
         raise TypeError(
             f"{file_bytes_files_or_url} is not a BytesIO object, file, list of files, or folder."
@@ -88,7 +89,7 @@ def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> Dict:
     return _open_image(buffer, mime_type)
 
 
-def extract_from_file(path: str, mime_type: str = MIME_TYPE) -> Dict:
+def extract_from_file(path: Path, mime_type: str = MIME_TYPE) -> Dict:
     """
     Returns the metadata from a TSPNG file as a dictionary.
 
@@ -114,7 +115,7 @@ def extract_from_file(path: str, mime_type: str = MIME_TYPE) -> Dict:
     return _open_image(path, mime_type)
 
 
-def extract_from_files(paths: List[str], mime_type: str = MIME_TYPE) -> Dict:
+def extract_from_files(paths: List[Path], mime_type: str = MIME_TYPE) -> Dict:
     """
     Returns a nested dictionary of metadata from a list of TSPNG file paths.
 
@@ -132,7 +133,7 @@ def extract_from_files(paths: List[str], mime_type: str = MIME_TYPE) -> Dict:
     return nested_dict
 
 
-def extract_from_folder(path: str, mime_type: str = MIME_TYPE) -> Dict:
+def extract_from_folder(path: Path, mime_type: str = MIME_TYPE) -> Dict:
     """
     Returns a nested dictionary of metadata from a folder of TSPNG file paths.
 

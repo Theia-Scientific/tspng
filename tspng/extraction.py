@@ -51,13 +51,15 @@ def extract(
     # call appropriate function
     if isinstance(file_bytes_files_or_url, io.BytesIO):
         return extract_from_bytes(file_bytes_files_or_url, mime_type)
-    elif type(file_bytes_files_or_url) == Path and os.path.isfile(
+    elif isinstance(file_bytes_files_or_url, Path) and os.path.isfile(
         file_bytes_files_or_url
     ):
         return extract_from_file(file_bytes_files_or_url, mime_type)
     elif isinstance(file_bytes_files_or_url, list):
         return extract_from_files(file_bytes_files_or_url, mime_type)
-    elif os.path.isdir(file_bytes_files_or_url):
+    elif isinstance(file_bytes_files_or_url, Path) and os.path.isdir(
+        file_bytes_files_or_url
+    ):
         return extract_from_folder(Path(file_bytes_files_or_url), mime_type)
     elif urlparse(str(file_bytes_files_or_url))[0] != "":
         return extract_from_url(str(file_bytes_files_or_url), mime_type)

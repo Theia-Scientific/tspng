@@ -3,6 +3,7 @@
 import os
 import pytest
 
+from pathlib import Path
 from tspng.implantation import implant, implant_from_file
 from tspng.extraction import extract
 
@@ -13,7 +14,7 @@ def test_implant():
     """
 
     implant("tests/assets/coco_data.json", "tests/assets/empty.png")
-    test_data = extract("tests/assets/empty.ts.png")
+    test_data = extract(Path("tests/assets/empty.ts.png"))
     assert list(test_data.keys()) == [
         "info",
         "licenses",
@@ -36,7 +37,7 @@ def test_implant_from_file():
     """
 
     implant_from_file("tests/assets/coco_data.json", "tests/assets/empty.png")
-    test_data = extract("tests/assets/empty.ts.png")
+    test_data = extract(Path("tests/assets/empty.ts.png"))
     assert list(test_data.keys()) == [
         "info",
         "licenses",

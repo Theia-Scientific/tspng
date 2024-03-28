@@ -12,6 +12,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = ["Pillow"]
 
 [project.urls]
 "Homepage" = "https://github.com/Theia-Scientific/tspng"
@@ -21,5 +22,9 @@ classifiers = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[project.scripts]
+tspng = "tspng.cli:app"
+
 [project.optional-dependencies]
 dev = ["build","twine"]
+cli = ["typer"]

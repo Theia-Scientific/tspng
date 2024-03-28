@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import typer
 
 from pathlib import Path
-from tspng import __app_name__, __version__
-from typing import Optional
+from tspng import __app_name__, __version__, extraction as E
+from typing import List, Optional
 
 PREFIX: str = f"{__app_name__.upper()}"
 
@@ -25,7 +26,16 @@ def version_callback(value: bool):
         raise typer.Exit()
 
 
-@app.callback(invoke_without_command=True)
+@app.command()
+def extract(inputs: List[Path] = typer.Argument(help="TS PNG image files.")):
+    extractions = []
+    for i in inputs:
+        logging.debug(f"i={i}")
+        extractions.append(E.extract(i))
+    print(json.dumps(extractions))
+
+
+@app.callback()
 def main(
     verbose: bool = typer.Option(
         False,

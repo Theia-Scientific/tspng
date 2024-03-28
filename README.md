@@ -159,7 +159,7 @@ and implantation of JSON data into existing PNGs.
 4. Install the dependencies.
 
    ```sh
-   python3 -m pip install .[dev]
+   python3 -m pip install -e .[dev,cli]
    ```
 
 5. Build the package.

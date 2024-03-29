@@ -4,6 +4,7 @@
 
 ### Features and enhancements
 
+- Added initial Command Line Interface (CLI) with extract subcommand ([#78](https://github.com/Theia-Scientific/tspng/pull/78))
 - Changed to using function argument ([#77](https://github.com/Theia-Scientific/tspng/pull/77))
 
 ## 0.0.4 (2024-01-18)

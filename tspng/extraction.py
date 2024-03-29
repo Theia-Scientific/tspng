@@ -171,7 +171,7 @@ def extract_from_folder(path: Union[str, Path], mime_type: str = MIME_TYPE) -> D
             file_list.append(os.path.join(path, file))
     # check if any PNG files in directory
     if file_list == []:
-        raise Exception(f"The {path} does not contain a PNG file.")
+        raise Exception(f"The '{path}' directory does not contain any PNG files.")
     return extract_from_files(file_list, mime_type)
 
 

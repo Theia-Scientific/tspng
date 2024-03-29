@@ -9,6 +9,14 @@ from tspng import MIME_TYPE
 from typing import Union
 
 
+def is_json(data: str) -> bool:
+    try:
+        json.loads(data)
+    except ValueError:
+        return False
+    return True
+
+
 def _implant_data(
     data: str, image: Union[str, Path], mime_type: str = MIME_TYPE, ext: str = ".ts.png"
 ):
@@ -41,10 +49,10 @@ def implant(
         implant_into_file(data, image, mime_type)
     elif isinstance(data, str) and os.path.isfile(data):
         implant_into_file(data, image, mime_type)
-    elif isinstance(data, str) and not os.path.isfile(data):
+    elif isinstance(data, str) and is_json(data):
         _implant_data(data, image, mime_type)
     else:
-        raise TypeError("The data is not a file or string.")
+        raise TypeError("The data is not a JSON file or string.")
 
 
 def implant_into_file(
@@ -73,7 +81,7 @@ def implant_into_file(
     # open file
     data = open(path, "r").read()
     # check if data is JSON string
-    if json.loads(data):
+    if is_json(data):
         # pass JSON string to _implant_data
         _implant_data(data, image, mime_type)
     else:

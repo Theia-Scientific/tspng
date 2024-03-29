@@ -1,9 +1,8 @@
-# import statements
 import io
+import logging
 import json
 import os
 import urllib.request
-import warnings
 
 from pathlib import Path
 from PIL import Image
@@ -15,6 +14,8 @@ from urllib.parse import urlparse
 def _open_image(
     file_or_bytes: Union[Path, str, io.BytesIO], mime_type: str = MIME_TYPE
 ) -> Dict:
+    logging.debug(f"file_or_bytes={file_or_bytes}")
+    logging.debug(f"mime_type={mime_type}")
     # open
     im = Image.open(file_or_bytes)
     if im.format != "PNG":
@@ -25,7 +26,7 @@ def _open_image(
         d = json.loads(meta[mime_type])
     else:
         # warn if file has no embedded data
-        warnings.warn("There is no embedded TS metadata.")
+        logging.warning("There is no embedded TS metadata.")
         d = {}
     return d
 

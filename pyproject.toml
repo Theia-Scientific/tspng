@@ -26,5 +26,5 @@ build-backend = "hatchling.build"
 tspng = "tspng.cli:app"
 
 [project.optional-dependencies]
-dev = ["build","twine"]
+dev = ["build","pytest", "twine"]
 cli = ["typer"]

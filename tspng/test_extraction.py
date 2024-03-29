@@ -93,7 +93,7 @@ def test_extract_from_bytes():
 
 def test_extract_from_bytes_fails():
     with pytest.raises(TypeError):
-        extract_from_bytes(Path("tests/assets/example_file_1.ts.png"))
+        extract_from_bytes("tests/assets/example_file_1.ts.png")
 
 
 def test_extract_from_file():

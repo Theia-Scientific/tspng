@@ -25,7 +25,7 @@ def _open_image(
         d = json.loads(meta[mime_type])
     else:
         # warn if file has no embedded data
-        warnings.warn("There is no embedded TS metadata.")
+        warnings.warn(f"There is no embedded TS metadata.")
         d = {}
     return d
 
@@ -159,7 +159,7 @@ def extract_from_folder(path: Union[str, Path], mime_type: str = MIME_TYPE) -> D
     """
     # check if directory
     if not os.path.isdir(path):
-        raise Exception(f"The {path} is not to a directory.")
+        raise Exception(f"The '{path}' path is not a directory.")
     # return all files as a list
     file_list = []
     for file in os.listdir(path):

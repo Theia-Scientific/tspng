@@ -26,5 +26,5 @@ build-backend = "hatchling.build"
 tspng = "tspng.cli:app"
 
 [project.optional-dependencies]
-dev = ["build","pytest", "twine"]
+dev = ["build", "flake8", "pytest", "twine"]
 cli = ["typer"]

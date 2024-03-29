@@ -1,5 +1,11 @@
 # Change log
 
+## 1.0.0 (IN PROGRESS)
+
+### Features and enhancements
+
+- Changed to using function argument ([#77](https://github.com/Theia-Scientific/tspng/pull/77))
+
 ## 0.0.4 (2024-01-18)
 
 ### Features and enhancements

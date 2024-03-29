@@ -18,14 +18,14 @@ def _open_image(
     # open
     im = Image.open(file_or_bytes)
     if im.format != "PNG":
-        raise Exception("Image is not a PNG.")
+        raise Exception("The image is not a PNG.")
     meta = im.text
     # load
     if mime_type in meta.keys():
         d = json.loads(meta[mime_type])
     else:
         # warn if file has no embedded data
-        warnings.warn(f"{file_or_bytes} has no embedded TS metadata.")
+        warnings.warn("There is no embedded TS metadata.")
         d = {}
     return d
 

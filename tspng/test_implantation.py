@@ -56,4 +56,4 @@ def test_implant_from_file_fails_with_folder():
 
 def test_implant_from_file_fails_existence():
     with pytest.raises(Exception):
-        implant_from_file("tests/assets/no_such_file.json", "tests/assets/empty.png")
+        implant_into_file("tests/assets/no_such_file.json", "tests/assets/empty.png")

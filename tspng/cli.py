@@ -5,7 +5,7 @@ import logging
 import typer
 
 from pathlib import Path
-from tspng import __app_name__, __version__, extraction as E
+from tspng import __app_name__, __version__, extraction as E, implantation as I
 from typing import List, Optional
 
 PREFIX: str = f"{__app_name__.upper()}"
@@ -33,6 +33,14 @@ def extract(inputs: List[Path] = typer.Argument(help="TS PNG image files.")):
         logging.debug(f"i={i}")
         extractions.append(E.extract(i))
     print(json.dumps(extractions))
+
+
+@app.command()
+def implant(
+    json_file: Path = typer.Argument(help="A JSON file."),
+    png_file: Path = typer.Argument(help="A PNG image file."),
+):
+    I.implant(json_file, png_file)
 
 
 @app.callback()

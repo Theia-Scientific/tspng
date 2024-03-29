@@ -1,7 +1,9 @@
 import os
 
+from importlib import metadata
+
 __app_name__ = "tspng"
-__version__ = "1.0.0"
+__version__ = metadata.version(__package__ or __name__)
 
 DEFAULT_MIME_TYPE = "application/vnd.theiascope.io+json"
 

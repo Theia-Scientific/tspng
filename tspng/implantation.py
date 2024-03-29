@@ -2,61 +2,70 @@
 import os
 import json
 
+from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from tspng import MIME_TYPE
-from typing import Dict
+from typing import Union
 
 
-def _implant_data(data: str, image: str, mime_type: str = MIME_TYPE):
+def is_json(data: str) -> bool:
+    try:
+        json.loads(data)
+    except ValueError:
+        return False
+    return True
+
+
+def _implant_data(
+    data: str, image: Union[str, Path], mime_type: str = MIME_TYPE, ext: str = ".ts.png"
+):
     # open image
     target_im = Image.open(image)
     # implant data
     metadata = PngInfo()
-    metadata.add_text(mime_type,data)
+    metadata.add_text(mime_type, data)
     # save file with implanted data
     base, _ = os.path.splitext(image)
-    mod_file = target_im.save(base+'.ts.png', format="PNG", pnginfo=metadata)
-    return mod_file
+    target_im.save(base + ext, format="PNG", pnginfo=metadata)
 
 
-def implant(data: str, image: str, mime_type: str = MIME_TYPE):
+def implant(
+    data: Union[str, Path], image: Union[str, Path], mime_type: str = MIME_TYPE
+):
     """
-    Returns the metadata from a TSPNG file as a dictionary.
+    Adds data to a PNG image.
 
         Parameters:
-                data (str): Path to a file
-                image (str): Path to a png file as a string
+                data (str, Path): Path to a file or text
+                image (str, path): Path to a PNG file
                 mime_type (str): Optional; Media type of file,
                     default is 'application/vnd.theiascope.io+json'
-
-        Returns:
-                (dict): Dictionary containing file metadata
 
         Raises:
-                TypeError: If not a BytesIO object, file, list of files, or folder
+                TypeError: If data is not a path to a file or a string.
     """
-    # call appropriate function
-    if type(data) == str and os.path.isfile(data):
-        return implant_from_file(data, image, mime_type)
+    if isinstance(data, Path) and os.path.isfile(data):
+        implant_into_file(data, image, mime_type)
+    elif isinstance(data, str) and os.path.isfile(data):
+        implant_into_file(data, image, mime_type)
+    elif isinstance(data, str) and is_json(data):
+        _implant_data(data, image, mime_type)
     else:
-        raise TypeError(
-            f"{data} is not a file."
-        )
+        raise TypeError("The data is not a JSON file or string.")
 
 
-def implant_from_file(path: str, image: str, mime_type: str=MIME_TYPE):
+def implant_into_file(
+    path: Union[str, Path], image: Union[str, Path], mime_type: str = MIME_TYPE
+):
     """
-    Returns the metadata from a TSPNG file as a dictionary.
+    Adds data to a PNG image file.
 
         Parameters:
-                path (str): Path to a file as a string
-                image (str): Path to a png file as a string
+                path (str): Path to a text or JSON file
+                image (str): Path to a PNG file
                 mime_type (str): Optional; Media type of file,
                     default is 'application/vnd.theiascope.io+json'
-
-        Returns:
-                (dict): Dictionary containing file metadata
 
         Raises:
                 Exception: If path does not exist
@@ -65,17 +74,15 @@ def implant_from_file(path: str, image: str, mime_type: str=MIME_TYPE):
     """
     # checks if path exists
     if not os.path.exists(path):
-        raise Exception(f"{path} does not exist.")
+        raise Exception(f"The '{path}' path does not exist.")
     # check if file exists
     if not os.path.isfile(path):
-        raise Exception(f"The {path} is not a file.")
-    #open file
+        raise Exception(f"The '{path}' path is not a file.")
+    # open file
     data = open(path, "r").read()
-    #check if data is JSON string
-    if json.loads(data):
-        #pass JSON string to _implant_data
-        return _implant_data(data, image, mime_type)
+    # check if data is JSON string
+    if is_json(data):
+        # pass JSON string to _implant_data
+        _implant_data(data, image, mime_type)
     else:
-        raise TypeError(
-            f"{data} is not a JSON string."
-        )
+        raise TypeError("The data is not a JSON string.")

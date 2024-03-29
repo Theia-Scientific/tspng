@@ -6,12 +6,13 @@ authors = [
 ]
 description = "A Python package for manipulating PNG files with embedded JSON related to Machine Learning."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = ["Pillow"]
 
 [project.urls]
 "Homepage" = "https://github.com/Theia-Scientific/tspng"
@@ -21,5 +22,9 @@ classifiers = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[project.scripts]
+tspng = "tspng.cli:app"
+
 [project.optional-dependencies]
-dev = ["build","twine"]
+dev = ["build", "flake8", "pytest", "twine"]
+cli = ["typer"]

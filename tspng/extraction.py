@@ -25,7 +25,7 @@ def _open_image(
         d = json.loads(meta[mime_type])
     else:
         # warn if file has no embedded data
-        warnings.warn(f"There is no embedded TS metadata.")
+        warnings.warn("There is no embedded TS metadata.")
         d = {}
     return d
 

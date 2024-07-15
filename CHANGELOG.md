@@ -1,5 +1,17 @@
 # Change log
 
+## 1.1.0 (IN PROGRESS)
+
+### Features and enhancements
+
+- Changed package version ([#81](https://github.com/Theia-Scientific/tspng/pull/81))
+- Removed Python v3.8 support ([#86](https://github.com/Theia-Scientific/tspng/pull/86))
+- Removed `requirements.txt` file ([#85](https://github.com/Theia-Scientific/tspng/pull/85))
+
+### Bug fixes
+
+- Fixed automated publishing workflow ([#80](https://github.com/Theia-Scientific/tspng/pull/80))
+
 ## 1.0.0 (2024-03-29)
 
 ### Features and enhancements

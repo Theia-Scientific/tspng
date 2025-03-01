@@ -40,10 +40,10 @@ and implantation of JSON data into existing PNGs.
 
    from tspng.extraction import extract_from_file
 
-   print(json.dumps(extract_from_file(PATH_TO_FILE), indent=2))
+   print(json.dumps(extract_from_file("PATH_TO_FILE"), indent=2))
    ```
 
-   where `PATH_TO_FILE` is replaced with the path to a `.ts.png` file on disk.
+   where `PATH_TO_FILE` is replaced, in quotes, with the path to a `.ts.png` file on disk.
 
 5. Run the `png_dump.py` script.
 

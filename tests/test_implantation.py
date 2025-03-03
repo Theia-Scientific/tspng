@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import os
 import pytest
 
 from pathlib import Path
@@ -8,13 +7,14 @@ from tspng.implantation import implant, implant_into_file
 from tspng.extraction import extract
 
 
-def test_implant():
+def test_implant(coco_json_path, empty_png_path):
     """
     Tests the dictionary keys from an example TSPNG file path.
     """
 
-    implant("tests/assets/coco_data.json", "tests/assets/empty.png")
-    test_data = extract(Path("tests/assets/empty.ts.png"))
+    implant(coco_json_path, empty_png_path)
+    ts_png = Path(empty_png_path).with_suffix(".ts.png")
+    test_data = extract(ts_png)
     assert list(test_data.keys()) == [
         "info",
         "licenses",
@@ -23,7 +23,6 @@ def test_implant():
         "models",
         "categories",
     ]
-    os.remove("tests/assets/empty.ts.png")
 
 
 def test_implant_fails():
@@ -31,13 +30,14 @@ def test_implant_fails():
         implant("Test for failure", "tests/assets/empty.png")
 
 
-def test_implant_into_file():
+def test_implant_into_file(coco_json_path, empty_png_path):
     """
     Tests the dictionary keys from an example TSPNG file path.
     """
 
-    implant_into_file("tests/assets/coco_data.json", "tests/assets/empty.png")
-    test_data = extract(Path("tests/assets/empty.ts.png"))
+    implant_into_file(coco_json_path, empty_png_path)
+    ts_png = Path(empty_png_path).with_suffix(".ts.png")
+    test_data = extract(ts_png)
     assert list(test_data.keys()) == [
         "info",
         "licenses",
@@ -46,7 +46,6 @@ def test_implant_into_file():
         "models",
         "categories",
     ]
-    os.remove("tests/assets/empty.ts.png")
 
 
 def test_implant_from_file_fails_with_folder():

@@ -28,3 +28,6 @@ tspng = "tspng.cli:app"
 [project.optional-dependencies]
 dev = ["build", "flake8", "pytest", "pytest-cov", "twine"]
 cli = ["typer"]
+
+[tool.coverage.report]
+omit = [ "__main__.py" ]

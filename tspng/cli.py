@@ -64,5 +64,5 @@ def main(
     logging.debug(f"version={version}")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     app(prog_name=__app_name__)

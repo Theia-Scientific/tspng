@@ -6,9 +6,21 @@ import urllib.request
 
 from pathlib import Path
 from PIL import Image
-from tspng import MIME_TYPE
+from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
 from typing import Dict, List, Union
 from urllib.parse import urlparse
+
+class NotPngFormat(Exception):
+    def __init__(self, im: Image.Image):
+        self.image = im
+
+class PathIsNotADir(Exception):
+    def __init__(self, path: Union[Path, str]):
+        self.path = path
+
+class PathDoesNotContainPngs(Exception):
+     def __init__(self, path: Union[Path, str]):
+        self.path = path
 
 
 def _open_image(
@@ -19,13 +31,12 @@ def _open_image(
     # open
     im = Image.open(file_or_bytes)
     if im.format != "PNG":
-        raise Exception("The image is not a PNG.")
-    meta = im.text
+        raise NotPngFormat(im)
+    meta = im.text  # pyright: ignore
     # load
     if mime_type in meta.keys():
         d = json.loads(meta[mime_type])
     else:
-        # warn if file has no embedded data
         logging.warning("There is no embedded TS metadata.")
         d = {}
     return d
@@ -90,9 +101,6 @@ def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> Dict:
                 TypeError: If buffer is not BytesIO
                 Exception: If image is not a PNG
     """
-    # check if file is BytesIO
-    if not isinstance(buffer, io.BytesIO):
-        raise TypeError(f"{buffer} is not a BytesIO object.")
     return _open_image(buffer, mime_type)
 
 
@@ -113,12 +121,10 @@ def extract_from_file(path: Union[Path, str], mime_type: str = MIME_TYPE) -> Dic
                 Exception: If path is not a file
                 Exception: If image is not a PNG
     """
-    # checks if path exists
     if not os.path.exists(path):
-        raise Exception(f"{path} does not exist.")
-    # check if file exists
+        raise PathDoesNotExist(path)
     if not os.path.isfile(path):
-        raise Exception(f"The {path} is not a file.")
+        raise PathIsNotAFile(path)
     return _open_image(path, mime_type)
 
 
@@ -160,7 +166,7 @@ def extract_from_folder(path: Union[str, Path], mime_type: str = MIME_TYPE) -> D
     """
     # check if directory
     if not os.path.isdir(path):
-        raise Exception(f"The '{path}' path is not a directory.")
+        raise PathIsNotADir(path)
     # return all files as a list
     file_list = []
     for file in os.listdir(path):
@@ -171,7 +177,7 @@ def extract_from_folder(path: Union[str, Path], mime_type: str = MIME_TYPE) -> D
             file_list.append(os.path.join(path, file))
     # check if any PNG files in directory
     if file_list == []:
-        raise Exception(f"The '{path}' directory does not contain any PNG files.")
+        raise PathDoesNotContainPngs(path)
     return extract_from_files(file_list, mime_type)
 
 
@@ -191,10 +197,5 @@ def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> Dict:
                 Exception: If cannot get image from url
     """
     response = urllib.request.urlopen(url)
-    if response.getcode() == 200:
-        img_data = response.read()
-    else:
-        raise Exception(
-            f"Failed to fetch image from {url}. Status code: {response.getcode()}"
-        )
+    img_data = response.read()
     return _open_image(io.BytesIO(img_data), mime_type)

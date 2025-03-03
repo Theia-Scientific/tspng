@@ -92,9 +92,6 @@ def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> Dict:
                 TypeError: If buffer is not BytesIO
                 Exception: If image is not a PNG
     """
-    # check if file is BytesIO
-    if not isinstance(buffer, io.BytesIO):
-        raise TypeError(f"{buffer} is not a BytesIO object.")
     return _open_image(buffer, mime_type)
 
 

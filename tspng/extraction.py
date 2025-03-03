@@ -10,6 +10,9 @@ from tspng import MIME_TYPE
 from typing import Dict, List, Union
 from urllib.parse import urlparse
 
+class NotPngFormat(Exception):
+    def __init__(self, im: Image.Image):
+        self.image = im
 
 def _open_image(
     file_or_bytes: Union[Path, str, io.BytesIO], mime_type: str = MIME_TYPE
@@ -19,7 +22,7 @@ def _open_image(
     # open
     im = Image.open(file_or_bytes)
     if im.format != "PNG":
-        raise Exception("The image is not a PNG.")
+        raise NotPngFormat(im)
     meta = im.text
     # load
     if mime_type in meta.keys():

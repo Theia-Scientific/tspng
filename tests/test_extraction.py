@@ -13,6 +13,7 @@ from tspng.extraction import (
     extract_from_files,
     extract_from_folder,
     extract_from_url,
+    NotPngFormat
 )
 from urllib.error import HTTPError
 
@@ -200,7 +201,7 @@ def test_extract_from_url_fails():
 
 
 def test_open_image_not_png_fails(empty_jpeg_path):
-    with pytest.raises(Exception):
+    with pytest.raises(NotPngFormat):
         _open_image(empty_jpeg_path)
 
 

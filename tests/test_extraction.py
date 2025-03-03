@@ -5,6 +5,7 @@ import pytest
 from io import BytesIO
 from pathlib import Path
 from PIL import Image
+from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.extraction import (
     _open_image,
     extract,
@@ -15,9 +16,7 @@ from tspng.extraction import (
     extract_from_url,
     NotPngFormat,
     PathDoesNotContainPngs,
-    PathDoesNotExist,
     PathIsNotADir,
-    PathIsNotAFile
 )
 from urllib.error import HTTPError
 

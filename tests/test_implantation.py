@@ -4,6 +4,7 @@ import json
 import pytest
 
 from pathlib import Path
+from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.implantation import implant, implant_into_file
 from tspng.extraction import extract
 
@@ -79,12 +80,12 @@ def test_implant_into_file(coco_json_path, empty_png_path):
 
 
 def test_implant_from_file_fails_with_folder(assets_directory_path, empty_png_path):
-    with pytest.raises(Exception):
+    with pytest.raises(PathIsNotAFile):
         implant_into_file(assets_directory_path, empty_png_path)
 
 
 def test_implant_from_file_fails_existence(empty_png_path):
-    with pytest.raises(Exception):
+    with pytest.raises(PathDoesNotExist):
         implant_into_file("tests/assets/no_such_file.json", empty_png_path)
 
 def test_implant_into_file_fails(txt_file_path, empty_png_path):

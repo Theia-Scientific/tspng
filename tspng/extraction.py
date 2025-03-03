@@ -6,21 +6,13 @@ import urllib.request
 
 from pathlib import Path
 from PIL import Image
-from tspng import MIME_TYPE
+from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
 from typing import Dict, List, Union
 from urllib.parse import urlparse
 
 class NotPngFormat(Exception):
     def __init__(self, im: Image.Image):
         self.image = im
-
-class PathDoesNotExist(Exception):
-    def __init__(self, path: Union[Path, str]):
-        self.path = path
-
-class PathIsNotAFile(Exception):
-    def __init__(self, path: Union[Path, str]):
-        self.path = path
 
 class PathIsNotADir(Exception):
     def __init__(self, path: Union[Path, str]):

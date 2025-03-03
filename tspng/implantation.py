@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
-from tspng import MIME_TYPE
+from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
 from typing import Union
 
 
@@ -74,10 +74,10 @@ def implant_into_file(
     """
     # checks if path exists
     if not os.path.exists(path):
-        raise Exception(f"The '{path}' path does not exist.")
+        raise PathDoesNotExist(path)
     # check if file exists
     if not os.path.isfile(path):
-        raise Exception(f"The '{path}' path is not a file.")
+        raise PathIsNotAFile(path)
     # open file
     data = open(path, "r").read()
     # check if data is JSON string

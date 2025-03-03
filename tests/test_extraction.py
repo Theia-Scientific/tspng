@@ -14,7 +14,9 @@ from tspng.extraction import (
     extract_from_folder,
     extract_from_url,
     NotPngFormat,
+    PathDoesNotContainPngs,
     PathDoesNotExist,
+    PathIsNotADir,
     PathIsNotAFile
 )
 from urllib.error import HTTPError
@@ -166,13 +168,14 @@ def test_extract_from_folder():
     assert "tests/assets/example_file_2.ts.png" in sorted(list(test_data.keys()))
 
 
-def test_extract_from_folder_fails():
-    # test if directory
-    with pytest.raises(Exception):
-        extract_from_folder(Path("tests/assets/example_file_1.ts.png"))
-    # test if PNG files in directory
-    with pytest.raises(Exception):
-        extract_from_folder(Path("tests"))
+def test_extract_from_folder_fails(example_file_1_path):
+    with pytest.raises(PathIsNotADir):
+        extract_from_folder(example_file_1_path)
+
+
+def test_extract_from_folder_fails_with_empty_files(tmp_path):
+    with pytest.raises(PathDoesNotContainPngs):
+        extract_from_folder(tmp_path)
 
 
 def test_extract_from_url():

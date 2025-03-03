@@ -22,6 +22,15 @@ class PathIsNotAFile(Exception):
     def __init__(self, path: Union[Path, str]):
         self.path = path
 
+class PathIsNotADir(Exception):
+    def __init__(self, path: Union[Path, str]):
+        self.path = path
+
+class PathDoesNotContainPngs(Exception):
+     def __init__(self, path: Union[Path, str]):
+        self.path = path
+
+
 def _open_image(
     file_or_bytes: Union[Path, str, io.BytesIO], mime_type: str = MIME_TYPE
 ) -> Dict:
@@ -165,7 +174,7 @@ def extract_from_folder(path: Union[str, Path], mime_type: str = MIME_TYPE) -> D
     """
     # check if directory
     if not os.path.isdir(path):
-        raise Exception(f"The '{path}' path is not a directory.")
+        raise PathIsNotADir(path)
     # return all files as a list
     file_list = []
     for file in os.listdir(path):
@@ -176,7 +185,7 @@ def extract_from_folder(path: Union[str, Path], mime_type: str = MIME_TYPE) -> D
             file_list.append(os.path.join(path, file))
     # check if any PNG files in directory
     if file_list == []:
-        raise Exception(f"The '{path}' directory does not contain any PNG files.")
+        raise PathDoesNotContainPngs(path)
     return extract_from_files(file_list, mime_type)
 
 

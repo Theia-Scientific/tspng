@@ -16,10 +16,6 @@ def txt_file_path(tmp_path) -> Path:
 
 
 def test_implant_with_path(coco_json_path, empty_png_path):
-    """
-    Tests the dictionary keys from an example TSPNG file path.
-    """
-
     implant(coco_json_path, empty_png_path)
     ts_png = Path(empty_png_path).with_suffix(".ts.png")
     test_data = extract(ts_png)
@@ -34,10 +30,6 @@ def test_implant_with_path(coco_json_path, empty_png_path):
 
 
 def test_implant_with_str(coco_json_path, empty_png_path):
-    """
-    Tests the dictionary keys from an example TSPNG file path.
-    """
-
     implant(str(coco_json_path), str(empty_png_path))
     ts_png = Path(empty_png_path).with_suffix(".ts.png")
     test_data = extract(ts_png)
@@ -52,10 +44,6 @@ def test_implant_with_str(coco_json_path, empty_png_path):
 
 
 def test_implant_with_data(coco_json_path, empty_png_path):
-    """
-    Tests the dictionary keys from an example TSPNG file path.
-    """
-
     with open(coco_json_path) as f:
         json_data = json.load(f)
     implant(json.dumps(json_data), str(empty_png_path))
@@ -77,10 +65,6 @@ def test_implant_fails(empty_png_path):
 
 
 def test_implant_into_file(coco_json_path, empty_png_path):
-    """
-    Tests the dictionary keys from an example TSPNG file path.
-    """
-
     implant_into_file(coco_json_path, empty_png_path)
     ts_png = Path(empty_png_path).with_suffix(".ts.png")
     test_data = extract(ts_png)

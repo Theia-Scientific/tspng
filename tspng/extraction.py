@@ -190,10 +190,5 @@ def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> Dict:
                 Exception: If cannot get image from url
     """
     response = urllib.request.urlopen(url)
-    if response.getcode() == 200:
-        img_data = response.read()
-    else:
-        raise Exception(
-            f"Failed to fetch image from {url}. Status code: {response.getcode()}"
-        )
+    img_data = response.read()
     return _open_image(io.BytesIO(img_data), mime_type)

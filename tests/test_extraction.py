@@ -14,6 +14,7 @@ from tspng.extraction import (
     extract_from_folder,
     extract_from_url,
 )
+from urllib.error import HTTPError
 
 @pytest.fixture
 def empty_jpeg_path(tmp_path) -> Path:
@@ -194,8 +195,8 @@ def test_extract_from_url():
 
 
 def test_extract_from_url_fails():
-    with pytest.raises(Exception):
-        extract_from_url("https://www.scientifictheia.com/example_file_4.ts.png")
+    with pytest.raises(HTTPError):
+        extract_from_url("https://bounding-box-instructions.s3.amazonaws.com/example_file_4.ts.png")
 
 
 def test_open_image_not_png_fails(empty_jpeg_path):

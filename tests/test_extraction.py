@@ -103,9 +103,6 @@ def test_extract_fails():
 
 
 def test_extract_from_bytes(example_file_1_path):
-    """
-    Tests the dictionary keys from an example TS byte stream.
-    """
     with open(example_file_1_path, "rb") as fh:
         buf = BytesIO(fh.read())
         test_data = extract_from_bytes(buf)
@@ -120,9 +117,6 @@ def test_extract_from_bytes(example_file_1_path):
 
 
 def test_extract_from_file(example_file_1_path):
-    """
-    Tests the dictionary keys from an example TSPNG file path.
-    """
     test_data = extract_from_file(example_file_1_path)
     assert list(test_data.keys()) == [
         "info",
@@ -145,9 +139,6 @@ def test_extract_from_file_with_directory_fails(assets_directory_path):
 
 
 def test_extract_from_files(example_file_1_path, example_file_2_path):
-    """
-    Tests the dictionary keys from a list of example TSPNG file paths.
-    """
     files = [
             example_file_1_path,
             example_file_2_path,
@@ -157,9 +148,6 @@ def test_extract_from_files(example_file_1_path, example_file_2_path):
 
 
 def test_extract_from_folder(assets_directory_path, example_file_1_path, example_file_2_path):
-    """
-    Tests the dictionary keys from a list of example TSPNG file paths.
-    """
     test_data = extract_from_folder(assets_directory_path)
     assert str(example_file_1_path) in sorted(list(test_data.keys()))
     assert str(example_file_2_path) in sorted(list(test_data.keys()))
@@ -176,9 +164,6 @@ def test_extract_from_folder_fails_with_empty_files(tmp_path):
 
 
 def test_extract_from_url(example_file_1_url):
-    """
-    Tests the dictionary keys from an example TSPNG url.
-    """
     test_data = extract_from_url(example_file_1_url)
     assert list(test_data.keys()) == [
         "info",

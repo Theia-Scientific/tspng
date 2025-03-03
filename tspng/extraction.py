@@ -23,7 +23,7 @@ def _open_image(
     im = Image.open(file_or_bytes)
     if im.format != "PNG":
         raise NotPngFormat(im)
-    meta = im.text
+    meta = im.text  # pyright: ignore
     # load
     if mime_type in meta.keys():
         d = json.loads(meta[mime_type])

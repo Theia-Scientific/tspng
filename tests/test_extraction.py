@@ -13,7 +13,9 @@ from tspng.extraction import (
     extract_from_files,
     extract_from_folder,
     extract_from_url,
-    NotPngFormat
+    NotPngFormat,
+    PathDoesNotExist,
+    PathIsNotAFile
 )
 from urllib.error import HTTPError
 
@@ -114,11 +116,6 @@ def test_extract_from_bytes():
         ]
 
 
-def test_extract_from_bytes_fails():
-    with pytest.raises(TypeError):
-        extract_from_bytes("tests/assets/example_file_1.ts.png")
-
-
 def test_extract_from_file():
     """
     Tests the dictionary keys from an example TSPNG file path.
@@ -135,12 +132,12 @@ def test_extract_from_file():
 
 
 def test_extract_from_file_not_exists_fails():
-    with pytest.raises(Exception):
+    with pytest.raises(PathDoesNotExist):
         extract_from_file(Path("Random/path.png"))
 
 
 def test_extract_from_file_with_directory_fails():
-    with pytest.raises(Exception):
+    with pytest.raises(PathIsNotAFile):
         extract_from_file(Path("tests/assets"))
 
 

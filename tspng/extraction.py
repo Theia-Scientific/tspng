@@ -14,6 +14,14 @@ class NotPngFormat(Exception):
     def __init__(self, im: Image.Image):
         self.image = im
 
+class PathDoesNotExist(Exception):
+    def __init__(self, path: Union[Path, str]):
+        self.path = path
+
+class PathIsNotAFile(Exception):
+    def __init__(self, path: Union[Path, str]):
+        self.path = path
+
 def _open_image(
     file_or_bytes: Union[Path, str, io.BytesIO], mime_type: str = MIME_TYPE
 ) -> Dict:
@@ -112,12 +120,10 @@ def extract_from_file(path: Union[Path, str], mime_type: str = MIME_TYPE) -> Dic
                 Exception: If path is not a file
                 Exception: If image is not a PNG
     """
-    # checks if path exists
     if not os.path.exists(path):
-        raise Exception(f"{path} does not exist.")
-    # check if file exists
+        raise PathDoesNotExist(path)
     if not os.path.isfile(path):
-        raise Exception(f"The {path} is not a file.")
+        raise PathIsNotAFile(path)
     return _open_image(path, mime_type)
 
 

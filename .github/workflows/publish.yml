@@ -1,20 +1,30 @@
-name: Publish to PyPI.org
+name: Publish to Python Package Indices
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "v*.*.*"
+
+  workflow_dispatch:
+
 jobs:
   pypi:
-    name: Upload release to PyPI
+    name: Upload release to the Python Package Index (PyPI)
     runs-on: ubuntu-latest
     environment: release
     permissions:
       id-token: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout source code
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - run: python3 -m pip install --upgrade build && python3 -m build
-      - name: Publish package distributions to PyPI
+
+      - name: Install build tools
+        run: python3 -m pip install --upgrade build
+
+      - name: Build wheel
+        run: python3 -m build
+
+      - name: Publish wheel
         uses: pypa/gh-action-pypi-publish@release/v1

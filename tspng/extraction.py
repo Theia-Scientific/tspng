@@ -12,6 +12,8 @@ from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
 from typing import Any
 from urllib.parse import urlparse
 
+LOGGER: logging.Logger = logging.getLogger(__name__)
+
 
 class NotPngFormat(Exception):
     def __init__(self, im: Image.Image):
@@ -31,14 +33,12 @@ class PathDoesNotContainPngs(Exception):
 def _open_image(
     file_or_bytes: Path | str | io.BytesIO, mime_type: str = MIME_TYPE
 ) -> dict[str, Any]:
-    logging.debug(f"file_or_bytes={file_or_bytes}")
-    logging.debug(f"mime_type={mime_type}")
-    # open
+    LOGGER.debug(f"{file_or_bytes=}")
+    LOGGER.debug(f"{mime_type=}")
     im = Image.open(file_or_bytes)
     if im.format != "PNG":
         raise NotPngFormat(im)
     meta = im.text  # pyright: ignore
-    # load
     if mime_type in meta.keys():
         d = json.loads(meta[mime_type])
     else:

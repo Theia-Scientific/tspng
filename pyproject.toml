@@ -26,6 +26,8 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Image Recognition",
 ]
 dependencies = ["Pillow"]
+license = "MIT"
+license-files = ["LICENSE"]
 
 [project.urls]
 "Homepage" = "https://github.com/Theia-Scientific/tspng"

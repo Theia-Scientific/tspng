@@ -6,7 +6,6 @@ import typer
 
 from pathlib import Path
 from tspng import __app_name__, __version__, extraction as E, implantation as I
-from typing import List, Optional
 
 PREFIX: str = f"{__app_name__.upper()}"
 
@@ -27,7 +26,7 @@ def version_callback(value: bool):
 
 
 @app.command()
-def extract(inputs: List[Path] = typer.Argument(help="TS PNG image files.")):
+def extract(inputs: list[Path] = typer.Argument(help="TS PNG image files.")):
     extractions = []
     for i in inputs:
         logging.debug(f"i={i}")
@@ -52,7 +51,7 @@ def main(
         help="Print debugging statements to STDOUT.",
         envvar=f"{PREFIX}_VERBOSE",
     ),
-    version: Optional[bool] = typer.Option(
+    version: bool | None = typer.Option(
         None,
         "--version",
         help="Prints the version to STDOUT",
@@ -64,5 +63,5 @@ def main(
     logging.debug(f"version={version}")
 
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
     app(prog_name=__app_name__)

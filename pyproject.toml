@@ -37,8 +37,29 @@ license-files = ["LICENSE"]
 tspng = "tspng.cli:app"
 
 [project.optional-dependencies]
-dev = ["build", "flake8", "pytest", "pytest-cov", "twine"]
+dev = [
+  "black",
+  "build",
+  "flake8",
+  "hatch",
+  "isort",
+  "pytest",
+  "pytest-cov",
+  "pytest-mock",
+  "twine"
+]
 cli = ["typer"]
 
 [tool.coverage.report]
+exclude_lines = [ "if __name__ == .__main__.:" ]
 omit = [ "__main__.py" ]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.flake8]
+ignore = ['E203', 'W503']
+max-line-length = 127
+max-complexity = 15

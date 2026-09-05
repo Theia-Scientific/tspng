@@ -10,12 +10,14 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
     strategy:
       fail-fast: false
       matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
         python-version: ["3.11", "3.12", "3.13", "3.14"]
+    timeout-minutes: 10
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout source code

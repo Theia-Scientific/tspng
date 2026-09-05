@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "tspng"
 version = "1.1.0"
@@ -17,10 +21,6 @@ dependencies = ["Pillow"]
 [project.urls]
 "Homepage" = "https://github.com/Theia-Scientific/tspng"
 "Bug Tracker" = "https://github.com/Theia-Scientific/tspng/issues"
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 
 [project.scripts]
 tspng = "tspng.cli:app"

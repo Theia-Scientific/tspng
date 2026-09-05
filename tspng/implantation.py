@@ -7,7 +7,6 @@ from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
-from typing import Union
 
 
 def is_json(data: str) -> bool:
@@ -19,7 +18,7 @@ def is_json(data: str) -> bool:
 
 
 def _implant_data(
-    data: str, image: Union[str, Path], mime_type: str = MIME_TYPE, ext: str = ".ts.png"
+    data: str, image: str | Path, mime_type: str = MIME_TYPE, ext: str = ".ts.png"
 ):
     # open image
     target_im = Image.open(image)
@@ -31,9 +30,7 @@ def _implant_data(
     target_im.save(base + ext, format="PNG", pnginfo=metadata)
 
 
-def implant(
-    data: Union[str, Path], image: Union[str, Path], mime_type: str = MIME_TYPE
-):
+def implant(data: str | Path, image: str | Path, mime_type: str = MIME_TYPE):
     """
     Adds data to a PNG image.
 
@@ -56,9 +53,7 @@ def implant(
         raise TypeError("The data is not a JSON file or string.")
 
 
-def implant_into_file(
-    path: Union[str, Path], image: Union[str, Path], mime_type: str = MIME_TYPE
-):
+def implant_into_file(path: str | Path, image: str | Path, mime_type: str = MIME_TYPE):
     """
     Adds data to a PNG image file.
 

@@ -25,7 +25,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Image Recognition",
 ]
-dependencies = ["Pillow"]
+dependencies = ["Pillow", "pydantic"]
 license = "MIT"
 license-files = ["LICENSE"]
 

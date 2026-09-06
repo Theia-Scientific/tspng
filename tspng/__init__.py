@@ -7,10 +7,6 @@ __version__ = metadata.version(__package__ or __name__)
 
 PNG_FILE_EXT: str = ".png"
 
-DEFAULT_MIME_TYPE = "application/vnd.theiascope.io+json"
-
-MIME_TYPE = os.getenv("TSPNG_MIME_TYPE") or DEFAULT_MIME_TYPE
-
 
 class PathDoesNotExist(Exception):
     def __init__(self, path: str | os.PathLike):

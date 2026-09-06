@@ -8,6 +8,7 @@ import urllib.request
 
 from pathlib import Path
 from PIL import Image
+from PIL.PngImagePlugin import PngImageFile
 from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
 from typing import Any
 from urllib.parse import urlparse
@@ -32,18 +33,21 @@ class PathDoesNotContainPngs(Exception):
 
 def _open_image(
     file_or_bytes: Path | str | io.BytesIO, mime_type: str = MIME_TYPE
-) -> dict[str, Any]:
+) -> dict[str, Any] | None:
     LOGGER.debug(f"{file_or_bytes=}")
     LOGGER.debug(f"{mime_type=}")
     im = Image.open(file_or_bytes)
-    if im.format != "PNG":
+    if not isinstance(im, PngImageFile):
         raise NotPngFormat(im)
-    meta = im.text  # pyright: ignore
+    meta = im.text
+    if meta is None:
+        LOGGER.warning("There is no metadata.")
+        return None
     if mime_type in meta.keys():
         d = json.loads(meta[mime_type])
     else:
-        logging.warning("There is no embedded TS metadata.")
-        d = {}
+        LOGGER.warning("There is no embedded TS metadata.")
+        d = None
     return d
 
 

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 from pydantic import BaseModel, model_validator, TypeAdapter
 from tspng.schema import coco, generic, text, ts
 from typing import Self, TypeAlias
@@ -27,3 +29,14 @@ class Metadata(BaseModel):
             else:
                 self.mime_type = text.MIME_TYPE
         return self
+
+    @property
+    def text(self) -> str:
+        if isinstance(self.data, coco.Json):
+            return self.data.model_dump_json()
+        elif isinstance(self.data, ts.Json):
+            return self.data.model_dump_json()
+        elif isinstance(self.data, dict):
+            return json.dumps(self.data)
+        else:
+            return self.data

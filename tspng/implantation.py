@@ -8,7 +8,7 @@ from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from tspng import PathDoesNotExist, PathIsNotAFile
-from tspng.schema import Metadata
+from tspng.schema import Metadata, text
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
@@ -17,10 +17,15 @@ def _implant_data(
     metadata: Metadata,
     image: str | os.PathLike,
     ext: str = ".ts.png",
+    default_mime_type: str = text.MIME_TYPE,
 ):
     target_im = Image.open(image)
     png_info = PngInfo()
-    png_info.add_text(metadata.mime_type, metadata.text)
+    if metadata.mime_type is None:
+        key = default_mime_type
+    else:
+        key = metadata.mime_type
+    png_info.add_text(key, metadata.text)
     base, _ = os.path.splitext(image)
     target_im.save(base + ext, format="PNG", pnginfo=metadata)
 
@@ -72,6 +77,6 @@ def implant_into_file(path: str | os.PathLike, image: str | os.PathLike):
     text = open(path, "r").read()
     try:
         data = json.loads(text)
-        _implant_data(Metadata.from_json(data, mime_type=None), image)
     except ValueError:
-        _implant_data(Metadata(data=text, mime_type="text/plain"), image)
+        data = text
+    _implant_data(Metadata(data=data), image)

@@ -52,3 +52,21 @@ def implant(
     else:
         target_im = src
     target_im.save(dst, format="PNG", pnginfo=png_info)
+
+
+def implant_into_file(
+    data: Metadata | str | os.PathLike,
+    src: str | os.PathLike | io.BytesIO | Image.Image,
+    dst: str | os.PathLike,
+    default_mime_type: str = text.MIME_TYPE,
+):
+    implant(data, src, dst, default_mime_type=default_mime_type)
+
+
+def implant_into_bytes(
+    data: Metadata | str | os.PathLike,
+    src: str | os.PathLike | io.BytesIO | Image.Image,
+    dst: io.BytesIO,
+    default_mime_type: str = text.MIME_TYPE,
+):
+    implant(data, src, dst, default_mime_type=default_mime_type)

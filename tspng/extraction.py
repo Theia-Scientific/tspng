@@ -105,9 +105,9 @@ def extract(
     elif urlparse(str(file_bytes_files_or_url))[0] != "":
         return extract_from_url(str(file_bytes_files_or_url), mime_type)
     else:
-        raise TypeError(
-            f"{file_bytes_files_or_url} is not a BytesIO object, file, list of files, or folder."
-        )
+        msg = f"{file_bytes_files_or_url} is not a BytesIO object, file, list of files, or folder."
+        LOGGER.warning(msg)
+        raise TypeError(msg)
 
 
 def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> Metadata:

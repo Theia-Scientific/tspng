@@ -8,6 +8,8 @@ from pathlib import Path
 from tspng import __app_name__, __version__, extraction as E, implantation as I
 from tspng.schema.ts import v1
 
+LOGGER: logging.Logger = logging.getLogger(__name__)
+
 PREFIX: str = f"{__app_name__.upper()}"
 
 app = typer.Typer()
@@ -30,7 +32,7 @@ def version_callback(value: bool):
 def extract(inputs: list[Path] = typer.Argument(help="PNG image files.")):
     extractions = []
     for i in inputs:
-        logging.debug(f"i={i}")
+        LOGGER.debug(f"i={i}")
         extractions.append(E.extract(i))
     print(json.dumps(extractions))
 

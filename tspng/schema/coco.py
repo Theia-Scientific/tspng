@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 from pydantic import BaseModel
+from tspng import PNG_FILE_EXT
 
-MIME_TYPE = "application/coco+json"
+FILE_EXT: str = f".coco{PNG_FILE_EXT}"
+MIME_TYPE: str = "application/coco+json"
 
 
 class Annotation(BaseModel):

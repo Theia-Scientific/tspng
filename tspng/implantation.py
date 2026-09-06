@@ -16,18 +16,21 @@ LOGGER: logging.Logger = logging.getLogger(__name__)
 def _implant_data(
     metadata: Metadata,
     image: str | os.PathLike,
-    ext: str = ".ts.png",
     default_mime_type: str = text.MIME_TYPE,
 ):
+    LOGGER.debug(f"{metadata=}")
+    LOGGER.debug(f"{image=}")
+    LOGGER.debug(f"{default_mime_type=}")
     target_im = Image.open(image)
     png_info = PngInfo()
     if metadata.mime_type is None:
         key = default_mime_type
     else:
         key = metadata.mime_type
+    LOGGER.debug(f"{key=}")
     png_info.add_text(key, metadata.text)
     base, _ = os.path.splitext(image)
-    target_im.save(base + ext, format="PNG", pnginfo=metadata)
+    target_im.save(base + metadata.ext, format="PNG", pnginfo=metadata)
 
 
 def implant(

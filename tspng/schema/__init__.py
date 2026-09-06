@@ -40,3 +40,14 @@ class Metadata(BaseModel):
             return json.dumps(self.data)
         else:
             return self.data
+
+    @property
+    def ext(self) -> str:
+        if isinstance(self.data, coco.Json):
+            return coco.FILE_EXT
+        elif isinstance(self.data, ts.Json):
+            return ts.FILE_EXT
+        elif isinstance(self.data, dict):
+            return generic.FILE_EXT
+        else:
+            return text.FILE_EXT

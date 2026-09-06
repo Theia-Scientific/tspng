@@ -2,10 +2,12 @@
 
 from pathlib import Path
 from pydantic import BaseModel
+from tspng import PNG_FILE_EXT
 from tspng.schema import coco
 from typing import Any
 
-MIME_TYPE = "application/vnd.theiascope.io+json"
+FILE_EXT: str = f".ts{PNG_FILE_EXT}"
+MIME_TYPE: str = "application/vnd.theiascope.io+json"
 
 
 class ScaleBar(BaseModel):

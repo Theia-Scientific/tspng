@@ -30,6 +30,7 @@ def _implant_data(
     LOGGER.debug(f"{key=}")
     png_info.add_text(key, metadata.text)
     base, _ = os.path.splitext(image)
+    LOGGER.debug(f"{base=}")
     target_im.save(base + metadata.ext, format="PNG", pnginfo=metadata)
 
 
@@ -49,6 +50,8 @@ def implant(
     Raises:
         TypeError: If data is not a path to a file or a string.
     """
+    LOGGER.debug(f"{data=}")
+    LOGGER.debug(f"{image=}")
     if isinstance(data, Path) and os.path.isfile(data):
         implant_into_file(data, image)
     elif isinstance(data, str) and os.path.isfile(data):
@@ -71,6 +74,8 @@ def implant_into_file(path: str | os.PathLike, image: str | os.PathLike):
         Exception: If path does not exist
         Exception: If path is not a file
     """
+    LOGGER.debug(f"{path=}")
+    LOGGER.debug(f"{image=}")
     if not os.path.exists(path):
         LOGGER.warning(f"The '{path}' does not exist.")
         raise PathDoesNotExist(path)

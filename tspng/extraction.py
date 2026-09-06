@@ -10,8 +10,7 @@ from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile
 from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
-from tspng.schema import Metadata, ts
-from typing import Any
+from tspng.schema import Json, Metadata
 from urllib.parse import urlparse
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -45,7 +44,7 @@ class PathDoesNotContainPngs(Exception):
 
 def _open_image(
     file_or_bytes: str | os.PathLike | io.BytesIO, mime_type: str = MIME_TYPE
-) -> dict[str, Any]:
+) -> Json:
     LOGGER.debug(f"{file_or_bytes=}")
     LOGGER.debug(f"{mime_type=}")
     im = Image.open(file_or_bytes)
@@ -127,9 +126,7 @@ def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> Metada
         TypeError: If buffer is not BytesIO
         Exception: If image is not a PNG
     """
-    return Metadata(
-        mime_type=mime_type, data=ts.Json.model_validate(_open_image(buffer, mime_type))
-    )
+    return Metadata.from_json(_open_image(buffer, mime_type), mime_type=mime_type)
 
 
 def extract_from_file(path: str | os.PathLike, mime_type: str = MIME_TYPE) -> Metadata:
@@ -155,9 +152,7 @@ def extract_from_file(path: str | os.PathLike, mime_type: str = MIME_TYPE) -> Me
     if not os.path.isfile(path):
         LOGGER.warning(f"The '{path}' path is not a file.")
         raise PathIsNotAFile(path)
-    return Metadata(
-        mime_type=mime_type, data=ts.Json.model_validate(_open_image(path, mime_type))
-    )
+    return Metadata.from_json(_open_image(path, mime_type), mime_type=mime_type)
 
 
 def extract_from_files(
@@ -231,7 +226,6 @@ def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> Metadata:
     """
     response = urllib.request.urlopen(url)
     img_data = response.read()
-    return Metadata(
-        mime_type=mime_type,
-        data=ts.Json.model_validate(_open_image(io.BytesIO(img_data), mime_type)),
+    return Metadata.from_json(
+        _open_image(io.BytesIO(img_data), mime_type), mime_type=mime_type
     )

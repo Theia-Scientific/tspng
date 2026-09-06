@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 import json
+import logging
+import os
 
 from pydantic import BaseModel, model_validator, TypeAdapter
+from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.schema import coco, generic, text
 from tspng.schema.ts import v1
 from typing import Self, TypeAlias
+
+LOGGER: logging.Logger = logging.getLogger(__name__)
 
 Data: TypeAlias = v1.Json | coco.Json | generic.Json | str
 
@@ -52,3 +57,18 @@ class Metadata(BaseModel):
             return generic.FILE_EXT
         else:
             return text.FILE_EXT
+
+    @staticmethod
+    def from_file(path: str | os.PathLike) -> Metadata:
+        if not os.path.exists(path):
+            LOGGER.warning(f"The '{path}' does not exist.")
+            raise PathDoesNotExist(path)
+        if not os.path.isfile(path):
+            LOGGER.warning(f"The '{path}' is not a file.")
+            raise PathIsNotAFile(path)
+        text = open(path, "r").read()
+        try:
+            data = json.loads(text)
+        except ValueError:
+            data = text
+        return Metadata(data=data)

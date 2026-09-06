@@ -18,30 +18,32 @@ def is_json(data: str) -> bool:
 
 
 def _implant_data(
-    data: str, image: str | Path, mime_type: str = MIME_TYPE, ext: str = ".ts.png"
+    data: str,
+    image: str | os.PathLike,
+    mime_type: str = MIME_TYPE,
+    ext: str = ".ts.png",
 ):
-    # open image
     target_im = Image.open(image)
-    # implant data
     metadata = PngInfo()
     metadata.add_text(mime_type, data)
-    # save file with implanted data
     base, _ = os.path.splitext(image)
     target_im.save(base + ext, format="PNG", pnginfo=metadata)
 
 
-def implant(data: str | Path, image: str | Path, mime_type: str = MIME_TYPE):
+def implant(
+    data: str | os.PathLike, image: str | os.PathLike, mime_type: str = MIME_TYPE
+):
     """
     Adds data to a PNG image.
 
-        Parameters:
-                data (str, Path): Path to a file or text
-                image (str, path): Path to a PNG file
-                mime_type (str): Optional; Media type of file,
-                    default is 'application/vnd.theiascope.io+json'
+    Parameters:
+        data (str, Path): Path to a file or text
+        image (str, path): Path to a PNG file
+        mime_type (str): Optional; Media type of file,
+            default is 'application/vnd.theiascope.io+json'
 
-        Raises:
-                TypeError: If data is not a path to a file or a string.
+    Raises:
+        TypeError: If data is not a path to a file or a string.
     """
     if isinstance(data, Path) and os.path.isfile(data):
         implant_into_file(data, image, mime_type)
@@ -53,32 +55,29 @@ def implant(data: str | Path, image: str | Path, mime_type: str = MIME_TYPE):
         raise TypeError("The data is not a JSON file or string.")
 
 
-def implant_into_file(path: str | Path, image: str | Path, mime_type: str = MIME_TYPE):
+def implant_into_file(
+    path: str | os.PathLike, image: str | os.PathLike, mime_type: str = MIME_TYPE
+):
     """
     Adds data to a PNG image file.
 
-        Parameters:
-                path (str): Path to a text or JSON file
-                image (str): Path to a PNG file
-                mime_type (str): Optional; Media type of file,
-                    default is 'application/vnd.theiascope.io+json'
+    Parameters:
+        path (str): Path to a text or JSON file
+        image (str): Path to a PNG file
+        mime_type (str): Optional; Media type of file,
+            default is 'application/vnd.theiascope.io+json'
 
-        Raises:
-                Exception: If path does not exist
-                Exception: If path is not a file
-                Exception: If image is not a PNG
+    Raises:
+        Exception: If path does not exist
+        Exception: If path is not a file
+        Exception: If image is not a PNG
     """
-    # checks if path exists
     if not os.path.exists(path):
         raise PathDoesNotExist(path)
-    # check if file exists
     if not os.path.isfile(path):
         raise PathIsNotAFile(path)
-    # open file
     data = open(path, "r").read()
-    # check if data is JSON string
     if is_json(data):
-        # pass JSON string to _implant_data
         _implant_data(data, image, mime_type)
     else:
         raise TypeError("The data is not a JSON string.")

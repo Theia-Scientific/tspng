@@ -6,6 +6,7 @@ import typer
 
 from pathlib import Path
 from tspng import __app_name__, __version__, extraction as E, implantation as I
+from tspng.schema.ts import v1
 
 PREFIX: str = f"{__app_name__.upper()}"
 
@@ -39,7 +40,7 @@ def implant(
     data_file: Path = typer.Argument(help="A data file."),
     png_file: Path = typer.Argument(help="A PNG image file."),
 ):
-    I.implant(data_file, png_file)
+    I.implant(data_file, png_file, png_file.name + v1.FILE_EXT)
 
 
 @app.callback()

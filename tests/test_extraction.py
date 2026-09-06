@@ -18,41 +18,33 @@ from tspng.extraction import (
     PathDoesNotContainPngs,
     PathIsNotADir,
 )
+from tspng.schema import Metadata, ts
 from urllib.error import HTTPError
+
 
 @pytest.fixture
 def empty_jpeg_path(tmp_path) -> Path:
     empty_jpeg_path = tmp_path.joinpath("empty.jpeg")
-    image = Image.new('RGB', (640, 640))
+    image = Image.new("RGB", (640, 640))
     image.save(empty_jpeg_path, format="JPEG")
     return empty_jpeg_path
+
 
 @pytest.fixture
 def example_file_1_url() -> str:
     return "https://bounding-box-instructions.s3.amazonaws.com/example_file_1.ts.png"
 
+
 def test_extract_with_file_path(example_file_1_path):
-    test_data = extract(example_file_1_path)
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+    result = extract(example_file_1_path)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == ts.MIME_TYPE
+    assert isinstance(result.data, ts.Json)
 
 
 def test_extract_with_file_str(example_file_1_path):
     test_data = extract(str(example_file_1_path))
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+    assert isinstance(test_data, ts.Json)
 
 
 def test_extract_with_files(example_file_1_path, example_file_2_path):
@@ -64,7 +56,9 @@ def test_extract_with_files(example_file_1_path, example_file_2_path):
     assert list(test_data.keys()) == files
 
 
-def test_extract_with_folder(assets_directory_path, example_file_1_path, example_file_2_path):
+def test_extract_with_folder(
+    assets_directory_path, example_file_1_path, example_file_2_path
+):
     test_data = extract(assets_directory_path)
     assert str(example_file_1_path) in sorted(list(test_data.keys()))
     assert str(example_file_2_path) in sorted(list(test_data.keys()))
@@ -139,14 +133,16 @@ def test_extract_from_file_with_directory_fails(assets_directory_path):
 
 def test_extract_from_files(example_file_1_path, example_file_2_path):
     files = [
-            example_file_1_path,
-            example_file_2_path,
-        ]
+        example_file_1_path,
+        example_file_2_path,
+    ]
     test_data = extract_from_files(files)
     assert sorted(list(test_data.keys())) == files
 
 
-def test_extract_from_folder(assets_directory_path, example_file_1_path, example_file_2_path):
+def test_extract_from_folder(
+    assets_directory_path, example_file_1_path, example_file_2_path
+):
     test_data = extract_from_folder(assets_directory_path)
     assert str(example_file_1_path) in sorted(list(test_data.keys()))
     assert str(example_file_2_path) in sorted(list(test_data.keys()))
@@ -176,7 +172,9 @@ def test_extract_from_url(example_file_1_url):
 
 def test_extract_from_url_fails():
     with pytest.raises(HTTPError):
-        extract_from_url("https://bounding-box-instructions.s3.amazonaws.com/example_file_4.ts.png")
+        extract_from_url(
+            "https://bounding-box-instructions.s3.amazonaws.com/example_file_4.ts.png"
+        )
 
 
 def test_open_image_not_png_fails(empty_jpeg_path):

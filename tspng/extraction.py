@@ -9,8 +9,8 @@ import urllib.request
 from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile
-from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
-from tspng.schema import generic, Metadata
+from tspng import PathDoesNotExist, PathIsNotAFile
+from tspng.schema import generic, Metadata, ts
 from urllib.parse import urlparse
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ class PathDoesNotContainPngs(Exception):
 
 
 def _open_image(
-    file_or_bytes: str | os.PathLike | io.BytesIO, mime_type: str = MIME_TYPE
+    file_or_bytes: str | os.PathLike | io.BytesIO, mime_type: str = ts.MIME_TYPE
 ) -> generic.Json:
     LOGGER.debug(f"{file_or_bytes=}")
     LOGGER.debug(f"{mime_type=}")
@@ -63,7 +63,7 @@ def _open_image(
 
 def extract(
     file_bytes_files_or_url: str | os.PathLike | io.BytesIO | list[str | os.PathLike],
-    mime_type: str = MIME_TYPE,
+    mime_type: str = ts.MIME_TYPE,
 ) -> Metadata | dict[str | os.PathLike, Metadata]:
     """
     Returns the metadata from a TS PNG file as either a dictionary-like object
@@ -109,7 +109,7 @@ def extract(
         raise TypeError(msg)
 
 
-def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> Metadata:
+def extract_from_bytes(buffer: io.BytesIO, mime_type: str = ts.MIME_TYPE) -> Metadata:
     """
     Returns the metadata from a TS PNG byte stream as a dictionary-like object.
 
@@ -126,10 +126,12 @@ def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> Metada
         TypeError: If buffer is not BytesIO
         Exception: If image is not a PNG
     """
-    return Metadata.from_json(_open_image(buffer, mime_type), mime_type=mime_type)
+    return Metadata(data=_open_image(buffer, mime_type), mime_type=mime_type)
 
 
-def extract_from_file(path: str | os.PathLike, mime_type: str = MIME_TYPE) -> Metadata:
+def extract_from_file(
+    path: str | os.PathLike, mime_type: str = ts.MIME_TYPE
+) -> Metadata:
     """
     Returns the metadata from a TS PNG file as a dictionary-like object.
 
@@ -152,11 +154,11 @@ def extract_from_file(path: str | os.PathLike, mime_type: str = MIME_TYPE) -> Me
     if not os.path.isfile(path):
         LOGGER.warning(f"The '{path}' path is not a file.")
         raise PathIsNotAFile(path)
-    return Metadata.from_json(_open_image(path, mime_type), mime_type=mime_type)
+    return Metadata(data=_open_image(path, mime_type), mime_type=mime_type)
 
 
 def extract_from_files(
-    paths: list[str | os.PathLike], mime_type: str = MIME_TYPE
+    paths: list[str | os.PathLike], mime_type: str = ts.MIME_TYPE
 ) -> dict[str | os.PathLike, Metadata]:
     """
     Returns a dictionary of dictionary-like objects from a list of TS PNG file
@@ -177,7 +179,7 @@ def extract_from_files(
 
 
 def extract_from_folder(
-    path: str | os.PathLike, mime_type: str = MIME_TYPE
+    path: str | os.PathLike, mime_type: str = ts.MIME_TYPE
 ) -> dict[str | os.PathLike, Metadata]:
     """
     Returns a dictionary of dictionary-like objects containing the metadata from
@@ -209,7 +211,7 @@ def extract_from_folder(
     return extract_from_files(file_list, mime_type)
 
 
-def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> Metadata:
+def extract_from_url(url: str, mime_type: str = ts.MIME_TYPE) -> Metadata:
     """
     Returns the metadata from a TS PNG URL as a TS PNG JSON object.
 
@@ -226,6 +228,6 @@ def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> Metadata:
     """
     response = urllib.request.urlopen(url)
     img_data = response.read()
-    return Metadata.from_json(
-        _open_image(io.BytesIO(img_data), mime_type), mime_type=mime_type
+    return Metadata(
+        data=_open_image(io.BytesIO(img_data), mime_type), mime_type=mime_type
     )

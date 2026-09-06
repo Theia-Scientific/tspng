@@ -26,6 +26,10 @@ def test_metadata_generic_json():
     assert isinstance(result, Metadata)
     assert result.mime_type == generic.MIME_TYPE
     assert isinstance(result.data, dict)
+    result = Metadata(data=data)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == generic.MIME_TYPE
+    assert isinstance(result.data, dict)
 
 
 def test_metadata_coco_json(coco_json_path):
@@ -40,6 +44,10 @@ def test_metadata_coco_json(coco_json_path):
     assert result.mime_type == coco.MIME_TYPE
     assert isinstance(result.data, coco.Json)
     result = Metadata(data=data, mime_type=coco.MIME_TYPE)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == coco.MIME_TYPE
+    assert isinstance(result.data, coco.Json)
+    result = Metadata(data=data)
     assert isinstance(result, Metadata)
     assert result.mime_type == coco.MIME_TYPE
     assert isinstance(result.data, coco.Json)
@@ -59,28 +67,7 @@ def test_metadata_text():
     assert isinstance(result, Metadata)
     assert result.mime_type == text.MIME_TYPE
     assert isinstance(result.data, str)
-
-
-def test_metadata_from_data_generic_json():
-    data = {"greeting": "Hello", "target": "World"}
-    result = Metadata.from_data(data, mime_type=None)
-    assert isinstance(result, Metadata)
-    assert result.mime_type == generic.MIME_TYPE
-    assert isinstance(result.data, dict)
-
-
-def test_metadata_from_data_coco_json(coco_json_path):
-    with open(coco_json_path) as f:
-        data = json.load(f)
-    result = Metadata.from_data(data, mime_type=None)
-    assert isinstance(result, Metadata)
-    assert result.mime_type == coco.MIME_TYPE
-    assert isinstance(result.data, coco.Json)
-
-
-def test_metadata_from_data_text():
-    data = "Hello, World!"
-    result = Metadata.from_data(data, mime_type=None)
+    result = Metadata(data=data)
     assert isinstance(result, Metadata)
     assert result.mime_type == text.MIME_TYPE
     assert isinstance(result.data, str)

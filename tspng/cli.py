@@ -26,7 +26,7 @@ def version_callback(value: bool):
 
 
 @app.command()
-def extract(inputs: list[Path] = typer.Argument(help="TS PNG image files.")):
+def extract(inputs: list[Path] = typer.Argument(help="PNG image files.")):
     extractions = []
     for i in inputs:
         logging.debug(f"i={i}")
@@ -36,10 +36,10 @@ def extract(inputs: list[Path] = typer.Argument(help="TS PNG image files.")):
 
 @app.command()
 def implant(
-    json_file: Path = typer.Argument(help="A JSON file."),
+    data_file: Path = typer.Argument(help="A data file."),
     png_file: Path = typer.Argument(help="A PNG image file."),
 ):
-    I.implant(json_file, png_file)
+    I.implant(data_file, png_file)
 
 
 @app.callback()

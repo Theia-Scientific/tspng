@@ -4,19 +4,11 @@ from __future__ import annotations
 
 import json
 
-from pydantic import BaseModel, Discriminator, TypeAdapter
+from pydantic import BaseModel, TypeAdapter
 from tspng.schema import coco, generic, ts
-from typing import Annotated, Any
 
-
-def get_discriminator_value(v: Any) -> str | None:
-    if isinstance(v, dict):
-        return v.get("fruit", v.get("filling"))
-    return getattr(v, "fruit", getattr(v, "filling", None))
-
-
-KnownJson = Annotated[coco.Json | ts.Json, Discriminator(get_discriminator_value)]
-JsonData = Annotated[KnownJson | generic.Json, Discriminator(get_discriminator_value)]
+KnownJson = coco.Json | ts.Json
+JsonData = KnownJson | generic.Json
 
 
 class Metadata(BaseModel):

@@ -21,12 +21,10 @@ def implant(
     Adds data to a PNG image.
 
     Parameters:
-        data (Metadata, str, Path): Dictionary-like object to implant in image
+        data (Metadata, str, os.PathLike, bytes): Dictionary-like object to
+            implant in an image or the path to a file to load or a bytes.
         src (str, path, io.BytesIO, Image.Image): The source image.
         dst (str, path, io.BytesIO): The destination image.
-
-    Raises:
-        TypeError: If data is not a path to a file or a string.
     """
     LOGGER.debug(f"{data=}")
     LOGGER.debug(f"{src=}")
@@ -64,6 +62,15 @@ def implant_into_file(
     dst: str | os.PathLike,
     default_mime_type: str = text.MIME_TYPE,
 ):
+    """
+    Adds data to a PNG image file.
+
+    Parameters:
+        data (Metadata, str, os.PathLike, bytes): Dictionary-like object to
+            implant in an image or the path to a file to load or a bytes.
+        src (str, path, io.BytesIO, Image.Image): The source image.
+        dst (str, path): The destination image.
+    """
     implant(data, src, dst, default_mime_type=default_mime_type)
 
 
@@ -73,4 +80,13 @@ def implant_into_bytes(
     dst: io.BytesIO,
     default_mime_type: str = text.MIME_TYPE,
 ):
+    """
+    Adds data to a buffer as a PNG image.
+
+    Parameters:
+        data (Metadata, str, os.PathLike, bytes): Dictionary-like object to
+            implant in an image or the path to a file to load or a bytes.
+        src (str, path, io.BytesIO, Image.Image): The source image.
+        dst (io.BytesIO): The buffer.
+    """
     implant(data, src, dst, default_mime_type=default_mime_type)

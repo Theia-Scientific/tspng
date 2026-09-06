@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import Any
-from typing_extensions import TypeAlias
+from typing import Any, TypeAlias
 
 MIME_TYPE: str = "application/json"
 

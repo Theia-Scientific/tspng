@@ -1,5 +1,6 @@
 #!/usr/env/bin python3
 
+import logging
 import os
 import json
 
@@ -7,6 +8,8 @@ from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
+
+LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
 def is_json(data: str) -> bool:
@@ -62,19 +65,21 @@ def implant_into_file(
     Adds data to a PNG image file.
 
     Parameters:
-        path (str): Path to a text or JSON file
-        image (str): Path to a PNG file
+        path (str, Path): Path to a text or JSON file
+        image (str, Path): Path to a PNG file
         mime_type (str): Optional; Media type of file,
             default is 'application/vnd.theiascope.io+json'
 
     Raises:
         Exception: If path does not exist
         Exception: If path is not a file
-        Exception: If image is not a PNG
+        Exception: If text is not JSON
     """
     if not os.path.exists(path):
+        LOGGER.warning(f"The '{path}' does not exist.")
         raise PathDoesNotExist(path)
     if not os.path.isfile(path):
+        LOGGER.warning(f"The '{path}' is not a file.")
         raise PathIsNotAFile(path)
     data = open(path, "r").read()
     if is_json(data):

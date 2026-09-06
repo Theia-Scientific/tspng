@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 from pydantic import BaseModel
 from tspng.schema import coco, ts
 from typing import Any
@@ -26,3 +28,12 @@ class Metadata(BaseModel):
         else:
             data = validator(image)
         return Metadata(data=data, mime_type=mime_type)
+
+    @property
+    def text(self) -> str:
+        if isinstance(self.data, coco.Json):
+            return self.data.model_dump_json()
+        elif isinstance(self.data, ts.Json):
+            return self.data.model_dump_json()
+        else:
+            return json.dumps(self.data)

@@ -59,7 +59,9 @@ def implant(
     elif isinstance(data, Metadata):
         _implant_data(data, image)
     else:
-        raise TypeError("The data is not a JSON file or string.")
+        msg = "The data is not a file, folder, or String."
+        LOGGER.warning(msg)
+        raise TypeError(msg)
 
 
 def implant_into_file(path: str | os.PathLike, image: str | os.PathLike):

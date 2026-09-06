@@ -1,7 +1,6 @@
 import os
 
 from importlib import metadata
-from pathlib import Path
 
 __app_name__ = "tspng"
 __version__ = metadata.version(__package__ or __name__)
@@ -12,10 +11,10 @@ MIME_TYPE = os.getenv("TSPNG_MIME_TYPE") or DEFAULT_MIME_TYPE
 
 
 class PathDoesNotExist(Exception):
-    def __init__(self, path: Path | str):
+    def __init__(self, path: str | os.PathLike):
         self.path = path
 
 
 class PathIsNotAFile(Exception):
-    def __init__(self, path: Path | str):
+    def __init__(self, path: str | os.PathLike):
         self.path = path

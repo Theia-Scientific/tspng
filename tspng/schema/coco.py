@@ -2,6 +2,8 @@
 
 from pydantic import BaseModel
 
+MIME_TYPE = "application/coco+json"
+
 
 class Annotation(BaseModel):
     area: int

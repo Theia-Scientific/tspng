@@ -5,6 +5,8 @@ from pydantic import BaseModel
 from tspng.schema import coco
 from typing import Any
 
+MIME_TYPE = "application/vnd.theiascope.io+json"
+
 
 class ScaleBar(BaseModel):
     l_n: float | None = None

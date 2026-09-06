@@ -78,7 +78,7 @@ def extract(
             default is 'application/vnd.theiascope.io+json'
 
     Returns:
-        (TsJson, dict): A dictionary-like object or a dictionary with the keys
+        (Metadata, dict): A dictionary-like object or a dictionary with the keys
             as the paths to the files and the values as a dictionary-like object
             containing the metadata
 
@@ -120,7 +120,7 @@ def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> Metada
             default is 'application/vnd.theiascope.io+json'
 
     Returns:
-        (TsJson): A dictionary-like object containing the metadata from the TS
+        (Metadata): A dictionary-like object containing the metadata from the TS
             PNG file
 
     Raises:
@@ -142,7 +142,7 @@ def extract_from_file(path: str | os.PathLike, mime_type: str = MIME_TYPE) -> Me
             default is 'application/vnd.theiascope.io+json'
 
     Returns:
-        (TsJson): A dictionary-like object containing the TS PNG file metadata
+        (Metadata): A dictionary-like object containing the TS PNG file metadata
 
     Raises:
         Exception: If path does not exist
@@ -194,7 +194,7 @@ def extract_from_folder(
             default is 'application/vnd.theiascope.io+json'
 
     Returns:
-        (TsJson): A dictionary-like object containing the metadata of each file
+        (Metadata): A dictionary-like object containing the metadata of each file
 
     Raises:
         Exception: If path is not a directory
@@ -224,7 +224,7 @@ def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> Metadata:
             default is 'application/vnd.theiascope.io+json'
 
     Returns:
-        (TsJson): An dictionary-like object containing the file metadata
+        (Metadata): An dictionary-like object containing the file metadata
 
     Raises:
         Exception: If the image cannot be obtained from the URL

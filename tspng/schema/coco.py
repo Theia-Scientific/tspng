@@ -12,7 +12,7 @@ class Annotation(BaseModel):
     id: int
     image_id: int
     iscrowd: int
-    segmentation: list[int]
+    segmentation: list[list[int]] | bytes | None = None
 
 
 class Category(BaseModel):
@@ -22,9 +22,11 @@ class Category(BaseModel):
 
 
 class Image(BaseModel):
+    coco_url: str | None = None
     id: int
-    license: int
     file_name: str
+    flickr_url: str | None = None
+    license: int
     height: int
     width: int
     date_captured: str
@@ -36,7 +38,7 @@ class Info(BaseModel):
     description: str
     url: str
     version: str
-    year: str
+    year: int | str
 
 
 class License(BaseModel):

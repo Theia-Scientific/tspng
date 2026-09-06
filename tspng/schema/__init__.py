@@ -59,7 +59,7 @@ class Metadata(BaseModel):
             return text.FILE_EXT
 
     @staticmethod
-    def from_file(path: str | os.PathLike | bytes) -> Metadata:
+    def load(path: str | os.PathLike | bytes) -> Metadata:
         if isinstance(path, str) or isinstance(path, os.PathLike):
             if not os.path.exists(path):
                 LOGGER.warning(f"The '{path}' does not exist.")

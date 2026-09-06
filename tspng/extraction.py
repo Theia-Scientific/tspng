@@ -150,8 +150,10 @@ def extract_from_file(path: str | os.PathLike, mime_type: str = MIME_TYPE) -> Me
         Exception: If image is not a PNG
     """
     if not os.path.exists(path):
+        LOGGER.warning(f"The '{path}' path does not exist.")
         raise PathDoesNotExist(path)
     if not os.path.isfile(path):
+        LOGGER.warning(f"The '{path}' path is not a file.")
         raise PathIsNotAFile(path)
     return Metadata(
         mime_type=mime_type, data=ts.Json.model_validate(_open_image(path, mime_type))
@@ -199,6 +201,7 @@ def extract_from_folder(
         Exception: If path does not contain a PNG file
     """
     if not os.path.isdir(path):
+        LOGGER.warning(f"The '{path}' is not a directory.")
         raise PathIsNotADir(path)
     file_list = []
     for file in os.listdir(path):
@@ -206,6 +209,7 @@ def extract_from_folder(
         if root_ext[1] == ".png":
             file_list.append(os.path.join(path, file))
     if file_list == []:
+        LOGGER.warning(f"The '{path}' does not contain PNG files.")
         raise PathDoesNotContainPngs(path)
     return extract_from_files(file_list, mime_type)
 
@@ -214,16 +218,16 @@ def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> Metadata:
     """
     Returns the metadata from a TS PNG URL as a TS PNG JSON object.
 
-        Parameters:
-                url (str): URL to a TS PNG file
-                mime_type (str): Optional; Media type of file,
-                    default is 'application/vnd.theiascope.io+json'
+    Parameters:
+        url (str): URL to a TS PNG file
+        mime_type (str): Optional; Media type of file,
+            default is 'application/vnd.theiascope.io+json'
 
-        Returns:
-                (TsJson): An dictionary-like object containing the file metadata
+    Returns:
+        (TsJson): An dictionary-like object containing the file metadata
 
-        Raises:
-                Exception: If the image cannot be obtained from the URL
+    Raises:
+        Exception: If the image cannot be obtained from the URL
     """
     response = urllib.request.urlopen(url)
     img_data = response.read()

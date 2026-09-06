@@ -5,10 +5,11 @@ from __future__ import annotations
 import json
 
 from pydantic import BaseModel, model_validator, TypeAdapter
-from tspng.schema import coco, generic, text, ts
+from tspng.schema import coco, generic, text
+from tspng.schema.ts import v1
 from typing import Self, TypeAlias
 
-Data: TypeAlias = ts.Json | coco.Json | generic.Json | str
+Data: TypeAlias = v1.Json | coco.Json | generic.Json | str
 
 
 class Metadata(BaseModel):
@@ -22,8 +23,8 @@ class Metadata(BaseModel):
             value = type_adapter.validate_python(self.data)
             if isinstance(value, coco.Json):
                 self.mime_type = coco.MIME_TYPE
-            elif isinstance(value, ts.Json):
-                self.mime_type = ts.MIME_TYPE
+            elif isinstance(value, v1.Json):
+                self.mime_type = v1.MIME_TYPE
             elif isinstance(value, dict):
                 self.mime_type = generic.MIME_TYPE
             else:
@@ -34,7 +35,7 @@ class Metadata(BaseModel):
     def text(self) -> str:
         if isinstance(self.data, coco.Json):
             return self.data.model_dump_json()
-        elif isinstance(self.data, ts.Json):
+        elif isinstance(self.data, v1.Json):
             return self.data.model_dump_json()
         elif isinstance(self.data, dict):
             return json.dumps(self.data)
@@ -45,8 +46,8 @@ class Metadata(BaseModel):
     def ext(self) -> str:
         if isinstance(self.data, coco.Json):
             return coco.FILE_EXT
-        elif isinstance(self.data, ts.Json):
-            return ts.FILE_EXT
+        elif isinstance(self.data, v1.Json):
+            return v1.FILE_EXT
         elif isinstance(self.data, dict):
             return generic.FILE_EXT
         else:

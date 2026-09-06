@@ -12,7 +12,7 @@ LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
 def implant(
-    data: Metadata | str | os.PathLike,
+    data: Metadata | str | os.PathLike | bytes,
     src: str | os.PathLike | io.BytesIO | Image.Image,
     dst: str | os.PathLike | io.BytesIO,
     default_mime_type: str = text.MIME_TYPE,
@@ -31,7 +31,11 @@ def implant(
     LOGGER.debug(f"{data=}")
     LOGGER.debug(f"{src=}")
     LOGGER.debug(f"{dst=}")
-    if isinstance(data, str) or isinstance(data, os.PathLike):
+    if (
+        isinstance(data, str)
+        or isinstance(data, os.PathLike)
+        or isinstance(data, bytes)
+    ):
         metadata = Metadata.load(data)
     else:
         metadata = data
@@ -55,7 +59,7 @@ def implant(
 
 
 def implant_into_file(
-    data: Metadata | str | os.PathLike,
+    data: Metadata | str | os.PathLike | bytes,
     src: str | os.PathLike | io.BytesIO | Image.Image,
     dst: str | os.PathLike,
     default_mime_type: str = text.MIME_TYPE,
@@ -64,7 +68,7 @@ def implant_into_file(
 
 
 def implant_into_bytes(
-    data: Metadata | str | os.PathLike,
+    data: Metadata | str | os.PathLike | bytes,
     src: str | os.PathLike | io.BytesIO | Image.Image,
     dst: io.BytesIO,
     default_mime_type: str = text.MIME_TYPE,

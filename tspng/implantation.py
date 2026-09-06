@@ -32,7 +32,7 @@ def implant(
     LOGGER.debug(f"{src=}")
     LOGGER.debug(f"{dst=}")
     if isinstance(data, str) or isinstance(data, os.PathLike):
-        metadata = Metadata.from_file(data)
+        metadata = Metadata.load(data)
     else:
         metadata = data
     png_info = PngInfo()

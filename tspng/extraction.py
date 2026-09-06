@@ -10,7 +10,7 @@ from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile
 from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
-from tspng.schema import Json, Metadata
+from tspng.schema import generic, Metadata
 from urllib.parse import urlparse
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ class PathDoesNotContainPngs(Exception):
 
 def _open_image(
     file_or_bytes: str | os.PathLike | io.BytesIO, mime_type: str = MIME_TYPE
-) -> Json:
+) -> generic.Json:
     LOGGER.debug(f"{file_or_bytes=}")
     LOGGER.debug(f"{mime_type=}")
     im = Image.open(file_or_bytes)

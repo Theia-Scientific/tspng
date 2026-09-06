@@ -10,11 +10,22 @@ from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile
 from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
-from tspng.schema.ts import Version1 as TsJson
+from tspng.schema import Metadata, ts
 from typing import Any
 from urllib.parse import urlparse
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
+
+
+class EmbeddedJsonNotFound(Exception):
+    def __init__(self, im: Image.Image, mime_type: str):
+        self.image = im
+        self.mime_type = mime_type
+
+
+class MetadataNotFound(Exception):
+    def __init__(self, im: Image.Image):
+        self.image = im
 
 
 class NotPngFormat(Exception):
@@ -34,7 +45,7 @@ class PathDoesNotContainPngs(Exception):
 
 def _open_image(
     file_or_bytes: str | os.PathLike | io.BytesIO, mime_type: str = MIME_TYPE
-) -> dict[str, Any] | None:
+) -> dict[str, Any]:
     LOGGER.debug(f"{file_or_bytes=}")
     LOGGER.debug(f"{mime_type=}")
     im = Image.open(file_or_bytes)
@@ -43,19 +54,18 @@ def _open_image(
     meta = im.text
     if meta is None:
         LOGGER.warning("There is no metadata.")
-        return None
+        raise MetadataNotFound(im)
     if mime_type in meta.keys():
-        d = json.loads(meta[mime_type])
+        return json.loads(meta[mime_type])
     else:
-        LOGGER.warning("There is no embedded TS metadata.")
-        d = None
-    return d
+        LOGGER.warning("There is not embedded JSON.")
+        raise EmbeddedJsonNotFound(im, mime_type)
 
 
 def extract(
     file_bytes_files_or_url: str | os.PathLike | io.BytesIO | list[str | os.PathLike],
     mime_type: str = MIME_TYPE,
-) -> TsJson | dict[str | os.PathLike, TsJson]:
+) -> Metadata | dict[str | os.PathLike, Metadata]:
     """
     Returns the metadata from a TS PNG file as either a dictionary-like object
     if a single file is extracted or a dictionary with the keys as the paths to
@@ -100,7 +110,7 @@ def extract(
         )
 
 
-def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> TsJson:
+def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> Metadata:
     """
     Returns the metadata from a TS PNG byte stream as a dictionary-like object.
 
@@ -117,10 +127,12 @@ def extract_from_bytes(buffer: io.BytesIO, mime_type: str = MIME_TYPE) -> TsJson
         TypeError: If buffer is not BytesIO
         Exception: If image is not a PNG
     """
-    return TsJson.model_validate(_open_image(buffer, mime_type))
+    return Metadata(
+        mime_type=mime_type, data=ts.Json.model_validate(_open_image(buffer, mime_type))
+    )
 
 
-def extract_from_file(path: str | os.PathLike, mime_type: str = MIME_TYPE) -> TsJson:
+def extract_from_file(path: str | os.PathLike, mime_type: str = MIME_TYPE) -> Metadata:
     """
     Returns the metadata from a TS PNG file as a dictionary-like object.
 
@@ -141,12 +153,14 @@ def extract_from_file(path: str | os.PathLike, mime_type: str = MIME_TYPE) -> Ts
         raise PathDoesNotExist(path)
     if not os.path.isfile(path):
         raise PathIsNotAFile(path)
-    return TsJson.model_validate(_open_image(path, mime_type))
+    return Metadata(
+        mime_type=mime_type, data=ts.Json.model_validate(_open_image(path, mime_type))
+    )
 
 
 def extract_from_files(
     paths: list[str | os.PathLike], mime_type: str = MIME_TYPE
-) -> dict[str | os.PathLike, TsJson]:
+) -> dict[str | os.PathLike, Metadata]:
     """
     Returns a dictionary of dictionary-like objects from a list of TS PNG file
     paths, where the keys are the paths to the files.
@@ -167,7 +181,7 @@ def extract_from_files(
 
 def extract_from_folder(
     path: str | os.PathLike, mime_type: str = MIME_TYPE
-) -> dict[str | os.PathLike, TsJson]:
+) -> dict[str | os.PathLike, Metadata]:
     """
     Returns a dictionary of dictionary-like objects containing the metadata from
     a folder of TS PNG file paths. The keys are the file paths.
@@ -196,7 +210,7 @@ def extract_from_folder(
     return extract_from_files(file_list, mime_type)
 
 
-def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> TsJson:
+def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> Metadata:
     """
     Returns the metadata from a TS PNG URL as a TS PNG JSON object.
 
@@ -213,4 +227,7 @@ def extract_from_url(url: str, mime_type: str = MIME_TYPE) -> TsJson:
     """
     response = urllib.request.urlopen(url)
     img_data = response.read()
-    return TsJson.model_validate(_open_image(io.BytesIO(img_data), mime_type))
+    return Metadata(
+        mime_type=mime_type,
+        data=ts.Json.model_validate(_open_image(io.BytesIO(img_data), mime_type)),
+    )

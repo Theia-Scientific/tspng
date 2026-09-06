@@ -43,7 +43,7 @@ class License(BaseModel):
     url: str
 
 
-class Coco(BaseModel):
+class Json(BaseModel):
     info: Info
     licenses: list[License]
     categories: list[Category]

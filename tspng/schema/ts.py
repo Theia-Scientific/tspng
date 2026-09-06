@@ -54,7 +54,7 @@ class Model(BaseModel):
     name: str
 
 
-class Version1(BaseModel):
+class Json(BaseModel):
     annotations: list[Annotation]
     categories: list[coco.Category]
     images: list[Image]

@@ -27,8 +27,13 @@ def coco_json_path(assets_directory_path) -> Path:
 
 
 @pytest.fixture
-def ts_v1_json_path(assets_directory_path) -> Path:
-    return assets_directory_path.joinpath("ts_v1_data.json")
+def ts_v1_legacy_json_path(assets_directory_path) -> Path:
+    return assets_directory_path.joinpath("ts_v1_legacy_data.json")
+
+
+@pytest.fixture
+def ts_v1_modern_json_path(assets_directory_path) -> Path:
+    return assets_directory_path.joinpath("ts_v1_modern_data.json")
 
 
 @pytest.fixture

@@ -4,7 +4,6 @@ import json
 import pytest
 
 from pathlib import Path
-from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.schema import coco, generic, Metadata, text
 from tspng.schema.ts import v1
 from typing import Any
@@ -138,10 +137,10 @@ def test_metadata_load_text(txt_file_path: Path):
 
 
 def test_metadata_load_fails_file_not_exists(tmp_path: Path):
-    with pytest.raises(PathDoesNotExist):
+    with pytest.raises(FileNotFoundError):
         _ = Metadata.load(tmp_path.joinpath("random.png"))
 
 
 def test_metadata_load_fails_path_not_file(tmp_path: Path):
-    with pytest.raises(PathIsNotAFile):
+    with pytest.raises(IsADirectoryError):
         _ = Metadata.load(tmp_path)

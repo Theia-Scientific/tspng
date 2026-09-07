@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import logging
-import os
 import sys
 import typer
 
@@ -19,11 +18,14 @@ PREFIX: str = f"{__app_name__.upper()}"
 app = typer.Typer()
 
 
-def map_verbosity(enabled: bool) -> str:
-    if enabled:
-        return "DEBUG"
+def map_verbosity(count: int) -> str:
+    log_level = "WARNING"
+    if count == 1:
+        log_level = "INFO"
     else:
-        return "INFO"
+        log_level = "DEBUG"
+
+    return log_level
 
 
 def version_callback(value: bool):
@@ -34,7 +36,7 @@ def version_callback(value: bool):
 
 @app.command()
 def extract(
-    inputs: Annotated[list[os.PathLike[str]], typer.Argument(help="PNG image files.")],
+    inputs: Annotated[list[Path], typer.Argument(help="PNG image files.")],
 ):
     extractions = E.extract_from_files(inputs)
     if len(extractions) > 1:
@@ -50,22 +52,22 @@ def extract(
 
 @app.command()
 def implant(
-    data_file: Annotated[os.PathLike[str], typer.Argument(help="A data file.")],
-    png_file: Annotated[os.PathLike[str], typer.Argument(help="A PNG image file.")],
+    data_file: Annotated[Path, typer.Argument(help="A data file.")],
+    png_file: Annotated[Path, typer.Argument(help="A PNG image file.")],
 ):
-    I.implant(data_file, png_file, Path(png_file).with_suffix(v1.FILE_EXT))
+    I.implant(data_file, png_file, png_file.with_suffix(v1.FILE_EXT))
 
 
 @app.callback()
 def main(
     verbose: Annotated[
-        bool,
+        int,
         typer.Option(
-            False,
+            0,
             "--verbose",
             "-v",
             help="Print debugging statements to STDOUT.",
-            envvar=f"{PREFIX}_VERBOSE",
+            count=True,
         ),
     ],
     version: Annotated[

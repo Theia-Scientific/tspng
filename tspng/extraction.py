@@ -104,11 +104,7 @@ def extract(
     """
     if isinstance(file_bytes_files_or_url, io.BytesIO):
         return extract_from_bytes(file_bytes_files_or_url, mime_type)
-    elif isinstance(file_bytes_files_or_url, str) and os.path.isfile(
-        file_bytes_files_or_url
-    ):
-        return extract_from_file(file_bytes_files_or_url, mime_type)
-    elif isinstance(file_bytes_files_or_url, Path) and os.path.isfile(
+    elif isinstance(file_bytes_files_or_url, os.PathLike) and os.path.isfile(
         file_bytes_files_or_url
     ):
         return extract_from_file(file_bytes_files_or_url, mime_type)

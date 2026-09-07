@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
+import errno
 import json
 import logging
 import os
 
 from pydantic import BaseModel, model_validator, TypeAdapter
-from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.schema import coco, generic, text
 from tspng.schema.ts import v1
 from typing import Self, TypeAlias
@@ -64,10 +64,10 @@ class Metadata(BaseModel):
     def load(path: os.PathLike[str]) -> Metadata:
         if not os.path.exists(path):
             LOGGER.warning(f"The '{path}' does not exist.")
-            raise PathDoesNotExist(path)
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), path)
         if not os.path.isfile(path):
             LOGGER.warning(f"The '{path}' is not a file.")
-            raise PathIsNotAFile(path)
+            raise IsADirectoryError(errno.EISDIR, os.strerror(errno.EISDIR), path)
         text = open(path, "r").read()
         try:
             data = json.loads(text)

@@ -18,31 +18,36 @@ LOGGER: logging.Logger = logging.getLogger(__name__)
 
 class EmbededDataNotFound(Exception):
     def __init__(self, im: Image.Image):
-        self.image = im
+        self.image: Image.Image = im
+        super().__init__()
 
 
 class MetadataNotFound(Exception):
     def __init__(self, im: Image.Image):
-        self.image = im
+        self.image: Image.Image = im
+        super().__init__()
 
 
 class NotPngFormat(Exception):
     def __init__(self, im: Image.Image):
-        self.image = im
+        self.image: Image.Image = im
+        super().__init__()
 
 
 class PathIsNotADir(Exception):
-    def __init__(self, path: str | os.PathLike):
-        self.path = path
+    def __init__(self, path: os.PathLike[str]):
+        self.path: os.PathLike[str] = path
+        super().__init__()
 
 
 class PathDoesNotContainPngs(Exception):
-    def __init__(self, path: str | os.PathLike):
-        self.path = path
+    def __init__(self, path: os.PathLike[str]):
+        self.path: os.PathLike[str] = path
+        super().__init__()
 
 
 def _open_image(
-    file_or_bytes: str | os.PathLike | io.BytesIO, mime_type: str | None = None
+    file_or_bytes: os.PathLike[str] | io.BytesIO, mime_type: str | None = None
 ) -> generic.Json | str:
     LOGGER.debug(f"{file_or_bytes=}")
     LOGGER.debug(f"{mime_type=}")
@@ -73,7 +78,7 @@ def _open_image(
 
 
 def extract(
-    file_bytes_files_or_url: str | os.PathLike | io.BytesIO | list[str | os.PathLike],
+    file_bytes_files_or_url: os.PathLike[str] | io.BytesIO | list[os.PathLike[str]],
     mime_type: str | None = None,
 ) -> Metadata | dict[str, Metadata]:
     """
@@ -137,9 +142,7 @@ def extract_from_bytes(buffer: io.BytesIO, mime_type: str | None = None) -> Meta
     return Metadata(data=_open_image(buffer, mime_type), mime_type=mime_type)
 
 
-def extract_from_file(
-    path: str | os.PathLike, mime_type: str | None = None
-) -> Metadata:
+def extract_from_file(path: os.PathLike[str], mime_type: str | None = None) -> Metadata:
     """
     Returns the metadata from a TS PNG file as a dictionary-like object.
 
@@ -165,7 +168,7 @@ def extract_from_file(
 
 
 def extract_from_files(
-    paths: list[str | os.PathLike], mime_type: str | None = None
+    paths: list[os.PathLike[str]], mime_type: str | None = None
 ) -> dict[str, Metadata]:
     """
     Returns a dictionary of dictionary-like objects from a list of TS PNG file
@@ -185,7 +188,7 @@ def extract_from_files(
 
 
 def extract_from_folder(
-    path: str | os.PathLike, mime_type: str | None = None
+    path: os.PathLike[str], mime_type: str | None = None
 ) -> dict[str, Metadata]:
     """
     Returns a dictionary of dictionary-like objects containing the metadata from

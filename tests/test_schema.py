@@ -54,6 +54,33 @@ def test_metadata_generic_json():
     assert result.ext == generic.FILE_EXT
 
 
+def test_metadata_ts_v1_modern_json(ts_v1_modern_json_path: Path):
+    with open(ts_v1_modern_json_path) as f:
+        data = json.load(f)
+    metadata: dict[str, dict[str, Any] | str] = {
+        "data": data,
+        "mime_type": v1.MIME_TYPE,
+    }
+    result = Metadata.model_validate(metadata)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == v1.FILE_EXT
+    result = Metadata(data=data, mime_type=v1.MIME_TYPE)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == v1.FILE_EXT
+    result = Metadata(data=data)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == v1.FILE_EXT
+
+
 def test_metadata_ts_v1_legacy_json(ts_v1_legacy_json_path: Path):
     with open(ts_v1_legacy_json_path) as f:
         data = json.load(f)

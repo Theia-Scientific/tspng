@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
+import os
 import sys
 import typer
 
@@ -9,6 +10,7 @@ from pydantic import TypeAdapter
 from tspng import __app_name__, __version__, extraction as E, implantation as I
 from tspng.schema import Metadata
 from tspng.schema.ts import v1
+from typing import Annotated
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
@@ -31,45 +33,51 @@ def version_callback(value: bool):
 
 
 @app.command()
-def extract(inputs: list[Path] = typer.Argument(help="PNG image files.")):
-    extractions = []
-    for i in inputs:
-        LOGGER.debug(f"i={i}")
-        extractions.append(E.extract_from_file(i))
+def extract(
+    inputs: Annotated[list[os.PathLike[str]], typer.Argument(help="PNG image files.")],
+):
+    extractions = E.extract_from_files(inputs)
     if len(extractions) > 1:
         print(
-            TypeAdapter(list[Metadata])
+            TypeAdapter(dict[str, Metadata])
             .dump_json(extractions, exclude_none=True)
             .decode("UTF-8")
         )
     else:
-        print(extractions[0].model_dump_json(exclude_none=True))
+        key = list(extractions.keys())[0]
+        print(extractions[key].model_dump_json(exclude_none=True))
 
 
 @app.command()
 def implant(
-    data_file: Path = typer.Argument(help="A data file."),
-    png_file: Path = typer.Argument(help="A PNG image file."),
+    data_file: Annotated[os.PathLike[str], typer.Argument(help="A data file.")],
+    png_file: Annotated[os.PathLike[str], typer.Argument(help="A PNG image file.")],
 ):
-    I.implant(data_file, png_file, png_file.with_suffix(v1.FILE_EXT))
+    I.implant(data_file, png_file, Path(png_file).with_suffix(v1.FILE_EXT))
 
 
 @app.callback()
 def main(
-    verbose: bool = typer.Option(
-        False,
-        "--verbose",
-        "-v",
-        help="Print debugging statements to STDOUT.",
-        envvar=f"{PREFIX}_VERBOSE",
-    ),
-    version: bool | None = typer.Option(
-        None,
-        "--version",
-        help="Prints the version to STDOUT",
-        callback=version_callback,
-        is_eager=True,
-    ),
+    verbose: Annotated[
+        bool,
+        typer.Option(
+            False,
+            "--verbose",
+            "-v",
+            help="Print debugging statements to STDOUT.",
+            envvar=f"{PREFIX}_VERBOSE",
+        ),
+    ],
+    version: Annotated[
+        bool | None,
+        typer.Option(
+            None,
+            "--version",
+            help="Prints the version to STDOUT",
+            callback=version_callback,
+            is_eager=True,
+        ),
+    ],
 ):
     logging.basicConfig(stream=sys.stderr, level=map_verbosity(verbose))
     LOGGER.debug(f"version={version}")

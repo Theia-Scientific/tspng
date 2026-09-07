@@ -18,7 +18,8 @@ from tspng.extraction import (
     PathDoesNotContainPngs,
     PathIsNotADir,
 )
-from tspng.schema import Metadata, ts
+from tspng.schema import Metadata
+from tspng.schema.ts import v1
 from urllib.error import HTTPError
 
 
@@ -38,13 +39,13 @@ def example_file_1_url() -> str:
 def test_extract_with_file_path(example_file_1_path):
     result = extract(example_file_1_path)
     assert isinstance(result, Metadata)
-    assert result.mime_type == ts.MIME_TYPE
-    assert isinstance(result.data, ts.Json)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
 
 
 def test_extract_with_file_str(example_file_1_path):
     test_data = extract(str(example_file_1_path))
-    assert isinstance(test_data, ts.Json)
+    assert isinstance(test_data, v1.Json)
 
 
 def test_extract_with_files(example_file_1_path, example_file_2_path):
@@ -52,42 +53,49 @@ def test_extract_with_files(example_file_1_path, example_file_2_path):
         example_file_1_path,
         example_file_2_path,
     ]
-    test_data = extract(files)
-    assert list(test_data.keys()) == files
+    result = extract(files)
+    assert isinstance(result, dict)
+    assert example_file_1_path in result
+    assert isinstance(result[example_file_1_path], Metadata)
+    assert result[example_file_1_path].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_1_path].data, v1.Json)
+    assert example_file_2_path in result
+    assert isinstance(result[example_file_2_path], Metadata)
+    assert result[example_file_1_path].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_2_path].data, v1.Json)
 
 
 def test_extract_with_folder(
     assets_directory_path, example_file_1_path, example_file_2_path
 ):
-    test_data = extract(assets_directory_path)
-    assert str(example_file_1_path) in sorted(list(test_data.keys()))
-    assert str(example_file_2_path) in sorted(list(test_data.keys()))
+    example_file_1_str = str(example_file_1_path)
+    example_file_2_str = str(example_file_2_path)
+    result = extract(assets_directory_path)
+    assert isinstance(result, dict)
+    assert example_file_1_str in result
+    assert isinstance(result[example_file_1_str], Metadata)
+    assert result[example_file_1_str].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_1_str].data, v1.Json)
+    assert example_file_2_str in result
+    assert isinstance(result[example_file_2_str], Metadata)
+    assert result[example_file_1_path].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_2_str].data, v1.Json)
 
 
 def test_extract_with_url(example_file_1_url):
-    test_data = extract(example_file_1_url)
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+    result = extract(example_file_1_url)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
 
 
 def test_extract_with_bytes(example_file_1_path):
     with open(example_file_1_path, "rb") as fh:
         buf = BytesIO(fh.read())
-    test_data = extract(buf)
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+    result = extract(buf)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
 
 
 def test_extract_fails():
@@ -98,27 +106,17 @@ def test_extract_fails():
 def test_extract_from_bytes(example_file_1_path):
     with open(example_file_1_path, "rb") as fh:
         buf = BytesIO(fh.read())
-        test_data = extract_from_bytes(buf)
-        assert list(test_data.keys()) == [
-            "info",
-            "licenses",
-            "images",
-            "annotations",
-            "models",
-            "categories",
-        ]
+    result = extract_from_bytes(buf)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
 
 
 def test_extract_from_file(example_file_1_path):
-    test_data = extract_from_file(example_file_1_path)
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+    result = extract_from_file(example_file_1_path)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
 
 
 def test_extract_from_file_not_exists_fails():
@@ -132,20 +130,39 @@ def test_extract_from_file_with_directory_fails(assets_directory_path):
 
 
 def test_extract_from_files(example_file_1_path, example_file_2_path):
+    example_file_1_str = str(example_file_1_path)
+    example_file_2_str = str(example_file_2_path)
     files = [
         example_file_1_path,
         example_file_2_path,
     ]
-    test_data = extract_from_files(files)
-    assert sorted(list(test_data.keys())) == files
+    result = extract_from_files(files)
+    assert isinstance(result, dict)
+    assert example_file_1_str in result
+    assert isinstance(result[example_file_1_str], Metadata)
+    assert result[example_file_1_str].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_1_str].data, v1.Json)
+    assert example_file_2_str in result
+    assert isinstance(result[example_file_2_str], Metadata)
+    assert result[example_file_1_str].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_2_str].data, v1.Json)
 
 
 def test_extract_from_folder(
     assets_directory_path, example_file_1_path, example_file_2_path
 ):
-    test_data = extract_from_folder(assets_directory_path)
-    assert str(example_file_1_path) in sorted(list(test_data.keys()))
-    assert str(example_file_2_path) in sorted(list(test_data.keys()))
+    example_file_1_str = str(example_file_1_path)
+    example_file_2_str = str(example_file_2_path)
+    result = extract_from_folder(assets_directory_path)
+    assert isinstance(result, dict)
+    assert example_file_1_str in result
+    assert isinstance(result[example_file_1_str], Metadata)
+    assert result[example_file_1_str].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_1_str].data, v1.Json)
+    assert example_file_2_str in result
+    assert isinstance(result[example_file_2_str], Metadata)
+    assert result[example_file_1_str].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_2_str].data, v1.Json)
 
 
 def test_extract_from_folder_fails(example_file_1_path):
@@ -159,15 +176,10 @@ def test_extract_from_folder_fails_with_empty_files(tmp_path):
 
 
 def test_extract_from_url(example_file_1_url):
-    test_data = extract_from_url(example_file_1_url)
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+    result = extract_from_url(example_file_1_url)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
 
 
 def test_extract_from_url_fails():

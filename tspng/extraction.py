@@ -65,7 +65,7 @@ def _open_image(
 def extract(
     file_bytes_files_or_url: str | os.PathLike | io.BytesIO | list[str | os.PathLike],
     mime_type: str = v1.MIME_TYPE,
-) -> Metadata | dict[str | os.PathLike, Metadata]:
+) -> Metadata | dict[str, Metadata]:
     """
     Returns the metadata from a TS PNG file as either a dictionary-like object
     if a single file is extracted or a dictionary with the keys as the paths to
@@ -160,7 +160,7 @@ def extract_from_file(
 
 def extract_from_files(
     paths: list[str | os.PathLike], mime_type: str = v1.MIME_TYPE
-) -> dict[str | os.PathLike, Metadata]:
+) -> dict[str, Metadata]:
     """
     Returns a dictionary of dictionary-like objects from a list of TS PNG file
     paths, where the keys are the paths to the files.
@@ -175,13 +175,13 @@ def extract_from_files(
     """
     nested_dict = {}
     for path in paths:
-        nested_dict[path] = extract_from_file(path, mime_type)
+        nested_dict[str(path)] = extract_from_file(path, mime_type)
     return nested_dict
 
 
 def extract_from_folder(
     path: str | os.PathLike, mime_type: str = v1.MIME_TYPE
-) -> dict[str | os.PathLike, Metadata]:
+) -> dict[str, Metadata]:
     """
     Returns a dictionary of dictionary-like objects containing the metadata from
     a folder of TS PNG file paths. The keys are the file paths.
@@ -230,5 +230,6 @@ def extract_from_url(url: str, mime_type: str = v1.MIME_TYPE) -> Metadata:
     response = urllib.request.urlopen(url)
     img_data = response.read()
     return Metadata(
-        data=_open_image(io.BytesIO(img_data), mime_type), mime_type=mime_type
+        data=_open_image(io.BytesIO(img_data), mime_type),
+        mime_type=mime_type,
     )

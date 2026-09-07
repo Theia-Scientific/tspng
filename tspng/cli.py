@@ -72,7 +72,8 @@ def main(
     ),
 ):
     logging.basicConfig(stream=sys.stderr, level=map_verbosity(verbose))
-    logging.debug(f"version={version}")
+    LOGGER.debug(f"version={version}")
+    LOGGER.debug(f"verbose={verbose}")
 
 
 if __name__ == "__main__":

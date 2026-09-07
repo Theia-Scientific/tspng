@@ -6,7 +6,6 @@ from io import BytesIO
 from pathlib import Path
 from PIL import Image
 from pytest_mock import MockerFixture
-from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.extraction import (
     EmbededDataNotFound,
     MetadataNotFound,
@@ -19,7 +18,6 @@ from tspng.extraction import (
     extract_from_url,
     NotPngFormat,
     PathDoesNotContainPngs,
-    PathIsNotADir,
 )
 from tspng.schema import Metadata
 from tspng.schema.ts import v1
@@ -120,12 +118,12 @@ def test_extract_from_file(example_file_1_path: Path):
 
 
 def test_extract_from_file_not_exists_fails():
-    with pytest.raises(PathDoesNotExist):
+    with pytest.raises(FileNotFoundError):
         _ = extract_from_file(Path("Random/path.png"))
 
 
 def test_extract_from_file_with_directory_fails(assets_directory_path: Path):
-    with pytest.raises(PathIsNotAFile):
+    with pytest.raises(IsADirectoryError):
         _ = extract_from_file(assets_directory_path)
 
 
@@ -166,7 +164,7 @@ def test_extract_from_folder(
 
 
 def test_extract_from_folder_fails(example_file_1_path: Path):
-    with pytest.raises(PathIsNotADir):
+    with pytest.raises(NotADirectoryError):
         _ = extract_from_folder(example_file_1_path)
 
 

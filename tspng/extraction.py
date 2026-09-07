@@ -1,5 +1,6 @@
 #!/usr/env/bin python3
 
+import errno
 import io
 import logging
 import json
@@ -10,7 +11,6 @@ from collections.abc import Sequence
 from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile
-from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.schema import generic, KNOWN_MIME_TYPES, Metadata, text
 from urllib.parse import urlparse
 
@@ -32,12 +32,6 @@ class MetadataNotFound(Exception):
 class NotPngFormat(Exception):
     def __init__(self, im: Image.Image):
         self.image: Image.Image = im
-        super().__init__()
-
-
-class PathIsNotADir(Exception):
-    def __init__(self, path: os.PathLike[str]):
-        self.path: os.PathLike[str] = path
         super().__init__()
 
 
@@ -159,10 +153,10 @@ def extract_from_file(path: os.PathLike[str], mime_type: str | None = None) -> M
     """
     if not os.path.exists(path):
         LOGGER.warning(f"The '{path}' path does not exist.")
-        raise PathDoesNotExist(path)
+        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), path)
     if not os.path.isfile(path):
         LOGGER.warning(f"The '{path}' path is not a file.")
-        raise PathIsNotAFile(path)
+        raise IsADirectoryError(errno.EISDIR, os.strerror(errno.EISDIR), path)
     return Metadata(data=_open_image(path, mime_type), mime_type=mime_type)
 
 
@@ -206,7 +200,7 @@ def extract_from_folder(
     """
     if not os.path.isdir(path):
         LOGGER.warning(f"The '{path}' is not a directory.")
-        raise PathIsNotADir(path)
+        raise NotADirectoryError(errno.ENOTDIR, os.strerror(errno.ENOTDIR), path)
     file_list = []
     for file in os.listdir(path):
         root_ext = os.path.splitext(file)

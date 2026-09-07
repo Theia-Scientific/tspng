@@ -63,5 +63,5 @@ class Json(BaseModel):
     categories: list[coco.Category]
     images: list[Image]
     info: coco.Info
-    licenses: list[coco.License]
+    licenses: coco.License
     models: list[Model]

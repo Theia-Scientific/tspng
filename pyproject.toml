@@ -63,3 +63,6 @@ filterwarnings = [
 ignore = ['E203', 'W503']
 max-line-length = 127
 max-complexity = 15
+
+[tool.basedpyright]
+typeCheckingMode = "standard"

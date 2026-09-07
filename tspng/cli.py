@@ -19,12 +19,12 @@ app = typer.Typer()
 
 
 def map_verbosity(count: int) -> str:
-    log_level = "WARNING"
     if count == 1:
         log_level = "INFO"
-    else:
+    elif count >= 2:
         log_level = "DEBUG"
-
+    else:
+        log_level = "WARNING"
     return log_level
 
 
@@ -63,23 +63,21 @@ def main(
     verbose: Annotated[
         int,
         typer.Option(
-            0,
             "--verbose",
             "-v",
-            help="Print debugging statements to STDOUT.",
+            help="Print debugging statements to STDERR.",
             count=True,
         ),
-    ],
+    ] = 0,
     version: Annotated[
         bool | None,
         typer.Option(
-            None,
             "--version",
             help="Prints the version to STDOUT",
             callback=version_callback,
             is_eager=True,
         ),
-    ],
+    ] = None,
 ):
     logging.basicConfig(stream=sys.stderr, level=map_verbosity(verbose))
     LOGGER.debug(f"version={version}")

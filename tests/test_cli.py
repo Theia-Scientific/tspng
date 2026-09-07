@@ -10,14 +10,11 @@ from typer.testing import CliRunner
 runner = CliRunner()
 
 
-def test_map_verbosity_false():
-    actual = map_verbosity(False)
-    assert actual == "INFO"
-
-
-def test_map_verbosity_true():
-    actual = map_verbosity(True)
-    assert actual == "DEBUG"
+def test_map_verbosity():
+    assert map_verbosity(0) == "WARNING"
+    assert map_verbosity(1) == "INFO"
+    assert map_verbosity(2) == "DEBUG"
+    assert map_verbosity(3) == "DEBUG"
 
 
 def test_app_help():

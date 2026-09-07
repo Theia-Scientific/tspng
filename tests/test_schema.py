@@ -127,11 +127,8 @@ def test_metadata_text():
     assert result.ext == text.FILE_EXT
 
 
-def test_metadata_load_text(tmp_path):
-    text_file = tmp_path.joinpath("test.txt")
-    with open(text_file, "w") as fp:
-        fp.write("Hello, World!")
-    result = Metadata.load(text_file)
+def test_metadata_load_text(txt_file_path):
+    result = Metadata.load(txt_file_path)
     assert isinstance(result, Metadata)
     assert result.mime_type == text.MIME_TYPE
     assert isinstance(result.data, str)

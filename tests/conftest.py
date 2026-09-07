@@ -37,3 +37,11 @@ def empty_png_path(tmp_path) -> Path:
     image = Image.new("RGB", (640, 640))
     image.save(empty_png_path, format="PNG")
     return empty_png_path
+
+
+@pytest.fixture
+def txt_file_path(tmp_path) -> Path:
+    txt_path = tmp_path.joinpath("file.txt")
+    with open(txt_path, "w") as f:
+        f.write("Hello World! This is NOT JSON.")
+    return txt_path

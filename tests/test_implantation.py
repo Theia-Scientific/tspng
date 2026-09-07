@@ -11,7 +11,10 @@ def test_implant_with_unknown_mime_type(empty_png_path, txt_file_path, tmp_path)
     with open(txt_file_path, "r") as fp:
         data = str(fp.read())
     dst = tmp_path.joinpath(empty_png_path.with_suffix(text.FILE_EXT).name)
-    implant(Metadata(data=data, mime_type=None), empty_png_path, dst)
+    md = Metadata(data=data, mime_type=None)
+    md.mime_type = None
+    assert md.mime_type is None
+    implant(md, empty_png_path, dst)
     result = extract(dst)
     assert isinstance(result, Metadata)
     assert result.mime_type == text.MIME_TYPE

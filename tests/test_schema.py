@@ -13,6 +13,12 @@ def test_coco_json(coco_json_path):
     assert isinstance(result, coco.Json)
 
 
+def test_ts_v1_json(ts_v1_json_path):
+    with open(ts_v1_json_path) as f:
+        result = v1.Json.model_validate_json(f.read())
+    assert isinstance(result, v1.Json)
+
+
 def test_metadata_generic_json():
     data = {"greeting": "Hello", "target": "World"}
     metadata: dict[str, generic.Json | str] = {

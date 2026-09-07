@@ -61,17 +61,14 @@ class Metadata(BaseModel):
             return text.FILE_EXT
 
     @staticmethod
-    def load(path: str | os.PathLike | bytes) -> Metadata:
-        if isinstance(path, str) or isinstance(path, os.PathLike):
-            if not os.path.exists(path):
-                LOGGER.warning(f"The '{path}' does not exist.")
-                raise PathDoesNotExist(path)
-            if not os.path.isfile(path):
-                LOGGER.warning(f"The '{path}' is not a file.")
-                raise PathIsNotAFile(path)
-            text = open(path, "r").read()
-        else:
-            text = path
+    def load(path: str | os.PathLike) -> Metadata:
+        if not os.path.exists(path):
+            LOGGER.warning(f"The '{path}' does not exist.")
+            raise PathDoesNotExist(path)
+        if not os.path.isfile(path):
+            LOGGER.warning(f"The '{path}' is not a file.")
+            raise PathIsNotAFile(path)
+        text = open(path, "r").read()
         try:
             data = json.loads(text)
         except ValueError:

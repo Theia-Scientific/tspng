@@ -194,6 +194,11 @@ def test_extract_from_url_fails():
         )
 
 
+def test_open_image_with_mime_type(example_file_1_path):
+    result = _open_image(example_file_1_path, mime_type=v1.MIME_TYPE)
+    assert isinstance(result, dict)
+
+
 def test_open_image_not_png_fails(empty_jpeg_path):
     with pytest.raises(NotPngFormat):
         _open_image(empty_jpeg_path)

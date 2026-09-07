@@ -3,19 +3,20 @@
 import json
 import pytest
 
+from pathlib import Path
 from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.schema import coco, generic, Metadata, text
 from tspng.schema.ts import v1
 from typing import Any
 
 
-def test_coco_json(coco_json_path):
+def test_coco_json(coco_json_path: Path):
     with open(coco_json_path) as f:
         result = coco.Json.model_validate_json(f.read())
     assert isinstance(result, coco.Json)
 
 
-def test_ts_v1_json(ts_v1_json_path):
+def test_ts_v1_json(ts_v1_json_path: Path):
     with open(ts_v1_json_path) as f:
         result = v1.Json.model_validate_json(f.read())
     assert isinstance(result, v1.Json)
@@ -47,7 +48,7 @@ def test_metadata_generic_json():
     assert result.ext == generic.FILE_EXT
 
 
-def test_metadata_ts_v1_json(ts_v1_json_path):
+def test_metadata_ts_v1_json(ts_v1_json_path: Path):
     with open(ts_v1_json_path) as f:
         data = json.load(f)
     metadata: dict[str, dict[str, Any] | str] = {
@@ -74,7 +75,7 @@ def test_metadata_ts_v1_json(ts_v1_json_path):
     assert result.ext == v1.FILE_EXT
 
 
-def test_metadata_coco_json(coco_json_path):
+def test_metadata_coco_json(coco_json_path: Path):
     with open(coco_json_path) as f:
         data = json.load(f)
     metadata: dict[str, dict[str, Any] | str] = {
@@ -127,7 +128,7 @@ def test_metadata_text():
     assert result.ext == text.FILE_EXT
 
 
-def test_metadata_load_text(txt_file_path):
+def test_metadata_load_text(txt_file_path: Path):
     result = Metadata.load(txt_file_path)
     assert isinstance(result, Metadata)
     assert result.mime_type == text.MIME_TYPE
@@ -136,11 +137,11 @@ def test_metadata_load_text(txt_file_path):
     assert result.ext == text.FILE_EXT
 
 
-def test_metadata_load_fails_file_not_exists(tmp_path):
+def test_metadata_load_fails_file_not_exists(tmp_path: Path):
     with pytest.raises(PathDoesNotExist):
-        Metadata.load(tmp_path.joinpath("random.png"))
+        _ = Metadata.load(tmp_path.joinpath("random.png"))
 
 
-def test_metadata_load_fails_path_not_file(tmp_path):
+def test_metadata_load_fails_path_not_file(tmp_path: Path):
     with pytest.raises(PathIsNotAFile):
-        Metadata.load(tmp_path)
+        _ = Metadata.load(tmp_path)

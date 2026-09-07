@@ -30,16 +30,19 @@ def test_metadata_generic_json():
     assert result.mime_type == generic.MIME_TYPE
     assert isinstance(result.data, dict)
     assert result.text == json.dumps(result.data)
+    assert result.ext == generic.FILE_EXT
     result = Metadata(data=data, mime_type=generic.MIME_TYPE)
     assert isinstance(result, Metadata)
     assert result.mime_type == generic.MIME_TYPE
     assert isinstance(result.data, dict)
     assert result.text == json.dumps(result.data)
+    assert result.ext == generic.FILE_EXT
     result = Metadata(data=data)
     assert isinstance(result, Metadata)
     assert result.mime_type == generic.MIME_TYPE
     assert isinstance(result.data, dict)
     assert result.text == json.dumps(result.data)
+    assert result.ext == generic.FILE_EXT
 
 
 def test_metadata_ts_v1_json(ts_v1_json_path):
@@ -54,16 +57,19 @@ def test_metadata_ts_v1_json(ts_v1_json_path):
     assert result.mime_type == v1.MIME_TYPE
     assert isinstance(result.data, v1.Json)
     assert result.text == result.data.model_dump_json()
+    assert result.ext == v1.FILE_EXT
     result = Metadata(data=data, mime_type=v1.MIME_TYPE)
     assert isinstance(result, Metadata)
     assert result.mime_type == v1.MIME_TYPE
     assert isinstance(result.data, v1.Json)
     assert result.text == result.data.model_dump_json()
+    assert result.ext == v1.FILE_EXT
     result = Metadata(data=data)
     assert isinstance(result, Metadata)
     assert result.mime_type == v1.MIME_TYPE
     assert isinstance(result.data, v1.Json)
     assert result.text == result.data.model_dump_json()
+    assert result.ext == v1.FILE_EXT
 
 
 def test_metadata_coco_json(coco_json_path):
@@ -78,16 +84,19 @@ def test_metadata_coco_json(coco_json_path):
     assert result.mime_type == coco.MIME_TYPE
     assert isinstance(result.data, coco.Json)
     assert result.text == result.data.model_dump_json()
+    assert result.ext == coco.FILE_EXT
     result = Metadata(data=data, mime_type=coco.MIME_TYPE)
     assert isinstance(result, Metadata)
     assert result.mime_type == coco.MIME_TYPE
     assert isinstance(result.data, coco.Json)
     assert result.text == result.data.model_dump_json()
+    assert result.ext == coco.FILE_EXT
     result = Metadata(data=data)
     assert isinstance(result, Metadata)
     assert result.mime_type == coco.MIME_TYPE
     assert isinstance(result.data, coco.Json)
     assert result.text == result.data.model_dump_json()
+    assert result.ext == coco.FILE_EXT
 
 
 def test_metadata_text():
@@ -101,13 +110,16 @@ def test_metadata_text():
     assert result.mime_type == text.MIME_TYPE
     assert isinstance(result.data, str)
     assert result.text == result.data
+    assert result.ext == text.FILE_EXT
     result = Metadata(data=data, mime_type=text.MIME_TYPE)
     assert isinstance(result, Metadata)
     assert result.mime_type == text.MIME_TYPE
     assert isinstance(result.data, str)
     assert result.text == result.data
+    assert result.ext == text.FILE_EXT
     result = Metadata(data=data)
     assert isinstance(result, Metadata)
     assert result.mime_type == text.MIME_TYPE
     assert isinstance(result.data, str)
     assert result.text == result.data
+    assert result.ext == text.FILE_EXT

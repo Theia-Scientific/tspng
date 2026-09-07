@@ -16,6 +16,11 @@ from urllib.parse import urlparse
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
+class EmbededDataNotFound(Exception):
+    def __init__(self, im: Image.Image):
+        self.image = im
+
+
 class MetadataNotFound(Exception):
     def __init__(self, im: Image.Image):
         self.image = im
@@ -60,7 +65,7 @@ def _open_image(
     LOGGER.debug(f"{mime_key=}")
     if mime_key is None:
         LOGGER.warning("There is no embedded data.")
-        raise MetadataNotFound(im)
+        raise EmbededDataNotFound(im)
     elif mime_key == text.MIME_TYPE:
         return meta[mime_key]
     else:

@@ -7,6 +7,8 @@ from pathlib import Path
 from PIL import Image
 from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.extraction import (
+    EmbededDataNotFound,
+    MetadataNotFound,
     _open_image,
     extract,
     extract_from_bytes,
@@ -44,25 +46,29 @@ def test_extract_with_file_path(example_file_1_path):
 
 
 def test_extract_with_file_str(example_file_1_path):
-    test_data = extract(str(example_file_1_path))
-    assert isinstance(test_data, v1.Json)
+    result = extract(str(example_file_1_path))
+    assert isinstance(result, Metadata)
+    assert result.mime_type == v1.MIME_TYPE
+    assert isinstance(result.data, v1.Json)
 
 
 def test_extract_with_files(example_file_1_path, example_file_2_path):
+    example_file_1_str = str(example_file_1_path)
+    example_file_2_str = str(example_file_2_path)
     files = [
         example_file_1_path,
         example_file_2_path,
     ]
     result = extract(files)
     assert isinstance(result, dict)
-    assert example_file_1_path in result
-    assert isinstance(result[example_file_1_path], Metadata)
-    assert result[example_file_1_path].mime_type == v1.MIME_TYPE
-    assert isinstance(result[example_file_1_path].data, v1.Json)
-    assert example_file_2_path in result
-    assert isinstance(result[example_file_2_path], Metadata)
-    assert result[example_file_1_path].mime_type == v1.MIME_TYPE
-    assert isinstance(result[example_file_2_path].data, v1.Json)
+    assert example_file_1_str in result
+    assert isinstance(result[example_file_1_str], Metadata)
+    assert result[example_file_1_str].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_1_str].data, v1.Json)
+    assert example_file_2_str in result
+    assert isinstance(result[example_file_2_str], Metadata)
+    assert result[example_file_1_str].mime_type == v1.MIME_TYPE
+    assert isinstance(result[example_file_2_str].data, v1.Json)
 
 
 def test_extract_with_folder(
@@ -78,7 +84,7 @@ def test_extract_with_folder(
     assert isinstance(result[example_file_1_str].data, v1.Json)
     assert example_file_2_str in result
     assert isinstance(result[example_file_2_str], Metadata)
-    assert result[example_file_1_path].mime_type == v1.MIME_TYPE
+    assert result[example_file_1_str].mime_type == v1.MIME_TYPE
     assert isinstance(result[example_file_2_str].data, v1.Json)
 
 
@@ -194,6 +200,6 @@ def test_open_image_not_png_fails(empty_jpeg_path):
         _open_image(empty_jpeg_path)
 
 
-def test_empty_embedded_data(empty_png_path):
-    result = _open_image(empty_png_path)
-    assert result == {}
+def test_open_image_fails_no_embedded_data(empty_png_path):
+    with pytest.raises(EmbededDataNotFound):
+        _ = _open_image(empty_png_path)

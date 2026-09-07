@@ -8,6 +8,7 @@ from typer.testing import CliRunner
 
 runner = CliRunner()
 
+
 def test_map_verbosity_false():
     actual = map_verbosity(False)
     assert actual == "INFO"

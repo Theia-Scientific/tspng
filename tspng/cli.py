@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-import json
 import logging
 import typer
 
 from pathlib import Path
+from pydantic import TypeAdapter
 from tspng import __app_name__, __version__, extraction as E, implantation as I
+from tspng.schema import Metadata
 from tspng.schema.ts import v1
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -33,8 +34,15 @@ def extract(inputs: list[Path] = typer.Argument(help="PNG image files.")):
     extractions = []
     for i in inputs:
         LOGGER.debug(f"i={i}")
-        extractions.append(E.extract_from_file(i).data)
-    print(json.dumps(extractions))
+        extractions.append(E.extract_from_file(i))
+    if len(extractions) > 1:
+        print(
+            TypeAdapter(list[Metadata])
+            .dump_json(extractions, exclude_none=True)
+            .decode("UTF-8")
+        )
+    else:
+        print(extractions[0].model_dump_json(exclude_none=True))
 
 
 @app.command()

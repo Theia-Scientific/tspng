@@ -37,6 +37,13 @@ def test_app_extract(example_file_1_path):
     assert result.exit_code == 0
 
 
+def test_app_extract_multiple_files(example_file_1_path, example_file_2_path):
+    result = runner.invoke(
+        app, ["extract", str(example_file_1_path), str(example_file_2_path)]
+    )
+    assert result.exit_code == 0
+
+
 def test_app_implant(coco_json_path, empty_png_path):
     expected = empty_png_path.with_suffix(v1.FILE_EXT)
     result = runner.invoke(app, ["implant", str(coco_json_path), str(empty_png_path)])

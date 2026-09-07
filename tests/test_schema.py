@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import json
+import pytest
 
+from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.schema import coco, generic, Metadata, text
 from tspng.schema.ts import v1
 from typing import Any
@@ -123,3 +125,13 @@ def test_metadata_text():
     assert isinstance(result.data, str)
     assert result.text == result.data
     assert result.ext == text.FILE_EXT
+
+
+def test_metadata_load_fails_file_not_exists(tmp_path):
+    with pytest.raises(PathDoesNotExist):
+        Metadata.load(tmp_path.joinpath("random.png"))
+
+
+def test_metadata_load_fails_path_not_file(tmp_path):
+    with pytest.raises(PathIsNotAFile):
+        Metadata.load(tmp_path)

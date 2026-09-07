@@ -45,13 +45,19 @@ class Image(coco.Image):
     rulers: list[Ruler] | None = None
 
 
-class Annotation(coco.Annotation):
+class Annotation(BaseModel):
+    area: float
     aspect_ratio: float | None = None
+    bbox: list[int]
     bottom_most_point: list[int] | None = None
+    category_id: int
     centroid: list[int] | None = None
     equivalent_diameter: float | None = None
     extent: float | None = None
+    id: int
+    image_id: int
     index: int | None = None
+    iscrowd: int
     left_most_point: list[int] | None = None
     major_axis: float | None = None
     minor_axis: float | None = None
@@ -60,6 +66,7 @@ class Annotation(coco.Annotation):
     perimeter: float | None = None
     right_most_Point: list[int] | None = None
     score: float
+    segmentation: str | list[list[int | float]] | bytes
     top_most_point: list[int] | None = None
     tracking_id: int | None = None
 

@@ -3,11 +3,13 @@
 import pytest
 
 from io import BytesIO
+from pytest_mock import MockerFixture
 from pathlib import Path
 from PIL import Image
 from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.extraction import (
     EmbededDataNotFound,
+    MetadataNotFound,
     _open_image,
     extract,
     extract_from_bytes,
@@ -35,6 +37,14 @@ def empty_jpeg_path(tmp_path) -> Path:
 @pytest.fixture
 def example_file_1_url() -> str:
     return "https://bounding-box-instructions.s3.amazonaws.com/example_file_1.ts.png"
+
+
+@pytest.fixture
+def mock_no_metadata_image(mocker: MockerFixture) -> Image.Image:
+    with mocker.patch(
+        "Image.Image.text", new_callable=mocker.PropertyMock
+    ) as mock_property:
+        mock_property.return_value = None
 
 
 def test_extract_with_file_path(example_file_1_path):
@@ -202,6 +212,14 @@ def test_open_image_with_mime_type(example_file_1_path):
 def test_open_image_not_png_fails(empty_jpeg_path):
     with pytest.raises(NotPngFormat):
         _open_image(empty_jpeg_path)
+
+
+def test_open_image_fails_no_metadata(empty_png_path, mocker):
+    mocker.patch(
+        "PIL.PngImagePlugin.PngImageFile.text", mocker.PropertyMock(return_value=None)
+    )
+    with pytest.raises(MetadataNotFound):
+        _ = _open_image(empty_png_path)
 
 
 def test_open_image_fails_no_embedded_data(empty_png_path):

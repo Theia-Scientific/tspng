@@ -57,6 +57,7 @@ def _open_image(
     else:
         if mime_type in meta.keys():
             mime_key = mime_type
+    LOGGER.debug(f"{mime_key=}")
     if mime_key is None:
         LOGGER.warning("There is no embedded data.")
         raise MetadataNotFound(im)
@@ -88,7 +89,6 @@ def extract(
     Raises:
         TypeError: If not a BytesIO object, file, list of files, or folder
     """
-    # call appropriate function
     if isinstance(file_bytes_files_or_url, io.BytesIO):
         return extract_from_bytes(file_bytes_files_or_url, mime_type)
     elif isinstance(file_bytes_files_or_url, str) and os.path.isfile(

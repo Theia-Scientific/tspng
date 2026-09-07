@@ -32,7 +32,7 @@ def test_implant_with_metadata(coco_json_path, empty_png_path, tmp_path):
     assert isinstance(result.data, coco.Json)
 
 
-def test_implant_with_path_data(coco_json_path, empty_png_path, tmp_path):
+def test_implant(coco_json_path, empty_png_path, tmp_path):
     dst = tmp_path.joinpath(empty_png_path.with_suffix(coco.FILE_EXT).name)
     implant(coco_json_path, empty_png_path, dst)
     result = extract(dst)

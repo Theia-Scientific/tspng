@@ -4,7 +4,19 @@ import io
 
 from tspng.implantation import implant, implant_into_bytes, implant_into_file
 from tspng.extraction import extract
-from tspng.schema import coco, Metadata
+from tspng.schema import coco, Metadata, text
+
+
+def test_implant_with_unknown_mime_type(empty_png_path, txt_file_path, tmp_path):
+    with open(txt_file_path, "r") as fp:
+        data = str(fp.read())
+    dst = tmp_path.joinpath(empty_png_path.with_suffix(text.FILE_EXT).name)
+    implant(Metadata(data=data, mime_type=None), empty_png_path, dst)
+    result = extract(dst)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == text.MIME_TYPE
+    assert isinstance(result.data, str)
+    assert result.data == data
 
 
 def test_implant_with_metadata(coco_json_path, empty_png_path, tmp_path):

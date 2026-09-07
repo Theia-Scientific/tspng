@@ -127,6 +127,18 @@ def test_metadata_text():
     assert result.ext == text.FILE_EXT
 
 
+def test_metadata_load_text(tmp_path):
+    text_file = tmp_path.joinpath("test.txt")
+    with open(text_file, "w") as fp:
+        fp.write("Hello, World!")
+    result = Metadata.load(text_file)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == text.MIME_TYPE
+    assert isinstance(result.data, str)
+    assert result.text == result.data
+    assert result.ext == text.FILE_EXT
+
+
 def test_metadata_load_fails_file_not_exists(tmp_path):
     with pytest.raises(PathDoesNotExist):
         Metadata.load(tmp_path.joinpath("random.png"))

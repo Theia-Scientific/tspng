@@ -6,6 +6,7 @@ import json
 import os
 import urllib.request
 
+from collections.abc import Sequence
 from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile
@@ -78,7 +79,9 @@ def _open_image(
 
 
 def extract(
-    file_bytes_files_or_url: os.PathLike[str] | io.BytesIO | list[os.PathLike[str]],
+    file_bytes_files_or_url: (
+        str | os.PathLike[str] | io.BytesIO | Sequence[os.PathLike[str]]
+    ),
     mime_type: str | None = None,
 ) -> Metadata | dict[str, Metadata]:
     """
@@ -168,7 +171,7 @@ def extract_from_file(path: os.PathLike[str], mime_type: str | None = None) -> M
 
 
 def extract_from_files(
-    paths: list[os.PathLike[str]], mime_type: str | None = None
+    paths: Sequence[os.PathLike[str]], mime_type: str | None = None
 ) -> dict[str, Metadata]:
     """
     Returns a dictionary of dictionary-like objects from a list of TS PNG file

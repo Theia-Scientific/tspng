@@ -16,8 +16,8 @@ def test_coco_json(coco_json_path: Path):
     assert isinstance(result, coco.Json)
 
 
-def test_ts_v1_json(ts_v1_json_path: Path):
-    with open(ts_v1_json_path) as f:
+def test_ts_v1_legacy_json(ts_v1_legacy_json_path: Path):
+    with open(ts_v1_legacy_json_path) as f:
         result = v1.Json.model_validate_json(f.read())
     assert isinstance(result, v1.Json)
 
@@ -48,8 +48,8 @@ def test_metadata_generic_json():
     assert result.ext == generic.FILE_EXT
 
 
-def test_metadata_ts_v1_json(ts_v1_json_path: Path):
-    with open(ts_v1_json_path) as f:
+def test_metadata_ts_v1_legacy_json(ts_v1_legacy_json_path: Path):
+    with open(ts_v1_legacy_json_path) as f:
         data = json.load(f)
     metadata: dict[str, dict[str, Any] | str] = {
         "data": data,
@@ -148,7 +148,10 @@ def test_metadata_load_fails_path_not_file(tmp_path: Path):
 
 
 def test_metadata_dump_to_file(
-    coco_json_path: Path, txt_file_path: Path, ts_v1_json_path: Path, tmp_path: Path
+    coco_json_path: Path,
+    txt_file_path: Path,
+    ts_v1_legacy_json_path: Path,
+    tmp_path: Path,
 ):
     with open(coco_json_path) as f:
         coco_data = json.load(f)
@@ -158,7 +161,7 @@ def test_metadata_dump_to_file(
     expected = Metadata.load(coco_dst)
     assert actual == expected
 
-    with open(ts_v1_json_path) as f:
+    with open(ts_v1_legacy_json_path) as f:
         v1_data = json.load(f)
     v1_dst = tmp_path.joinpath("v1.json")
     actual = Metadata(data=v1_data).dump(v1_dst)
@@ -183,7 +186,7 @@ def test_metadata_dump_to_file(
 
 
 def test_metadata_dump_to_buffer(
-    coco_json_path: Path, txt_file_path: Path, ts_v1_json_path: Path
+    coco_json_path: Path, txt_file_path: Path, ts_v1_legacy_json_path: Path
 ):
     with open(coco_json_path) as f:
         coco_data = json.load(f)
@@ -192,7 +195,7 @@ def test_metadata_dump_to_buffer(
     expected = Metadata.load(coco_dst)
     assert actual == expected
 
-    with open(ts_v1_json_path) as f:
+    with open(ts_v1_legacy_json_path) as f:
         v1_data = json.load(f)
     v1_dst = io.StringIO()
     actual = Metadata(data=v1_data).dump(v1_dst)

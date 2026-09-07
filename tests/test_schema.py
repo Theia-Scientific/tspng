@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import io
 import json
 import pytest
 
@@ -144,3 +145,67 @@ def test_metadata_load_fails_file_not_exists(tmp_path: Path):
 def test_metadata_load_fails_path_not_file(tmp_path: Path):
     with pytest.raises(IsADirectoryError):
         _ = Metadata.load(tmp_path)
+
+
+def test_metadata_dump_to_file(
+    coco_json_path: Path, txt_file_path: Path, ts_v1_json_path: Path, tmp_path: Path
+):
+    with open(coco_json_path) as f:
+        coco_data = json.load(f)
+    coco_dst = tmp_path.joinpath("coco.json")
+    actual = Metadata(data=coco_data).dump(coco_dst)
+    assert coco_dst.exists()
+    expected = Metadata.load(coco_dst)
+    assert actual == expected
+
+    with open(ts_v1_json_path) as f:
+        v1_data = json.load(f)
+    v1_dst = tmp_path.joinpath("v1.json")
+    actual = Metadata(data=v1_data).dump(v1_dst)
+    assert v1_dst.exists()
+    expected = Metadata.load(v1_dst)
+    assert actual == expected
+
+    generic_data = {"greeting": "Hello", "target": "World"}
+    generic_dst = tmp_path.joinpath("generic.json")
+    _ = Metadata(data=generic_data).dump(generic_dst)
+    assert generic_dst.exists()
+    with open(generic_dst) as f:
+        assert json.load(f) == generic_data
+
+    with open(txt_file_path) as f:
+        text_data = f.read()
+    text_dst = tmp_path.joinpath("text.txt")
+    _ = Metadata(data=text_data).dump(text_dst)
+    assert text_dst.exists()
+    with open(text_dst) as f:
+        assert f.read() == text_data
+
+
+def test_metadata_dump_to_buffer(
+    coco_json_path: Path, txt_file_path: Path, ts_v1_json_path: Path
+):
+    with open(coco_json_path) as f:
+        coco_data = json.load(f)
+    coco_dst = io.StringIO()
+    actual = Metadata(data=coco_data).dump(coco_dst)
+    expected = Metadata.load(coco_dst)
+    assert actual == expected
+
+    with open(ts_v1_json_path) as f:
+        v1_data = json.load(f)
+    v1_dst = io.StringIO()
+    actual = Metadata(data=v1_data).dump(v1_dst)
+    expected = Metadata.load(v1_dst)
+    assert actual == expected
+
+    generic_data = {"greeting": "Hello", "target": "World"}
+    generic_dst = io.StringIO()
+    _ = Metadata(data=generic_data).dump(generic_dst)
+    assert json.loads(generic_dst.getvalue()) == generic_data
+
+    with open(txt_file_path) as f:
+        text_data = f.read()
+    text_dst = io.StringIO()
+    _ = Metadata(data=text_data).dump(text_dst)
+    assert text_dst.getvalue() == text_data

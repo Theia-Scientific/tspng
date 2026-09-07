@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import errno
+import io
 import json
 import logging
 import os
@@ -61,16 +62,47 @@ class Metadata(BaseModel):
             return text.FILE_EXT
 
     @staticmethod
-    def load(path: os.PathLike[str]) -> Metadata:
-        if not os.path.exists(path):
-            LOGGER.warning(f"The '{path}' does not exist.")
-            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), path)
-        if not os.path.isfile(path):
-            LOGGER.warning(f"The '{path}' is not a file.")
-            raise IsADirectoryError(errno.EISDIR, os.strerror(errno.EISDIR), path)
-        text = open(path, "r").read()
+    def load(src: os.PathLike[str] | io.StringIO) -> Metadata:
+        if isinstance(src, io.StringIO):
+            text = src.getvalue()
+        else:
+            if not os.path.exists(src):
+                LOGGER.warning(f"The '{src}' does not exist.")
+                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), src)
+            if not os.path.isfile(src):
+                LOGGER.warning(f"The '{src}' is not a file.")
+                raise IsADirectoryError(errno.EISDIR, os.strerror(errno.EISDIR), src)
+            text = open(src, "r").read()
         try:
             data = json.loads(text)
         except ValueError:
             data = str(text)
         return Metadata(data=data)
+
+    def dump(
+        self,
+        dst: os.PathLike[str] | io.StringIO,
+        encoding: str = "utf8",
+        indent: int = 2,
+    ) -> Self:
+        LOGGER.debug(f"{dst=}")
+        LOGGER.debug(f"{encoding=}")
+        LOGGER.debug(f"{indent=}")
+        if isinstance(dst, io.StringIO):
+            fp = dst
+        else:
+            fp = open(dst, "w")
+        if isinstance(self.data, coco.Json) or isinstance(self.data, v1.Json):
+            fp.write(self.data.model_dump_json(indent=indent, exclude_none=True))
+        elif isinstance(self.data, dict):
+            generic_json_type = TypeAdapter(generic.Json)
+            fp.write(
+                generic_json_type.dump_json(
+                    self.data, indent=indent, exclude_none=True
+                ).decode("utf8")
+            )
+        else:
+            fp.write(self.data)
+        if not isinstance(dst, io.StringIO):
+            fp.close()
+        return self

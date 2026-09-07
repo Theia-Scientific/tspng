@@ -9,10 +9,12 @@ PNG_FILE_EXT: str = ".png"
 
 
 class PathDoesNotExist(Exception):
-    def __init__(self, path: str | os.PathLike):
-        self.path = path
+    def __init__(self, path: os.PathLike[str]):
+        self.path: os.PathLike[str] = path
+        super().__init__()
 
 
 class PathIsNotAFile(Exception):
-    def __init__(self, path: str | os.PathLike):
-        self.path = path
+    def __init__(self, path: os.PathLike[str]):
+        self.path: os.PathLike[str] = path
+        super().__init__()

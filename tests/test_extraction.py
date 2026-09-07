@@ -8,7 +8,6 @@ from PIL import Image
 from tspng import PathDoesNotExist, PathIsNotAFile
 from tspng.extraction import (
     EmbededDataNotFound,
-    MetadataNotFound,
     _open_image,
     extract,
     extract_from_bytes,

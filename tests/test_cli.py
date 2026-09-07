@@ -2,8 +2,9 @@
 
 import importlib.metadata
 
-from tspng import __app_name__
+from tspng import __app_name__, PNG_FILE_EXT
 from tspng.cli import app, map_verbosity
+from tspng.schema.ts import v1
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -37,5 +38,9 @@ def test_app_extract(example_file_1_path):
 
 
 def test_app_implant(coco_json_path, empty_png_path):
+    expected = empty_png_path.with_suffix(v1.FILE_EXT)
     result = runner.invoke(app, ["implant", str(coco_json_path), str(empty_png_path)])
     assert result.exit_code == 0
+    assert expected.exists()
+    assert expected.name == empty_png_path.stem + v1.FILE_EXT
+    assert expected.suffix == PNG_FILE_EXT

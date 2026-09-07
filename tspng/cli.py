@@ -50,7 +50,7 @@ def implant(
     data_file: Path = typer.Argument(help="A data file."),
     png_file: Path = typer.Argument(help="A PNG image file."),
 ):
-    I.implant(data_file, png_file, png_file.name + v1.FILE_EXT)
+    I.implant(data_file, png_file, png_file.with_suffix(v1.FILE_EXT))
 
 
 @app.callback()

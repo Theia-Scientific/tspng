@@ -25,7 +25,7 @@ class Metadata(BaseModel):
 
     @model_validator(mode="after")
     def validate_mime_type(self) -> Self:
-        type_adapter = TypeAdapter(Data)
+        type_adapter: TypeAdapter[Data] = TypeAdapter(Data)
         if self.mime_type is None:
             value = type_adapter.validate_python(self.data)
             if isinstance(value, coco.Json):

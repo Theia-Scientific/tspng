@@ -12,7 +12,8 @@ MIME_TYPE: str = "application/vnd.theiascope.io+json"
 class ScaleBar(BaseModel):
     dimensions: list[int]
     l_n: float | None = None
-    length: float
+    length: float | None = None
+    length_e: float | None = None
     units_abbr: str
     units_name: str
     units_factor: float | None = None

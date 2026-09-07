@@ -2,6 +2,7 @@
 
 import importlib.metadata
 
+from pathlib import Path
 from tspng import __app_name__, PNG_FILE_EXT
 from tspng.cli import app, map_verbosity
 from tspng.schema.ts import v1
@@ -29,19 +30,21 @@ def test_app_version():
     assert f"{__app_name__} {version}" in result.stdout
 
 
-def test_app_extract(example_file_1_path):
+def test_app_extract(example_file_1_path: Path):
     result = runner.invoke(app, ["extract", str(example_file_1_path)])
     assert result.exit_code == 0
 
 
-def test_app_extract_multiple_files(example_file_1_path, example_file_2_path):
+def test_app_extract_multiple_files(
+    example_file_1_path: Path, example_file_2_path: Path
+):
     result = runner.invoke(
         app, ["extract", str(example_file_1_path), str(example_file_2_path)]
     )
     assert result.exit_code == 0
 
 
-def test_app_implant(coco_json_path, empty_png_path):
+def test_app_implant(coco_json_path: Path, empty_png_path: Path):
     expected = empty_png_path.with_suffix(v1.FILE_EXT)
     result = runner.invoke(app, ["implant", str(coco_json_path), str(empty_png_path)])
     assert result.exit_code == 0

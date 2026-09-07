@@ -14,7 +14,7 @@ class Annotation(BaseModel):
     id: int
     image_id: int
     iscrowd: int
-    segmentation: list[list[int]] | bytes | None = None
+    segmentation: list[list[int | float]] | bytes | None = None
 
 
 class Category(BaseModel):

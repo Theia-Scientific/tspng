@@ -11,11 +11,12 @@ MIME_TYPE: str = "application/vnd.theiascope.io+json"
 
 
 class ScaleBar(BaseModel):
+    dimensions: list[int]
     l_n: float | None = None
-    length_e: float
+    length: float
     units_abbr: str
     units_name: str
-    units_factor: float
+    units_factor: float | None
     x_n: float | None = None
     y_n: float | None = None
 
@@ -38,16 +39,29 @@ class Ruler(BaseModel):
 
 class Image(coco.Image):
     field_of_view: list[float]
-    uuid: str
+    uuid: str | None
     scale_bar: ScaleBar
     original_media_path: Path
     rulers: list[Ruler]
 
 
 class Annotation(coco.Annotation):
+    aspect_ratio: float | None
+    bottom_most_point: list[int] | None
+    centroid: list[int] | None
+    equivalent_diameter: float | None
+    extent: float | None
+    index: int | None
+    left_most_point: list[int] | None
+    major_axis: float | None
+    minor_axis: float | None
     model_id: int
+    orientation: float | None
+    perimeter: float | None
+    right_most_Point: list[int] | None
     score: float
-    tracking_id: int
+    top_most_point: list[int] | None
+    tracking_id: int | None
 
 
 class Model(BaseModel):
@@ -56,6 +70,7 @@ class Model(BaseModel):
     family: str
     id: int
     name: str
+    pid: int | None
 
 
 class Json(BaseModel):

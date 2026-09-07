@@ -33,7 +33,7 @@ def extract(inputs: list[Path] = typer.Argument(help="PNG image files.")):
     extractions = []
     for i in inputs:
         LOGGER.debug(f"i={i}")
-        extractions.append(E.extract(i))
+        extractions.append(E.extract_from_file(i).data)
     print(json.dumps(extractions))
 
 

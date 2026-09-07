@@ -16,6 +16,8 @@ LOGGER: logging.Logger = logging.getLogger(__name__)
 
 Data: TypeAlias = v1.Json | coco.Json | generic.Json | str
 
+KNOWN_MIME_TYPES = [v1.MIME_TYPE, coco.MIME_TYPE, generic.MIME_TYPE, text.MIME_TYPE]
+
 
 class Metadata(BaseModel):
     data: Data

@@ -2,6 +2,7 @@
 
 import io
 
+from PIL import Image
 from tspng.implantation import implant, implant_into_bytes, implant_into_file
 from tspng.extraction import extract
 from tspng.schema import coco, Metadata, text
@@ -43,6 +44,16 @@ def test_implant_with_path_data(coco_json_path, empty_png_path, tmp_path):
 def test_implant_with_str_data(coco_json_path, empty_png_path, tmp_path):
     dst = tmp_path.joinpath(empty_png_path.with_suffix(coco.FILE_EXT).name)
     implant(str(coco_json_path), str(empty_png_path), dst)
+    result = extract(dst)
+    assert isinstance(result, Metadata)
+    assert result.mime_type == coco.MIME_TYPE
+    assert isinstance(result.data, coco.Json)
+
+
+def test_implant_with_src_image(coco_json_path, empty_png_path, tmp_path):
+    dst = tmp_path.joinpath(empty_png_path.with_suffix(coco.FILE_EXT).name)
+    src = Image.open(empty_png_path)
+    implant(str(coco_json_path), src, dst)
     result = extract(dst)
     assert isinstance(result, Metadata)
     assert result.mime_type == coco.MIME_TYPE

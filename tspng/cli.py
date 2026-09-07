@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
+import sys
 import typer
 
 from pathlib import Path
@@ -70,7 +71,7 @@ def main(
         is_eager=True,
     ),
 ):
-    logging.basicConfig(level=map_verbosity(verbose))
+    logging.basicConfig(stream=sys.stderr, level=map_verbosity(verbose))
     logging.debug(f"version={version}")
 
 

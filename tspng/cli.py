@@ -8,7 +8,7 @@ from pathlib import Path
 from pydantic import TypeAdapter
 from tspng import __app_name__, __version__, extraction as E, implantation as I
 from tspng.schema import Metadata
-from tspng.schema.ts import v1
+from tspng.schema.ts import FILE_EXT as TS_FILE_EXT
 from typing import Annotated
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ def implant(
     data_file: Annotated[Path, typer.Argument(help="A data file.")],
     png_file: Annotated[Path, typer.Argument(help="A PNG image file.")],
 ):
-    I.implant(data_file, png_file, png_file.with_suffix(v1.FILE_EXT))
+    I.implant(data_file, png_file, png_file.with_suffix(TS_FILE_EXT))
 
 
 @app.callback()

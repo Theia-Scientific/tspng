@@ -9,7 +9,7 @@ import logging
 import os
 
 from pydantic import BaseModel, model_validator, TypeAdapter
-from tspng.schema import coco, generic, text
+from tspng.schema import coco, generic, text, ts
 from tspng.schema.ts import v1
 from typing import Self, TypeAlias
 
@@ -17,7 +17,7 @@ LOGGER: logging.Logger = logging.getLogger(__name__)
 
 Data: TypeAlias = v1.Json | coco.Json | generic.Json | str
 
-KNOWN_MIME_TYPES = [v1.MIME_TYPE, coco.MIME_TYPE, generic.MIME_TYPE, text.MIME_TYPE]
+KNOWN_MIME_TYPES = [ts.MIME_TYPE, coco.MIME_TYPE, generic.MIME_TYPE, text.MIME_TYPE]
 
 
 class Metadata(BaseModel):
@@ -32,7 +32,7 @@ class Metadata(BaseModel):
             if isinstance(value, coco.Json):
                 self.mime_type = coco.MIME_TYPE
             elif isinstance(value, v1.Json):
-                self.mime_type = v1.MIME_TYPE
+                self.mime_type = ts.MIME_TYPE
             elif isinstance(value, dict):
                 self.mime_type = generic.MIME_TYPE
             else:
@@ -55,7 +55,7 @@ class Metadata(BaseModel):
         if isinstance(self.data, coco.Json):
             return coco.FILE_EXT
         elif isinstance(self.data, v1.Json):
-            return v1.FILE_EXT
+            return ts.FILE_EXT
         elif isinstance(self.data, dict):
             return generic.FILE_EXT
         else:

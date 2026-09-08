@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 
 from pydantic import BaseModel
-from tspng import PNG_FILE_EXT
 from tspng.schema import coco
 from typing import Any
-
-FILE_EXT: str = f".ts{PNG_FILE_EXT}"
-MIME_TYPE: str = "application/vnd.theiascope.io+json"
 
 
 class ScaleBar(BaseModel):

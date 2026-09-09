@@ -45,6 +45,8 @@
         "units": {
             "abbr": "nm",
             "name": "nanometers"
-        }
+        },
+        "x": [0.1, 10],
+        "y": [0.9, 90]
     }
 }

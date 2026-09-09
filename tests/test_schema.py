@@ -9,7 +9,7 @@ from PIL import Image
 from PIL.PngImagePlugin import PngImageFile
 from tspng.schema import coco, generic, text
 from tspng.schema.data import Embedded, Meta as Metadata
-from tspng.schema.ts import FILE_EXT as TS_FILE_EXT, MIME_TYPE as TS_MIME_TYPE, v1
+from tspng.schema.ts import FILE_EXT as TS_FILE_EXT, MIME_TYPE as TS_MIME_TYPE, v1, v2
 from typing import Any
 
 

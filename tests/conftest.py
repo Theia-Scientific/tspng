@@ -37,6 +37,11 @@ def ts_v1_modern_json_path(assets_directory_path) -> Path:
 
 
 @pytest.fixture
+def ts_v2_json_path(assets_directory_path) -> Path:
+    return assets_directory_path.joinpath("ts_v2_data.json")
+
+
+@pytest.fixture
 def empty_png_path(tmp_path) -> Path:
     empty_png_path = tmp_path.joinpath("empty.png")
     image = Image.new("RGB", (640, 640))

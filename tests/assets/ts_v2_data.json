@@ -1,0 +1,50 @@
+{
+    "version": "2.0",
+    "annotations": [
+        {
+            "confidence": 0.954321,
+            "database_id": 5434312,
+            "height": [1.0, 100],
+            "label": {
+                "id": 0,
+                "name": "defect"
+            },
+            "ignore": false,
+            "index": 1,
+            "segmentation": [
+                [0, 0],
+                [100, 100]
+            ],
+            "tracking_id": 1,
+            "uuid": "00000-0000-000000"
+            "width": [1.0, 100]
+        }
+    ],
+    "field_of_view": {
+        "height": [1.0, 100],
+        "width": [1.0, 100],
+        "x": [0.0, 0],
+        "y": [0.0, 0]
+    },
+    "model": {
+        "created": "20260909T164600Z",
+        "description": "/YOLO/26/COCO/L-seg.pt",
+        "family": "YOLO",
+        "id": 12345,
+        "parameters": {
+            "tracking": {
+                "enabled": false
+            }
+        },
+        "title": "3000Epochs 16BatchSize 640imgsz L-seg",
+        "uuid": "00000000-0000-0000000",
+        "variant": "26"
+    },
+    "scale_bar": {
+        "length": [100.0, 0.5, 50],
+        "units": {
+            "abbr": "nm",
+            "name": "nanometers"
+        }
+    }
+}

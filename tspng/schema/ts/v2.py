@@ -7,14 +7,13 @@ from typing import Any, Literal
 
 
 class Annotation(BaseModel):
-    created: str
     confidence: float
     database_id: int
     height: tuple[float, int]
     label: Class
     ignore: bool = False
     index: int | None = None
-    segmentation: list[list[int | float]]
+    segmentation: list[tuple[int | float, int | float]]
     tracking_id: int | None = None
     uuid: str
     width: tuple[float, int]
@@ -26,7 +25,6 @@ class Class(BaseModel):
 
 
 class FieldOfView(BaseModel):
-    created: str
     height: tuple[float, int]
     width: tuple[float, int]
     x: tuple[float, int]

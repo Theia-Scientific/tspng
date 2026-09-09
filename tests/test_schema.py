@@ -31,6 +31,12 @@ def test_ts_v1_modern_json(ts_v1_modern_json_path: Path):
     assert isinstance(result, v1.Json)
 
 
+def test_ts_v2_json(ts_v2_json_path: Path):
+    with open(ts_v2_json_path) as f:
+        result = v2.Json.model_validate_json(f.read())
+    assert isinstance(result, v2.Json)
+
+
 def test_embedded_generic_json():
     data = {"greeting": "Hello", "target": "World"}
     embedded: dict[str, generic.Json | str] = {

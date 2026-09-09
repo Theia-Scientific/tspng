@@ -57,9 +57,17 @@ class Original(BaseModel):
     media: Media
 
 
-class Units(BaseModel):
-    abbr: str
-    name: str
+class Point(BaseModel):
+    x: tuple[float, int]
+    y: tuple[float, int]
+
+
+class Ruler(BaseModel):
+    begin: Point
+    color: str
+    end: Point
+    length: tuple[float, float, int]
+    units: Units
 
 
 class ScaleBar(BaseModel):
@@ -69,10 +77,16 @@ class ScaleBar(BaseModel):
     y: tuple[float, int]
 
 
+class Units(BaseModel):
+    abbr: str
+    name: str
+
+
 class Json(BaseModel):
     version: Literal["2.0"]
 
     annotations: list[Annotation]
     field_of_view: FieldOfView
     model: Model
+    rulers: list[Ruler]
     scale_bar: ScaleBar

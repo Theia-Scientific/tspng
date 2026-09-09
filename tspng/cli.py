@@ -7,7 +7,7 @@ import typer
 from pathlib import Path
 from pydantic import TypeAdapter
 from tspng import __app_name__, __version__, extraction as E, implantation as I
-from tspng.schema import Metadata
+from tspng.schema.data import Embedded
 from tspng.schema.ts import FILE_EXT as TS_FILE_EXT
 from typing import Annotated
 
@@ -41,7 +41,7 @@ def extract(
     extractions = E.extract_from_files(inputs)
     if len(extractions) > 1:
         print(
-            TypeAdapter(dict[str, Metadata])
+            TypeAdapter(dict[str, Embedded])
             .dump_json(extractions, exclude_none=True)
             .decode("UTF-8")
         )

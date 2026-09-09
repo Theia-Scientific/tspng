@@ -1,5 +1,4 @@
 {
-    "version": "2.0",
     "annotations": [
         {
             "confidence": 0.954321,
@@ -40,6 +39,24 @@
         "uuid": "00000000-0000-0000000",
         "variant": "26"
     },
+    "rulers": [
+        {
+            "begin": {
+                "x": [0.0, 0],
+                "y": [0.0, 0]
+            },
+            "color": "#FFFFFFFF",
+            "end": {
+                "x": [1.0, 100],
+                "y": [1.0, 100]
+            },
+            "length": [141.0, 1.41, 141],
+            "units": {
+                "abbr": "nm",
+                "name": "nanometers"
+            }
+        }
+    ],
     "scale_bar": {
         "length": [100.0, 0.5, 50],
         "units": {
@@ -48,5 +65,6 @@
         },
         "x": [0.1, 10],
         "y": [0.9, 90]
-    }
+    },
+    "version": "2.0"
 }

@@ -88,5 +88,5 @@ class Json(BaseModel):
     annotations: list[Annotation]
     field_of_view: FieldOfView
     model: Model
-    rulers: list[Ruler]
+    rulers: list[Ruler] = []
     scale_bar: ScaleBar

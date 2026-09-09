@@ -29,13 +29,13 @@ def test_ts_v1_modern_json(ts_v1_modern_json_path: Path):
     assert isinstance(result, v1.Json)
 
 
-def test_metadata_generic_json():
+def test_embedded_generic_json():
     data = {"greeting": "Hello", "target": "World"}
-    metadata: dict[str, generic.Json | str] = {
+    embedded: dict[str, generic.Json | str] = {
         "data": data,
         "mime_type": generic.MIME_TYPE,
     }
-    result = Embedded.model_validate(metadata)
+    result = Embedded.model_validate(embedded)
     assert isinstance(result, Embedded)
     assert result.mime_type == generic.MIME_TYPE
     assert isinstance(result.data, dict)
@@ -55,14 +55,14 @@ def test_metadata_generic_json():
     assert result.ext == generic.FILE_EXT
 
 
-def test_metadata_ts_v1_modern_json(ts_v1_modern_json_path: Path):
+def test_embedded_ts_v1_modern_json(ts_v1_modern_json_path: Path):
     with open(ts_v1_modern_json_path) as f:
         data = json.load(f)
-    metadata: dict[str, dict[str, Any] | str] = {
+    embedded: dict[str, dict[str, Any] | str] = {
         "data": data,
         "mime_type": TS_MIME_TYPE,
     }
-    result = Embedded.model_validate(metadata)
+    result = Embedded.model_validate(embedded)
     assert isinstance(result, Embedded)
     assert result.mime_type == TS_MIME_TYPE
     assert isinstance(result.data, v1.Json)
@@ -82,14 +82,14 @@ def test_metadata_ts_v1_modern_json(ts_v1_modern_json_path: Path):
     assert result.ext == TS_FILE_EXT
 
 
-def test_metadata_ts_v1_legacy_json(ts_v1_legacy_json_path: Path):
+def test_embedded_ts_v1_legacy_json(ts_v1_legacy_json_path: Path):
     with open(ts_v1_legacy_json_path) as f:
         data = json.load(f)
-    metadata: dict[str, dict[str, Any] | str] = {
+    embedded: dict[str, dict[str, Any] | str] = {
         "data": data,
         "mime_type": TS_MIME_TYPE,
     }
-    result = Embedded.model_validate(metadata)
+    result = Embedded.model_validate(embedded)
     assert isinstance(result, Embedded)
     assert result.mime_type == TS_MIME_TYPE
     assert isinstance(result.data, v1.Json)
@@ -109,14 +109,14 @@ def test_metadata_ts_v1_legacy_json(ts_v1_legacy_json_path: Path):
     assert result.ext == TS_FILE_EXT
 
 
-def test_metadata_coco_json(coco_json_path: Path):
+def test_embedded_coco_json(coco_json_path: Path):
     with open(coco_json_path) as f:
         data = json.load(f)
-    metadata: dict[str, dict[str, Any] | str] = {
+    embedded: dict[str, dict[str, Any] | str] = {
         "data": data,
         "mime_type": coco.MIME_TYPE,
     }
-    result = Embedded.model_validate(metadata)
+    result = Embedded.model_validate(embedded)
     assert isinstance(result, Embedded)
     assert result.mime_type == coco.MIME_TYPE
     assert isinstance(result.data, coco.Json)
@@ -136,13 +136,13 @@ def test_metadata_coco_json(coco_json_path: Path):
     assert result.ext == coco.FILE_EXT
 
 
-def test_metadata_text():
+def test_embedded_text():
     data = "Hello, World!"
-    metadata: dict[str, str] = {
+    embedded: dict[str, str] = {
         "data": data,
         "mime_type": text.MIME_TYPE,
     }
-    result = Embedded.model_validate(metadata)
+    result = Embedded.model_validate(embedded)
     assert isinstance(result, Embedded)
     assert result.mime_type == text.MIME_TYPE
     assert isinstance(result.data, str)
@@ -162,7 +162,7 @@ def test_metadata_text():
     assert result.ext == text.FILE_EXT
 
 
-def test_metadata_load_text(txt_file_path: Path):
+def test_embedded_load_text(txt_file_path: Path):
     result = Embedded.load(txt_file_path)
     assert isinstance(result, Embedded)
     assert result.mime_type == text.MIME_TYPE
@@ -171,17 +171,17 @@ def test_metadata_load_text(txt_file_path: Path):
     assert result.ext == text.FILE_EXT
 
 
-def test_metadata_load_fails_file_not_exists(tmp_path: Path):
+def test_embedded_load_fails_file_not_exists(tmp_path: Path):
     with pytest.raises(FileNotFoundError):
         _ = Embedded.load(tmp_path.joinpath("random.png"))
 
 
-def test_metadata_load_fails_path_not_file(tmp_path: Path):
+def test_embedded_load_fails_path_not_file(tmp_path: Path):
     with pytest.raises(IsADirectoryError):
         _ = Embedded.load(tmp_path)
 
 
-def test_metadata_dump_to_file(
+def test_embedded_dump_to_file(
     coco_json_path: Path,
     txt_file_path: Path,
     ts_v1_legacy_json_path: Path,
@@ -219,7 +219,7 @@ def test_metadata_dump_to_file(
         assert f.read() == text_data
 
 
-def test_metadata_dump_to_buffer(
+def test_embedded_dump_to_buffer(
     coco_json_path: Path, txt_file_path: Path, ts_v1_legacy_json_path: Path
 ):
     with open(coco_json_path) as f:

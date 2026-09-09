@@ -5,13 +5,13 @@ import logging
 import os
 
 from PIL import Image
-from tspng.schema.data import Meta
+from tspng.schema.data import Embedded, Meta as Metadata
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
 def implant(
-    data: Embedded | os.PathLike[str],
+    data: Embedded | Metadata | os.PathLike[str],
     src: os.PathLike[str] | io.BytesIO | Image.Image,
     dst: os.PathLike[str] | io.BytesIO,
 ):
@@ -43,7 +43,7 @@ def implant(
 
 
 def implant_into_file(
-    data: Embedded | os.PathLike[str],
+    data: Embedded | Metadata | os.PathLike[str],
     src: os.PathLike[str] | io.BytesIO | Image.Image,
     dst: os.PathLike[str],
 ):
@@ -60,7 +60,7 @@ def implant_into_file(
 
 
 def implant_into_bytes(
-    data: Embedded | os.PathLike[str],
+    data: Embedded | Metadata | os.PathLike[str],
     src: os.PathLike[str] | io.BytesIO | Image.Image,
     dst: io.BytesIO,
 ):

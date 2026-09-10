@@ -8,15 +8,28 @@ import json
 import logging
 import os
 
-from PIL.PngImagePlugin import PngInfo
-from pydantic import BaseModel, model_validator, TypeAdapter
-from tspng.schema import coco, generic, text, ts
+from PIL import Image
+from PIL.PngImagePlugin import PngImageFile, PngInfo
+from pydantic import BaseModel, Field, model_validator, TypeAdapter
+from tspng.schema import coco, generic, KNOWN_MIME_TYPES, text, ts
 from tspng.schema.ts import v1
 from typing import Self, TypeAlias
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
 Data: TypeAlias = v1.Json | coco.Json | generic.Json | str
+
+
+class MetadataNotFound(Exception):
+    def __init__(self, im: Image.Image):
+        self.image: Image.Image = im
+        super().__init__()
+
+
+class NotPngFormat(Exception):
+    def __init__(self, im: Image.Image, msg: str = ""):
+        self.image: Image.Image = im
+        super().__init__(msg)
 
 
 class Embedded(BaseModel):
@@ -121,39 +134,49 @@ class Embedded(BaseModel):
 
 
 class Meta(BaseModel):
-    author: str | None
-    comment: str | None
-    description: str | None
-    copyright: str | None
-    creation_time: str | None
-    disclaimer: str | None
-    embedded: list[Embedded] | None
-    title: str | None
-    software: str | None
-    source: str | None
+    author: str | None = Field(default=None, alias="Author")
+    comment: str | None = Field(default=None, alias="Comment")
+    description: str | None = Field(default=None, alias="Description")
+    copyright: str | None = Field(default=None, alias="Copyright")
+    creation_time: str | None = Field(default=None, alias="Creation Time")
+    disclaimer: str | None = Field(default=None, alias="Disclaimer")
+    embedded: list[Embedded] | None = None
+    title: str | None = Field(default=None, alias="Disclaimer")
+    software: str | None = Field(default=None, alias="Software")
+    source: str | None = Field(default=None, alias="Source")
 
     @property
     def png_info(self) -> PngInfo:
         png_info = PngInfo()
-        if self.author is not None:
-            png_info.add_text("Author", self.author)
-        if self.copyright is not None:
-            png_info.add_text("Copyright", self.copyright)
-        if self.creation_time is not None:
-            png_info.add_text("Creation Time", self.creation_time)
-        if self.comment is not None:
-            png_info.add_text("Comment", self.comment)
-        if self.description is not None:
-            png_info.add_text("Description", self.description)
-        if self.disclaimer is not None:
-            png_info.add_text("Disclaimer", self.disclaimer)
-        if self.embedded is not None:
-            for embed in self.embedded:
-                png_info.add_text(embed.key, embed.text)
-        if self.software is not None:
-            png_info.add_text("Software", self.software)
-        if self.source is not None:
-            png_info.add_text("Source", self.source)
-        if self.title is not None:
-            png_info.add_text("Title", self.title)
+        for name, field_info in Meta.model_fields.items():
+            value = getattr(self, name)
+            if value is not None:
+                if name == "embedded":
+                    for embed in value:
+                        png_info.add_text(embed.key, embed.text)
+                else:
+                    key = field_info.alias
+                    if key is not None:
+                        png_info.add_text(key, value)
         return png_info
+
+    @staticmethod
+    def load(src: os.PathLike[str] | io.BytesIO) -> Meta:
+        im = Image.open(src)
+        if not isinstance(im, PngImageFile):
+            LOGGER.warning("The source is not a PNG image.")
+            raise NotPngFormat(im)
+        meta = im.text
+        if meta is None:
+            LOGGER.warning("There is no metadata.")
+            raise MetadataNotFound(im)
+        metadata = Meta()
+        embedded = []
+        for key, value in meta.items():
+            if key in KNOWN_MIME_TYPES:
+                embedded.append(Embedded(data=value))
+            else:
+                setattr(metadata, key.lower(), value)
+        if len(embedded) > 0:
+            metadata.embedded = embedded
+        return metadata

@@ -136,9 +136,9 @@ class Embedded(BaseModel):
 class Meta(BaseModel):
     author: str | None = Field(default=None, alias="Author")
     comment: str | None = Field(default=None, alias="Comment")
-    description: str | None = Field(default=None, alias="Description")
     copyright: str | None = Field(default=None, alias="Copyright")
     creation_time: str | None = Field(default=None, alias="Creation Time")
+    description: str | None = Field(default=None, alias="Description")
     disclaimer: str | None = Field(default=None, alias="Disclaimer")
     embedded: list[Embedded] = []
     title: str | None = Field(default=None, alias="Title")
@@ -163,9 +163,9 @@ class Meta(BaseModel):
                 generic.MIME_TYPE,
                 text.MIME_TYPE,
             ]:
-                metadata.embedded.append(Embedded(data=value))
+                metadata.embedded.append(Embedded.load(io.StringIO(value)))
             else:
-                setattr(metadata, key.lower(), value)
+                setattr(metadata, key.lower().replace(" ", "_"), value)
         return metadata
 
     @property

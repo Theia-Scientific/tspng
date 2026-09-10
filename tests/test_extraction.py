@@ -7,19 +7,15 @@ from pathlib import Path
 from PIL import Image
 from pytest_mock import MockerFixture
 from tspng.extraction import (
-    EmbededDataNotFound,
-    MetadataNotFound,
-    _open_image,
     extract,
     extract_from_bytes,
     extract_from_file,
     extract_from_files,
     extract_from_folder,
     extract_from_url,
-    NotPngFormat,
     PathDoesNotContainPngs,
 )
-from tspng.schema.data import Embedded
+from tspng.schema.data import Meta as Metadata
 from tspng.schema.ts import MIME_TYPE as TS_MIME_TYPE, v1
 from urllib.error import HTTPError
 
@@ -39,9 +35,18 @@ def example_file_1_url() -> str:
 
 def test_extract_with_file_path(example_file_1_path: Path):
     result = extract(example_file_1_path)
-    assert isinstance(result, Embedded)
-    assert result.mime_type == TS_MIME_TYPE
-    assert isinstance(result.data, v1.Json)
+    assert isinstance(result, Metadata)
+    assert result.author is not None
+    assert result.comment is not None
+    assert result.copyright is not None
+    assert result.creation_time is not None
+    assert result.description is not None
+    assert result.title is not None
+    assert result.software is not None
+    assert result.source is not None
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == TS_MIME_TYPE
+    assert isinstance(result.embedded[0].data, v1.Json)
 
 
 def test_extract_with_files(example_file_1_path: Path, example_file_2_path: Path):

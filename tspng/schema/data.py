@@ -10,7 +10,7 @@ import os
 
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile, PngInfo
-from pydantic import BaseModel, Field, model_validator, TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field, model_validator, TypeAdapter
 from tspng.schema import coco, generic, text, ts
 from tspng.schema.ts import v1
 from typing import Self, TypeAlias
@@ -134,16 +134,18 @@ class Embedded(BaseModel):
 
 
 class Meta(BaseModel):
-    author: str | None = Field(default=None, alias="Author")
-    comment: str | None = Field(default=None, alias="Comment")
-    copyright: str | None = Field(default=None, alias="Copyright")
-    creation_time: str | None = Field(default=None, alias="Creation Time")
-    description: str | None = Field(default=None, alias="Description")
-    disclaimer: str | None = Field(default=None, alias="Disclaimer")
+    author: str | None = None
+    comment: str | None = None
+    copyright: str | None = None
+    creation_time: str | None = None
+    description: str | None = None
+    disclaimer: str | None = None
     embedded: list[Embedded] = []
-    title: str | None = Field(default=None, alias="Title")
-    software: str | None = Field(default=None, alias="Software")
-    source: str | None = Field(default=None, alias="Source")
+    title: str | None = None
+    software: str | None = None
+    source: str | None = None
+
+    model_config = ConfigDict(validate_by_alias=True, validate_by_name=True)
 
     @staticmethod
     def load(src: os.PathLike[str] | io.BytesIO) -> Meta:
@@ -171,14 +173,12 @@ class Meta(BaseModel):
     @property
     def png_info(self) -> PngInfo:
         png_info = PngInfo()
-        for name, field_info in Meta.model_fields.items():
+        for name in Meta.model_fields.keys():
             value = getattr(self, name)
             if value is not None:
                 if name == "embedded":
                     for embed in value:
                         png_info.add_text(embed.key, embed.text)
                 else:
-                    key = field_info.alias
-                    if key is not None:
-                        png_info.add_text(key, value)
+                    png_info.add_text(name.title().replace("_", " "), value)
         return png_info

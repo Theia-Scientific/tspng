@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import io
 import importlib.metadata
 
 from pathlib import Path
+from pydantic import TypeAdapter
 from tspng import __app_name__, PNG_FILE_EXT
 from tspng.cli import app, map_verbosity
 from tspng.schema.data import Meta as Metadata
@@ -53,11 +53,41 @@ def test_app_extract(example_file_1_path: Path):
 def test_app_extract_multiple_files(
     example_file_1_path: Path, example_file_2_path: Path
 ):
+    example_file_1_str = str(example_file_1_path)
+    example_file_2_str = str(example_file_2_path)
     result = runner.invoke(
         app, ["extract", str(example_file_1_path), str(example_file_2_path)]
     )
     assert result.exit_code == 0
     assert len(result.stdout) > 0
+    files_metadata = TypeAdapter(dict[str, Metadata]).validate_json(result.stdout)
+    assert len(files_metadata) > 0
+    assert example_file_1_str in files_metadata
+    example_file_1_result = files_metadata[example_file_1_str]
+    assert example_file_1_result.author is not None
+    assert example_file_1_result.comment is not None
+    assert example_file_1_result.copyright is not None
+    assert example_file_1_result.creation_time is not None
+    assert example_file_1_result.description is not None
+    assert example_file_1_result.title is not None
+    assert example_file_1_result.software is not None
+    assert example_file_1_result.source is not None
+    assert len(example_file_1_result.embedded) == 1
+    assert example_file_1_result.embedded[0].mime_type == TS_MIME_TYPE
+    assert isinstance(example_file_1_result.embedded[0].data, v1.Json)
+    assert example_file_2_str in files_metadata
+    example_file_2_result = files_metadata[example_file_2_str]
+    assert example_file_2_result.author is not None
+    assert example_file_2_result.comment is not None
+    assert example_file_2_result.copyright is not None
+    assert example_file_2_result.creation_time is not None
+    assert example_file_2_result.description is not None
+    assert example_file_2_result.title is not None
+    assert example_file_2_result.software is not None
+    assert example_file_2_result.source is not None
+    assert len(example_file_2_result.embedded) == 1
+    assert example_file_2_result.embedded[0].mime_type == TS_MIME_TYPE
+    assert isinstance(example_file_2_result.embedded[0].data, v1.Json)
 
 
 def test_app_implant(coco_json_path: Path, empty_png_path: Path):

@@ -53,7 +53,7 @@ def extract(
         return extract_from_url(str(src))
     else:
         msg = f"{src} is not a BytesIO object, file, list of files, or folder."
-        LOGGER.warning(msg)
+        LOGGER.error(msg)
         raise TypeError(msg)
 
 
@@ -93,10 +93,10 @@ def extract_from_file(path: os.PathLike[str]) -> Metadata:
         Exception: If image is not a PNG
     """
     if not os.path.exists(path):
-        LOGGER.warning(f"The '{path}' path does not exist.")
+        LOGGER.error(f"The '{path}' path does not exist.")
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), path)
     if not os.path.isfile(path):
-        LOGGER.warning(f"The '{path}' path is not a file.")
+        LOGGER.error(f"The '{path}' path is not a file.")
         raise IsADirectoryError(errno.EISDIR, os.strerror(errno.EISDIR), path)
     return Metadata.load(path)
 
@@ -136,7 +136,7 @@ def extract_from_folder(path: os.PathLike[str]) -> dict[str, Metadata]:
         Exception: If path does not contain a PNG file
     """
     if not os.path.isdir(path):
-        LOGGER.warning(f"The '{path}' is not a directory.")
+        LOGGER.error(f"The '{path}' is not a directory.")
         raise NotADirectoryError(errno.ENOTDIR, os.strerror(errno.ENOTDIR), path)
     file_list = []
     for file in os.listdir(path):
@@ -144,7 +144,7 @@ def extract_from_folder(path: os.PathLike[str]) -> dict[str, Metadata]:
         if root_ext[1] == PNG_FILE_EXT:
             file_list.append(os.path.join(path, file))
     if file_list == []:
-        LOGGER.warning(f"The '{path}' does not contain PNG files.")
+        LOGGER.error(f"The '{path}' does not contain PNG files.")
         raise PathDoesNotContainPngs(path)
     return extract_from_files(file_list)
 

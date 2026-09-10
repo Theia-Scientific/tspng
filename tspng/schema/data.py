@@ -11,7 +11,7 @@ import os
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile, PngInfo
 from pydantic import BaseModel, Field, model_validator, TypeAdapter
-from tspng.schema import coco, generic, KNOWN_MIME_TYPES, text, ts
+from tspng.schema import coco, generic, text, ts
 from tspng.schema.ts import v1
 from typing import Self, TypeAlias
 
@@ -21,9 +21,9 @@ Data: TypeAlias = v1.Json | coco.Json | generic.Json | str
 
 
 class MetadataNotFound(Exception):
-    def __init__(self, im: Image.Image):
+    def __init__(self, im: Image.Image, msg: str = ""):
         self.image: Image.Image = im
-        super().__init__()
+        super().__init__(msg)
 
 
 class NotPngFormat(Exception):
@@ -140,10 +140,33 @@ class Meta(BaseModel):
     copyright: str | None = Field(default=None, alias="Copyright")
     creation_time: str | None = Field(default=None, alias="Creation Time")
     disclaimer: str | None = Field(default=None, alias="Disclaimer")
-    embedded: list[Embedded] | None = None
-    title: str | None = Field(default=None, alias="Disclaimer")
+    embedded: list[Embedded] = []
+    title: str | None = Field(default=None, alias="Title")
     software: str | None = Field(default=None, alias="Software")
     source: str | None = Field(default=None, alias="Source")
+
+    @staticmethod
+    def load(src: os.PathLike[str] | io.BytesIO) -> Meta:
+        im = Image.open(src)
+        if not isinstance(im, PngImageFile):
+            LOGGER.warning("The source is not a PNG image.")
+            raise NotPngFormat(im)
+        meta = im.text
+        if meta is None:
+            LOGGER.warning("There is no metadata.")
+            raise MetadataNotFound(im)
+        metadata = Meta()
+        for key, value in meta.items():
+            if key in [
+                ts.MIME_TYPE,
+                coco.MIME_TYPE,
+                generic.MIME_TYPE,
+                text.MIME_TYPE,
+            ]:
+                metadata.embedded.append(Embedded(data=value))
+            else:
+                setattr(metadata, key.lower(), value)
+        return metadata
 
     @property
     def png_info(self) -> PngInfo:
@@ -159,24 +182,3 @@ class Meta(BaseModel):
                     if key is not None:
                         png_info.add_text(key, value)
         return png_info
-
-    @staticmethod
-    def load(src: os.PathLike[str] | io.BytesIO) -> Meta:
-        im = Image.open(src)
-        if not isinstance(im, PngImageFile):
-            LOGGER.warning("The source is not a PNG image.")
-            raise NotPngFormat(im)
-        meta = im.text
-        if meta is None:
-            LOGGER.warning("There is no metadata.")
-            raise MetadataNotFound(im)
-        metadata = Meta()
-        embedded = []
-        for key, value in meta.items():
-            if key in KNOWN_MIME_TYPES:
-                embedded.append(Embedded(data=value))
-            else:
-                setattr(metadata, key.lower(), value)
-        if len(embedded) > 0:
-            metadata.embedded = embedded
-        return metadata

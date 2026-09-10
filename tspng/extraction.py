@@ -3,43 +3,22 @@
 import errno
 import io
 import logging
-import json
 import os
 import urllib.request
 
 from collections.abc import Sequence
 from pathlib import Path
-from PIL import Image
-from PIL.PngImagePlugin import PngImageFile
-from tspng.schema import generic, KNOWN_MIME_TYPES, text
-from tspng.schema.data import Embedded, Meta as Metadata
+from tspng import PNG_FILE_EXT
+from tspng.schema.data import Meta as Metadata
 from urllib.parse import urlparse
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
-class EmbededDataNotFound(Exception):
-    def __init__(self, im: Image.Image):
-        self.image: Image.Image = im
-        super().__init__()
-
-
-class MetadataNotFound(Exception):
-    def __init__(self, im: Image.Image):
-        self.image: Image.Image = im
-        super().__init__()
-
-
-class NotPngFormat(Exception):
-    def __init__(self, im: Image.Image):
-        self.image: Image.Image = im
-        super().__init__()
-
-
 class PathDoesNotContainPngs(Exception):
-    def __init__(self, path: os.PathLike[str]):
+    def __init__(self, path: os.PathLike[str], msg: str = ""):
         self.path: os.PathLike[str] = path
-        super().__init__()
+        super().__init__(msg)
 
 
 def extract(
@@ -162,7 +141,7 @@ def extract_from_folder(path: os.PathLike[str]) -> dict[str, Metadata]:
     file_list = []
     for file in os.listdir(path):
         root_ext = os.path.splitext(file)
-        if root_ext[1] == ".png":
+        if root_ext[1] == PNG_FILE_EXT:
             file_list.append(os.path.join(path, file))
     if file_list == []:
         LOGGER.warning(f"The '{path}' does not contain PNG files.")

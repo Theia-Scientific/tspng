@@ -287,7 +287,6 @@ def test_metadata(empty_png_path: Path):
         source="This test",
     )
     im = Image.open(empty_png_path)
-    print(metadata.png_info.chunks)
     im.save(empty_png_path, format="PNG", pnginfo=metadata.png_info)
     im.close()
     saved_im = Image.open(empty_png_path)
@@ -318,3 +317,8 @@ def test_metadata_load_no_metadata(empty_png_path: Path, mocker: MockerFixture):
     )
     with pytest.raises(MetadataNotFound):
         _ = Metadata.load(empty_png_path)
+
+
+def test_metadata_extra_keys(empty_png_path: Path):
+    im = Image.open(empty_png_path)
+    pass

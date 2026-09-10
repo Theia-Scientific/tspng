@@ -4,7 +4,6 @@ import pytest
 
 from io import BytesIO
 from pathlib import Path
-from PIL import Image
 from tspng.extraction import (
     extract,
     extract_from_bytes,
@@ -17,14 +16,6 @@ from tspng.extraction import (
 from tspng.schema.data import Meta as Metadata
 from tspng.schema.ts import MIME_TYPE as TS_MIME_TYPE, v1
 from urllib.error import HTTPError
-
-
-@pytest.fixture
-def empty_jpeg_path(tmp_path: Path) -> Path:
-    empty_jpeg_path = tmp_path.joinpath("empty.jpeg")
-    image = Image.new("RGB", (640, 640))
-    image.save(empty_jpeg_path, format="JPEG")
-    return empty_jpeg_path
 
 
 @pytest.fixture

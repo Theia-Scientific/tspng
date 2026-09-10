@@ -7,10 +7,19 @@ import pytest
 from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile
+from pytest_mock import MockerFixture
 from tspng.schema import coco, generic, text
-from tspng.schema.data import Embedded, Meta as Metadata
+from tspng.schema.data import Embedded, Meta as Metadata, MetadataNotFound, NotPngFormat
 from tspng.schema.ts import FILE_EXT as TS_FILE_EXT, MIME_TYPE as TS_MIME_TYPE, v1, v2
 from typing import Any
+
+
+@pytest.fixture
+def empty_jpeg_path(tmp_path: Path) -> Path:
+    empty_jpeg_path = tmp_path.joinpath("empty.jpeg")
+    image = Image.new("RGB", (640, 640))
+    image.save(empty_jpeg_path, format="JPEG")
+    return empty_jpeg_path
 
 
 def test_coco_json(coco_json_path: Path):
@@ -296,3 +305,16 @@ def test_metadata(empty_png_path: Path):
     assert "Software" in keys
     assert "Source" in keys
     assert text.MIME_TYPE in keys
+
+
+def test_metadata_load_not_png_fails(empty_jpeg_path: Path):
+    with pytest.raises(NotPngFormat):
+        _ = Metadata.load(empty_jpeg_path)
+
+
+def test_metadata_load_no_metadata(empty_png_path: Path, mocker: MockerFixture):
+    _ = mocker.patch(
+        "PIL.PngImagePlugin.PngImageFile.text", mocker.PropertyMock(return_value=None)
+    )
+    with pytest.raises(MetadataNotFound):
+        _ = Metadata.load(empty_png_path)

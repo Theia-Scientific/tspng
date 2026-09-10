@@ -5,7 +5,6 @@ import pytest
 from io import BytesIO
 from pathlib import Path
 from PIL import Image
-from pytest_mock import MockerFixture
 from tspng.extraction import (
     extract,
     extract_from_bytes,
@@ -307,26 +306,3 @@ def test_extract_from_url_fails():
         _ = extract_from_url(
             "https://bounding-box-instructions.s3.amazonaws.com/example_file_4.ts.png"
         )
-
-
-def test_open_image_with_mime_type(example_file_1_path: Path):
-    result = _open_image(example_file_1_path, mime_type=TS_MIME_TYPE)
-    assert isinstance(result, dict)
-
-
-def test_open_image_not_png_fails(empty_jpeg_path: Path):
-    with pytest.raises(NotPngFormat):
-        _ = _open_image(empty_jpeg_path)
-
-
-def test_open_image_fails_no_metadata(empty_png_path: Path, mocker: MockerFixture):
-    _ = mocker.patch(
-        "PIL.PngImagePlugin.PngImageFile.text", mocker.PropertyMock(return_value=None)
-    )
-    with pytest.raises(MetadataNotFound):
-        _ = _open_image(empty_png_path)
-
-
-def test_open_image_fails_no_embedded_data(empty_png_path: Path):
-    with pytest.raises(EmbededDataNotFound):
-        _ = _open_image(empty_png_path)

@@ -164,16 +164,34 @@ def test_extract_from_bytes(example_file_1_path: Path):
     with open(example_file_1_path, "rb") as fh:
         buf = BytesIO(fh.read())
     result = extract_from_bytes(buf)
-    assert isinstance(result, Embedded)
-    assert result.mime_type == TS_MIME_TYPE
-    assert isinstance(result.data, v1.Json)
+    assert isinstance(result, Metadata)
+    assert result.author is not None
+    assert result.comment is not None
+    assert result.copyright is not None
+    assert result.creation_time is not None
+    assert result.description is not None
+    assert result.title is not None
+    assert result.software is not None
+    assert result.source is not None
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == TS_MIME_TYPE
+    assert isinstance(result.embedded[0].data, v1.Json)
 
 
 def test_extract_from_file(example_file_1_path: Path):
     result = extract_from_file(example_file_1_path)
-    assert isinstance(result, Embedded)
-    assert result.mime_type == TS_MIME_TYPE
-    assert isinstance(result.data, v1.Json)
+    assert isinstance(result, Metadata)
+    assert result.author is not None
+    assert result.comment is not None
+    assert result.copyright is not None
+    assert result.creation_time is not None
+    assert result.description is not None
+    assert result.title is not None
+    assert result.software is not None
+    assert result.source is not None
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == TS_MIME_TYPE
+    assert isinstance(result.embedded[0].data, v1.Json)
 
 
 def test_extract_from_file_not_exists_fails():

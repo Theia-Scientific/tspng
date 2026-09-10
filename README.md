@@ -51,10 +51,26 @@ embedded data into existing PNGs.
      // ...  omitted for clarity
    }
    ```
-   
+
    where the contents of the PNG metadata will be printed to STDOUT as JSON. The
    actual contents are omitted for clarity. The [jq] application can also be
    used to query and filter the output.
+
+6. Alternatively, data can be implanted into an existing PNG.
+
+   ```python
+   from tspng.implantation import implant
+
+   implant("Path/to/file.json", "Path/to/existing.png", "Path/to/new.png")
+   ```
+
+7. Creating Metadata for use in other components is also possible with the schema API.
+
+   ```python
+   from tspng.schema.data import Meta as Metadata
+
+   print(Metadata(embedded=[Embedded(data="Hello, World!", mime_type="text/plain")]).model_dump_json(ident=2))
+   ```
 
 ### Application
 

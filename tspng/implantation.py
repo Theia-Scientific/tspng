@@ -28,7 +28,7 @@ def implant(
     LOGGER.debug(f"{src=}")
     LOGGER.debug(f"{dst=}")
     if isinstance(data, os.PathLike):
-        metadata = Embedded.load(data)
+        metadata = Metadata(embedded=[Embedded.load(data)])
     else:
         metadata = data
     if (

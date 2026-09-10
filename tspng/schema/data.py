@@ -8,6 +8,7 @@ import json
 import logging
 import os
 
+from datetime import datetime as DateTime
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile, PngInfo
 from pydantic import BaseModel, ConfigDict, model_validator, TypeAdapter
@@ -138,7 +139,7 @@ class Meta(BaseModel):
     author: str | None = None
     comment: str | None = None
     copyright: str | None = None
-    creation_time: str | None = None
+    creation_time: DateTime | str | None = None
     description: str | None = None
     disclaimer: str | None = None
     embedded: list[Embedded] = []

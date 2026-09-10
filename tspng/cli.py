@@ -6,7 +6,7 @@ import typer
 
 from pathlib import Path
 from pydantic import TypeAdapter
-from tspng import __app_name__, __version__, extraction as E, implantation as I
+from tspng import __app_name__, __version__, extraction, implantation
 from tspng.schema.data import Meta as Metadata
 from tspng.schema.ts import FILE_EXT as TS_FILE_EXT
 from typing import Annotated
@@ -38,7 +38,7 @@ def version_callback(value: bool):
 def extract(
     inputs: Annotated[list[Path], typer.Argument(help="PNG image files.")],
 ):
-    extractions = E.extract_from_files(inputs)
+    extractions = extraction.extract_from_files(inputs)
     if len(extractions) > 1:
         print(
             TypeAdapter(dict[str, Metadata])
@@ -55,7 +55,7 @@ def implant(
     data_file: Annotated[Path, typer.Argument(help="A data file.")],
     png_file: Annotated[Path, typer.Argument(help="A PNG image file.")],
 ):
-    I.implant(data_file, png_file, png_file.with_suffix(TS_FILE_EXT))
+    implantation.implant(data_file, png_file, png_file.with_suffix(TS_FILE_EXT))
 
 
 @app.callback()

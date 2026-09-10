@@ -127,7 +127,7 @@ class Meta(BaseModel):
     copyright: str | None
     creation_time: str | None
     disclaimer: str | None
-    embedded: Embedded | None
+    embedded: list[Embedded] | None
     title: str | None
     software: str | None
     source: str | None
@@ -148,7 +148,8 @@ class Meta(BaseModel):
         if self.disclaimer is not None:
             png_info.add_text("Disclaimer", self.disclaimer)
         if self.embedded is not None:
-            png_info.add_text(self.embedded.key, self.embedded.text)
+            for embed in self.embedded:
+                png_info.add_text(embed.key, embed.text)
         if self.software is not None:
             png_info.add_text("Software", self.software)
         if self.source is not None:

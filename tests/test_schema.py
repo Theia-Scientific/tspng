@@ -4,6 +4,7 @@ import io
 import json
 import pytest
 
+from datetime import datetime as DateTime
 from pathlib import Path
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile
@@ -24,13 +25,17 @@ def empty_jpeg_path(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def mock_metadata() -> Callable[[str, str], Metadata]:
-    def create_metadata(data: str, mime_type: str = text.MIME_TYPE) -> Metadata:
+    def create_metadata(
+        data: str,
+        creation_time: DateTime | str = "20260910T121212.000Z",
+        mime_type: str = text.MIME_TYPE,
+    ) -> Metadata:
         return Metadata(
             author="Tester",
             comment="This is a comment",
             description="This is a description",
             copyright="This is something about copyright",
-            creation_time="This really should be a DateTime type",
+            creation_time=creation_time,
             disclaimer="I have no responsibility",
             embedded=[
                 Embedded.model_validate(
@@ -289,6 +294,24 @@ def test_embedded_dump_to_buffer(
     text_dst = io.StringIO()
     _ = Embedded(data=text_data).dump(text_dst)
     assert text_dst.getvalue() == text_data
+
+
+def test_metadata_datetime_creation_time(empty_png_path: Path, mock_metadata):
+    data = "Hello, World!"
+    now = DateTime.now()
+    metadata = mock_metadata(data, creation_time=now)
+    im = Image.open(empty_png_path)
+    im.save(empty_png_path, format="PNG", pnginfo=metadata.png_info)
+    im.close()
+    saved_im = Image.open(empty_png_path)
+    assert isinstance(saved_im, PngImageFile)
+    meta = saved_im.text
+    assert meta is not None
+    keys = meta.keys()
+    assert "Creation Time" in keys
+    actual = meta["Creation Time"]
+    assert len(actual) > 0
+    assert actual == now.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
 
 
 def test_metadata(empty_png_path: Path, mock_metadata):

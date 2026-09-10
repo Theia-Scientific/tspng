@@ -188,6 +188,13 @@ class Meta(BaseModel):
                 if name == "embedded":
                     for embed in value:
                         png_info.add_text(embed.key, embed.text)
+                elif name == "creation_time" and isinstance(
+                    self.creation_time, DateTime
+                ):
+                    png_info.add_text(
+                        name.title().replace("_", " "),
+                        self.creation_time.strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
+                    )
                 else:
                     png_info.add_text(name.title().replace("_", " "), value)
         return png_info

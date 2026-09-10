@@ -94,13 +94,31 @@ def test_extract_with_folder(
     result = extract(assets_directory_path)
     assert isinstance(result, dict)
     assert example_file_1_str in result
-    assert isinstance(result[example_file_1_str], Embedded)
-    assert result[example_file_1_str].mime_type == TS_MIME_TYPE
-    assert isinstance(result[example_file_1_str].data, v1.Json)
+    assert isinstance(result[example_file_1_str], Metadata)
+    assert result[example_file_1_str].author is not None
+    assert result[example_file_1_str].comment is not None
+    assert result[example_file_1_str].copyright is not None
+    assert result[example_file_1_str].creation_time is not None
+    assert result[example_file_1_str].description is not None
+    assert result[example_file_1_str].title is not None
+    assert result[example_file_1_str].software is not None
+    assert result[example_file_1_str].source is not None
+    assert len(result[example_file_1_str].embedded) == 1
+    assert result[example_file_1_str].embedded[0].mime_type == TS_MIME_TYPE
+    assert isinstance(result[example_file_1_str].embedded[0].data, v1.Json)
     assert example_file_2_str in result
-    assert isinstance(result[example_file_2_str], Embedded)
-    assert result[example_file_1_str].mime_type == TS_MIME_TYPE
-    assert isinstance(result[example_file_2_str].data, v1.Json)
+    assert isinstance(result[example_file_2_str], Metadata)
+    assert result[example_file_2_str].author is not None
+    assert result[example_file_2_str].comment is not None
+    assert result[example_file_2_str].copyright is not None
+    assert result[example_file_2_str].creation_time is not None
+    assert result[example_file_2_str].description is not None
+    assert result[example_file_2_str].title is not None
+    assert result[example_file_2_str].software is not None
+    assert result[example_file_2_str].source is not None
+    assert len(result[example_file_2_str].embedded) == 1
+    assert result[example_file_2_str].embedded[0].mime_type == TS_MIME_TYPE
+    assert isinstance(result[example_file_2_str].embedded[0].data, v1.Json)
 
 
 def test_extract_with_url(example_file_1_url: str):

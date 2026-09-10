@@ -304,9 +304,9 @@ def test_metadata(empty_png_path: Path, mock_metadata):
     keys = meta.keys()
     assert "Author" in keys
     assert "Comment" in keys
-    assert "Description" in keys
     assert "Copyright" in keys
     assert "Creation Time" in keys
+    assert "Description" in keys
     assert "Disclaimer" in keys
     assert "Title" in keys
     assert "Software" in keys
@@ -331,9 +331,9 @@ def test_metadata_extra_keys(empty_png_path: Path, mock_metadata):
     keys = meta.keys()
     assert "Author" in keys
     assert "Comment" in keys
-    assert "Description" in keys
     assert "Copyright" in keys
     assert "Creation Time" in keys
+    assert "Description" in keys
     assert "Disclaimer" in keys
     assert "Title" in keys
     assert "Software" in keys
@@ -344,16 +344,16 @@ def test_metadata_extra_keys(empty_png_path: Path, mock_metadata):
     result = Metadata.load(empty_png_path)
     assert result.author == meta["Author"]
     assert result.comment == meta["Comment"]
-    assert result.description == meta["description"]
-    assert result.copyright == meta["copyright"]
+    assert result.copyright == meta["Copyright"]
     assert result.creation_time == meta["Creation Time"]
+    assert result.description == meta["Description"]
     assert result.disclaimer == meta["Disclaimer"]
     assert result.title == meta["Title"]
     assert result.software == meta["Software"]
     assert result.source == meta["Source"]
     assert len(result.embedded) == 1
     assert result.embedded[0].mime_type == text.MIME_TYPE
-    assert result.embedded[0].data == text.MIME_TYPE
+    assert result.embedded[0].data == data
 
 
 def test_metadata_load_not_png_fails(empty_jpeg_path: Path):

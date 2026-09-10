@@ -10,7 +10,7 @@ import os
 
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile, PngInfo
-from pydantic import BaseModel, ConfigDict, Field, model_validator, TypeAdapter
+from pydantic import BaseModel, ConfigDict, model_validator, TypeAdapter
 from tspng.schema import coco, generic, text, ts
 from tspng.schema.ts import v1
 from typing import Self, TypeAlias
@@ -84,14 +84,15 @@ class Embedded(BaseModel):
 
     @staticmethod
     def load(src: os.PathLike[str] | io.StringIO) -> Embedded:
+        LOGGER.debug(f"{src=}")
         if isinstance(src, io.StringIO):
             text = src.getvalue()
         else:
             if not os.path.exists(src):
-                LOGGER.warning(f"The '{src}' does not exist.")
+                LOGGER.error(f"The '{src}' does not exist.")
                 raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), src)
             if not os.path.isfile(src):
-                LOGGER.warning(f"The '{src}' is not a file.")
+                LOGGER.error(f"The '{src}' is not a file.")
                 raise IsADirectoryError(errno.EISDIR, os.strerror(errno.EISDIR), src)
             text = open(src, "r").read()
         try:
@@ -149,16 +150,18 @@ class Meta(BaseModel):
 
     @staticmethod
     def load(src: os.PathLike[str] | io.BytesIO) -> Meta:
+        LOGGER.debug(f"{src=}")
         im = Image.open(src)
         if not isinstance(im, PngImageFile):
-            LOGGER.warning("The source is not a PNG image.")
+            LOGGER.error("The source is not a PNG image.")
             raise NotPngFormat(im)
         meta = im.text
         if meta is None:
-            LOGGER.warning("There is no metadata.")
+            LOGGER.error("There is no metadata.")
             raise MetadataNotFound(im)
         metadata = Meta()
         for key, value in meta.items():
+            LOGGER.debug(f"{key=}")
             if key in [
                 ts.MIME_TYPE,
                 coco.MIME_TYPE,
@@ -167,7 +170,12 @@ class Meta(BaseModel):
             ]:
                 metadata.embedded.append(Embedded.load(io.StringIO(value)))
             else:
-                setattr(metadata, key.lower().replace(" ", "_"), value)
+                name = key.lower().replace(" ", "_")
+                LOGGER.debug(f"{name=}")
+                if hasattr(metadata, name):
+                    setattr(metadata, name, value)
+                else:
+                    LOGGER.warning(f"Unrecognized key: {key}")
         return metadata
 
     @property

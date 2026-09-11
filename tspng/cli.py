@@ -1,23 +1,31 @@
 #!/usr/bin/env python3
 
-import json
 import logging
+import sys
 import typer
 
 from pathlib import Path
-from tspng import __app_name__, __version__, extraction as E, implantation as I
-from typing import List, Optional
+from pydantic import TypeAdapter
+from tspng import __app_name__, __version__, extraction, implantation
+from tspng.schema.data import Meta as Metadata
+from tspng.schema.ts import FILE_EXT as TS_FILE_EXT
+from typing import Annotated
+
+LOGGER: logging.Logger = logging.getLogger(__name__)
 
 PREFIX: str = f"{__app_name__.upper()}"
 
 app = typer.Typer()
 
 
-def map_verbosity(enabled: bool) -> str:
-    if enabled:
-        return "DEBUG"
+def map_verbosity(count: int) -> str:
+    if count == 1:
+        log_level = "INFO"
+    elif count >= 2:
+        log_level = "DEBUG"
     else:
-        return "INFO"
+        log_level = "WARNING"
+    return log_level
 
 
 def version_callback(value: bool):
@@ -27,42 +35,54 @@ def version_callback(value: bool):
 
 
 @app.command()
-def extract(inputs: List[Path] = typer.Argument(help="TS PNG image files.")):
-    extractions = []
-    for i in inputs:
-        logging.debug(f"i={i}")
-        extractions.append(E.extract(i))
-    print(json.dumps(extractions))
+def extract(
+    inputs: Annotated[list[Path], typer.Argument(help="PNG image files.")],
+):
+    extractions = extraction.extract_from_files(inputs)
+    if len(extractions) > 1:
+        print(
+            TypeAdapter(dict[str, Metadata])
+            .dump_json(extractions, exclude_none=True)
+            .decode("UTF-8")
+        )
+    else:
+        key = list(extractions.keys())[0]
+        print(extractions[key].model_dump_json(exclude_none=True))
 
 
 @app.command()
 def implant(
-    json_file: Path = typer.Argument(help="A JSON file."),
-    png_file: Path = typer.Argument(help="A PNG image file."),
+    data_file: Annotated[Path, typer.Argument(help="A data file.")],
+    png_file: Annotated[Path, typer.Argument(help="A PNG image file.")],
 ):
-    I.implant(json_file, png_file)
+    implantation.implant(data_file, png_file, png_file.with_suffix(TS_FILE_EXT))
 
 
 @app.callback()
 def main(
-    verbose: bool = typer.Option(
-        False,
-        "--verbose",
-        "-v",
-        help="Print debugging statements to STDOUT.",
-        envvar=f"{PREFIX}_VERBOSE",
-    ),
-    version: Optional[bool] = typer.Option(
-        None,
-        "--version",
-        help="Prints the version to STDOUT",
-        callback=version_callback,
-        is_eager=True,
-    ),
+    verbose: Annotated[
+        int,
+        typer.Option(
+            "--verbose",
+            "-v",
+            help="Print debugging statements to STDERR.",
+            count=True,
+        ),
+    ] = 0,
+    version: Annotated[
+        bool | None,
+        typer.Option(
+            "--version",
+            help="Prints the version to STDOUT",
+            callback=version_callback,
+            is_eager=True,
+        ),
+    ] = None,
 ):
-    logging.basicConfig(level=map_verbosity(verbose))
-    logging.debug(f"version={version}")
+    logging.basicConfig(stream=sys.stderr, level=map_verbosity(verbose))
+    LOGGER.debug(f"version={version}")
+    LOGGER.debug(f"verbose={verbose}")
 
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
     app(prog_name=__app_name__)

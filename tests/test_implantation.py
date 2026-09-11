@@ -1,93 +1,96 @@
 #!/usr/bin/env python3
 
-import json
-import pytest
+import io
 
 from pathlib import Path
-from tspng import PathDoesNotExist, PathIsNotAFile
-from tspng.implantation import implant, implant_into_file
+from PIL import Image
+from tspng.implantation import implant, implant_into_bytes, implant_into_file
 from tspng.extraction import extract
-
-@pytest.fixture
-def txt_file_path(tmp_path) -> Path:
-    txt_path = tmp_path.joinpath("file.txt")
-    with open(txt_path, "w") as f:
-        f.write("Hello World! This is NOT JSON.")
-    return txt_path
+from tspng.schema import coco, text
+from tspng.schema.data import Embedded, Meta as Metadata
 
 
-def test_implant_with_path(coco_json_path, empty_png_path):
-    implant(coco_json_path, empty_png_path)
-    ts_png = Path(empty_png_path).with_suffix(".ts.png")
-    test_data = extract(ts_png)
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+def test_implant_with_unknown_mime_type(
+    empty_png_path: Path, txt_file_path: Path, tmp_path: Path
+):
+    with open(txt_file_path, "r") as fp:
+        data = str(fp.read())
+    dst = tmp_path.joinpath(empty_png_path.with_suffix(text.FILE_EXT).name)
+    md = Metadata(embedded=[Embedded(data=data, mime_type=None)])
+    assert len(md.embedded) == 1
+    md.embedded[0].mime_type = None
+    assert md.embedded[0].mime_type is None
+    implant(md, empty_png_path, dst)
+    result = extract(dst)
+    assert isinstance(result, Metadata)
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == text.MIME_TYPE
+    assert isinstance(result.embedded[0].data, str)
+    assert result.embedded[0].data == data
 
 
-def test_implant_with_str(coco_json_path, empty_png_path):
-    implant(str(coco_json_path), str(empty_png_path))
-    ts_png = Path(empty_png_path).with_suffix(".ts.png")
-    test_data = extract(ts_png)
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+def test_implant_with_embedded(
+    coco_json_path: Path, empty_png_path: Path, tmp_path: Path
+):
+    dst = tmp_path.joinpath(empty_png_path.with_suffix(coco.FILE_EXT).name)
+    implant(Embedded.load(coco_json_path), empty_png_path, dst)
+    result = extract(dst)
+    assert isinstance(result, Metadata)
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == coco.MIME_TYPE
+    assert isinstance(result.embedded[0].data, coco.Json)
 
 
-def test_implant_with_data(coco_json_path, empty_png_path):
-    with open(coco_json_path) as f:
-        json_data = json.load(f)
-    implant(json.dumps(json_data), str(empty_png_path))
-    ts_png = Path(empty_png_path).with_suffix(".ts.png")
-    test_data = extract(ts_png)
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+def test_implant_with_metadata(
+    coco_json_path: Path, empty_png_path: Path, tmp_path: Path
+):
+    dst = tmp_path.joinpath(empty_png_path.with_suffix(coco.FILE_EXT).name)
+    implant(Metadata(embedded=[Embedded.load(coco_json_path)]), empty_png_path, dst)
+    result = extract(dst)
+    assert isinstance(result, Metadata)
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == coco.MIME_TYPE
+    assert isinstance(result.embedded[0].data, coco.Json)
 
 
-def test_implant_fails(empty_png_path):
-    with pytest.raises(TypeError):
-        implant("Test for failure", empty_png_path)
+def test_implant(coco_json_path: Path, empty_png_path: Path, tmp_path: Path):
+    dst = tmp_path.joinpath(empty_png_path.with_suffix(coco.FILE_EXT).name)
+    implant(coco_json_path, empty_png_path, dst)
+    result = extract(dst)
+    assert isinstance(result, Metadata)
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == coco.MIME_TYPE
+    assert isinstance(result.embedded[0].data, coco.Json)
 
 
-def test_implant_into_file(coco_json_path, empty_png_path):
-    implant_into_file(coco_json_path, empty_png_path)
-    ts_png = Path(empty_png_path).with_suffix(".ts.png")
-    test_data = extract(ts_png)
-    assert list(test_data.keys()) == [
-        "info",
-        "licenses",
-        "images",
-        "annotations",
-        "models",
-        "categories",
-    ]
+def test_implant_with_src_image(
+    coco_json_path: Path, empty_png_path: Path, tmp_path: Path
+):
+    dst = tmp_path.joinpath(empty_png_path.with_suffix(coco.FILE_EXT).name)
+    src = Image.open(empty_png_path)
+    implant(coco_json_path, src, dst)
+    result = extract(dst)
+    assert isinstance(result, Metadata)
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == coco.MIME_TYPE
+    assert isinstance(result.embedded[0].data, coco.Json)
 
 
-def test_implant_from_file_fails_with_folder(assets_directory_path, empty_png_path):
-    with pytest.raises(PathIsNotAFile):
-        implant_into_file(assets_directory_path, empty_png_path)
+def test_implant_into_bytes(coco_json_path: Path, empty_png_path: Path):
+    dst = io.BytesIO()
+    implant_into_bytes(coco_json_path, empty_png_path, dst)
+    result = extract(dst)
+    assert isinstance(result, Metadata)
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == coco.MIME_TYPE
+    assert isinstance(result.embedded[0].data, coco.Json)
 
 
-def test_implant_from_file_fails_existence(empty_png_path):
-    with pytest.raises(PathDoesNotExist):
-        implant_into_file("tests/assets/no_such_file.json", empty_png_path)
-
-def test_implant_into_file_fails(txt_file_path, empty_png_path):
-    with pytest.raises(TypeError):
-        implant_into_file(txt_file_path, empty_png_path)
+def test_implant_into_file(coco_json_path: Path, empty_png_path: Path, tmp_path: Path):
+    dst = tmp_path.joinpath(empty_png_path.with_suffix(coco.FILE_EXT).name)
+    implant_into_file(coco_json_path, empty_png_path, dst)
+    result = extract(dst)
+    assert isinstance(result, Metadata)
+    assert len(result.embedded) == 1
+    assert result.embedded[0].mime_type == coco.MIME_TYPE
+    assert isinstance(result.embedded[0].data, coco.Json)

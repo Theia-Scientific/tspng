@@ -1,88 +1,76 @@
-# import statements
+#!/usr/env/bin python3
+
+import io
+import logging
 import os
-import json
 
-from pathlib import Path
 from PIL import Image
-from PIL.PngImagePlugin import PngInfo
-from tspng import MIME_TYPE, PathDoesNotExist, PathIsNotAFile
-from typing import Union
+from tspng.schema.data import Embedded, Meta as Metadata
 
-
-def is_json(data: str) -> bool:
-    try:
-        json.loads(data)
-    except ValueError:
-        return False
-    return True
-
-
-def _implant_data(
-    data: str, image: Union[str, Path], mime_type: str = MIME_TYPE, ext: str = ".ts.png"
-):
-    # open image
-    target_im = Image.open(image)
-    # implant data
-    metadata = PngInfo()
-    metadata.add_text(mime_type, data)
-    # save file with implanted data
-    base, _ = os.path.splitext(image)
-    target_im.save(base + ext, format="PNG", pnginfo=metadata)
+LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
 def implant(
-    data: Union[str, Path], image: Union[str, Path], mime_type: str = MIME_TYPE
+    data: Embedded | Metadata | os.PathLike[str],
+    src: os.PathLike[str] | io.BytesIO | Image.Image,
+    dst: os.PathLike[str] | io.BytesIO,
 ):
     """
     Adds data to a PNG image.
 
-        Parameters:
-                data (str, Path): Path to a file or text
-                image (str, path): Path to a PNG file
-                mime_type (str): Optional; Media type of file,
-                    default is 'application/vnd.theiascope.io+json'
-
-        Raises:
-                TypeError: If data is not a path to a file or a string.
+    Parameters:
+        data (Metadata, str, os.PathLike, bytes): Dictionary-like object to
+            implant in an image or the path to a file to load or a bytes.
+        src (str, path, io.BytesIO, Image.Image): The source image.
+        dst (str, path, io.BytesIO): The destination image.
     """
-    if isinstance(data, Path) and os.path.isfile(data):
-        implant_into_file(data, image, mime_type)
-    elif isinstance(data, str) and os.path.isfile(data):
-        implant_into_file(data, image, mime_type)
-    elif isinstance(data, str) and is_json(data):
-        _implant_data(data, image, mime_type)
+    LOGGER.debug(f"{data=}")
+    LOGGER.debug(f"{src=}")
+    LOGGER.debug(f"{dst=}")
+    if isinstance(data, os.PathLike):
+        metadata = Metadata(embedded=[Embedded.load(data)])
     else:
-        raise TypeError("The data is not a JSON file or string.")
+        metadata = data
+    if (
+        isinstance(src, str)
+        or isinstance(src, os.PathLike)
+        or isinstance(src, io.BytesIO)
+    ):
+        target_im = Image.open(src)
+    else:
+        target_im = src
+    target_im.save(dst, format="PNG", pnginfo=metadata.png_info)
 
 
 def implant_into_file(
-    path: Union[str, Path], image: Union[str, Path], mime_type: str = MIME_TYPE
+    data: Embedded | Metadata | os.PathLike[str],
+    src: os.PathLike[str] | io.BytesIO | Image.Image,
+    dst: os.PathLike[str],
 ):
     """
     Adds data to a PNG image file.
 
-        Parameters:
-                path (str): Path to a text or JSON file
-                image (str): Path to a PNG file
-                mime_type (str): Optional; Media type of file,
-                    default is 'application/vnd.theiascope.io+json'
-
-        Raises:
-                Exception: If path does not exist
-                Exception: If path is not a file
-                Exception: If image is not a PNG
+    Parameters:
+        data (Metadata, str, os.PathLike, bytes): Dictionary-like object to
+            implant in an image or the path to a file to load or a bytes.
+        src (str, path, io.BytesIO, Image.Image): The source image.
+        dst (str, path): The destination image.
     """
-    # checks if path exists
-    if not os.path.exists(path):
-        raise PathDoesNotExist(path)
-    # check if file exists
-    if not os.path.isfile(path):
-        raise PathIsNotAFile(path)
-    # open file
-    data = open(path, "r").read()
-    # check if data is JSON string
-    if is_json(data):
-        # pass JSON string to _implant_data
-        _implant_data(data, image, mime_type)
-    else:
-        raise TypeError("The data is not a JSON string.")
+    implant(data, src, dst)
+
+
+def implant_into_bytes(
+    data: Embedded | Metadata | os.PathLike[str],
+    src: os.PathLike[str] | io.BytesIO | Image.Image,
+    dst: io.BytesIO,
+):
+    """
+    Adds data to a buffer as a PNG image.
+
+    Parameters:
+        data (Metadata, str, os.PathLike, bytes): Dictionary-like object to
+            implant in an image or the path to a file to load or a bytes.
+        src (str, path, io.BytesIO, Image.Image): The source image.
+        dst (io.BytesIO): The buffer.
+    """
+    implant(data, src, dst)

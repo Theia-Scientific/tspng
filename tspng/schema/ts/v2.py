@@ -9,14 +9,16 @@ from typing import Any, Literal
 class Annotation(BaseModel):
     confidence: float
     database_id: int
-    height: tuple[float, int]
+    height: Value
     label: Class
     ignore: bool = False
     index: int | None = None
     segmentation: list[tuple[int | float, int | float]]
     tracking_id: int | None = None
     uuid: str
-    width: tuple[float, int]
+    width: Value
+    x: Value
+    y: Value
 
 
 class Class(BaseModel):
@@ -25,10 +27,10 @@ class Class(BaseModel):
 
 
 class FieldOfView(BaseModel):
-    height: tuple[float, int]
-    width: tuple[float, int]
-    x: tuple[float, int]
-    y: tuple[float, int]
+    height: Value
+    width: Value
+    x: Value
+    y: Value
 
 
 class Image(BaseModel):
@@ -58,28 +60,33 @@ class Original(BaseModel):
 
 
 class Point(BaseModel):
-    x: tuple[float, int]
-    y: tuple[float, int]
+    x: Value
+    y: Value
 
 
 class Ruler(BaseModel):
     begin: Point
     color: str
     end: Point
-    length: tuple[float, float, int]
-    units: Units
+    length: Value
 
 
 class ScaleBar(BaseModel):
-    length: tuple[float, float, int]
-    units: Units
-    x: tuple[float, int]
-    y: tuple[float, int]
+    length: Value
+    x: Value
+    y: Value
 
 
 class Units(BaseModel):
-    abbr: str
-    name: str
+    abbr: str = "px"
+    e_to_px: float = 1.0
+    name: str = "pixel"
+
+
+class Value(BaseModel):
+    e: float
+    n: float
+    px: int
 
 
 class Json(BaseModel):
@@ -90,3 +97,4 @@ class Json(BaseModel):
     model: Model
     rulers: list[Ruler] = []
     scale_bar: ScaleBar
+    units: Units

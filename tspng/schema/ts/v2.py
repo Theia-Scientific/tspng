@@ -9,14 +9,16 @@ from typing import Any, Literal
 class Annotation(BaseModel):
     confidence: float
     database_id: int
-    height: tuple[float, int]
+    height: Number
     label: Class
     ignore: bool = False
     index: int | None = None
     segmentation: list[tuple[int | float, int | float]]
     tracking_id: int | None = None
     uuid: str
-    width: tuple[float, int]
+    width: Number
+    x: Number
+    y: Number
 
 
 class Class(BaseModel):
@@ -25,10 +27,10 @@ class Class(BaseModel):
 
 
 class FieldOfView(BaseModel):
-    height: tuple[float, int]
-    width: tuple[float, int]
-    x: tuple[float, int]
-    y: tuple[float, int]
+    height: Number
+    width: Number
+    x: Number
+    y: Number
 
 
 class Image(BaseModel):
@@ -52,34 +54,39 @@ class Model(BaseModel):
     variant: str
 
 
+class Number(BaseModel):
+    e: float
+    n: float
+    px: int
+
+
 class Original(BaseModel):
     dimensions: tuple[int, int]
     media: Media
 
 
 class Point(BaseModel):
-    x: tuple[float, int]
-    y: tuple[float, int]
+    x: Number
+    y: Number
 
 
 class Ruler(BaseModel):
     begin: Point
     color: str
     end: Point
-    length: tuple[float, float, int]
-    units: Units
+    length: Number
 
 
 class ScaleBar(BaseModel):
-    length: tuple[float, float, int]
-    units: Units
-    x: tuple[float, int]
-    y: tuple[float, int]
+    length: Number
+    x: Number
+    y: Number
 
 
 class Units(BaseModel):
-    abbr: str
-    name: str
+    abbr: str = "px"
+    e_to_px: float = 1.0
+    name: str = "pixel"
 
 
 class Json(BaseModel):
@@ -90,3 +97,4 @@ class Json(BaseModel):
     model: Model
     rulers: list[Ruler] = []
     scale_bar: ScaleBar
+    units: Units

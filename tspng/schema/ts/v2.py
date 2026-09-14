@@ -9,16 +9,16 @@ from typing import Any, Literal
 class Annotation(BaseModel):
     confidence: float
     database_id: int
-    height: Value
+    height: Number
     label: Class
     ignore: bool = False
     index: int | None = None
     segmentation: list[tuple[int | float, int | float]]
     tracking_id: int | None = None
     uuid: str
-    width: Value
-    x: Value
-    y: Value
+    width: Number
+    x: Number
+    y: Number
 
 
 class Class(BaseModel):
@@ -27,10 +27,10 @@ class Class(BaseModel):
 
 
 class FieldOfView(BaseModel):
-    height: Value
-    width: Value
-    x: Value
-    y: Value
+    height: Number
+    width: Number
+    x: Number
+    y: Number
 
 
 class Image(BaseModel):
@@ -54,39 +54,39 @@ class Model(BaseModel):
     variant: str
 
 
+class Number(BaseModel):
+    e: float
+    n: float
+    px: int
+
+
 class Original(BaseModel):
     dimensions: tuple[int, int]
     media: Media
 
 
 class Point(BaseModel):
-    x: Value
-    y: Value
+    x: Number
+    y: Number
 
 
 class Ruler(BaseModel):
     begin: Point
     color: str
     end: Point
-    length: Value
+    length: Number
 
 
 class ScaleBar(BaseModel):
-    length: Value
-    x: Value
-    y: Value
+    length: Number
+    x: Number
+    y: Number
 
 
 class Units(BaseModel):
     abbr: str = "px"
     e_to_px: float = 1.0
     name: str = "pixel"
-
-
-class Value(BaseModel):
-    e: float
-    n: float
-    px: int
 
 
 class Json(BaseModel):

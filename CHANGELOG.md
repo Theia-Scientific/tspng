@@ -1,4 +1,18 @@
-# Change log
+# Change Log
+
+## 2.0.0 (2026-09-18)
+
+### Features and enhancements
+
+- Added Pydantic-based implementation ([#96](https://github.com/Theia-Scientific/tspng/pull/96))
+- Added complete test suite ([#90](https://github.com/Theia-Scientific/tspng/pull/90))
+- Changed release workflow configuration to publish a GitHub release instead of creating a draft ([#92](https://github.com/Theia-Scientific/tspng/pull/92))
+
+### Bug fixes
+
+- Fixed Publish workflow not triggering on release ([#93](https://github.com/Theia-Scientific/tspng/pull/93))
+- Fixed instructions for `PATH_TO_FILE` ([#89](https://github.com/Theia-Scientific/tspng/pull/89))
+- Fixed v2 schema ([#97](https://github.com/Theia-Scientific/tspng/pull/97))
 
 ## 1.1.0 (2024-07-15)
 

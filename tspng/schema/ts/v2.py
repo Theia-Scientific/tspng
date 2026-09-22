@@ -97,5 +97,5 @@ class Json(BaseModel):
     field_of_view: FieldOfView
     model: Model
     rulers: list[Ruler] = []
-    scale_bar: ScaleBar
+    scale_bar: ScaleBar | None
     units: Units

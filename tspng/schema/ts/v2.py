@@ -61,8 +61,8 @@ class Number(BaseModel):
 
 
 class Original(BaseModel):
-    dimensions: tuple[int, int]
     media: Media
+    wh: tuple[int, int]
 
 
 class Point(BaseModel):

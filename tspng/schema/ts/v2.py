@@ -85,7 +85,7 @@ class ScaleBar(BaseModel):
 
 class Units(BaseModel):
     abbr: str = "px"
-    e_to_px: float = 1.0
+    e_per_px: float = 1.0
     name: str = "pixel"
 
 

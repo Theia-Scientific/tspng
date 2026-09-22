@@ -93,6 +93,7 @@ class Json(BaseModel):
     version: Literal["2.0"]
 
     annotations: list[Annotation]
+    image: Image
     field_of_view: FieldOfView
     model: Model
     rulers: list[Ruler] = []

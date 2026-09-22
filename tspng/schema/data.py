@@ -13,12 +13,12 @@ from PIL import Image
 from PIL.PngImagePlugin import PngImageFile, PngInfo
 from pydantic import BaseModel, ConfigDict, model_validator, TypeAdapter
 from tspng.schema import coco, generic, text, ts
-from tspng.schema.ts import v1
+from tspng.schema.ts import v1, v2
 from typing import Self, TypeAlias
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
-Data: TypeAlias = v1.Json | coco.Json | generic.Json | str
+Data: TypeAlias = v2.Json | v1.Json | coco.Json | generic.Json | str
 
 
 class MetadataNotFound(Exception):
@@ -50,7 +50,11 @@ class Embedded(BaseModel):
             fp = dst
         else:
             fp = open(dst, "w")
-        if isinstance(self.data, coco.Json) or isinstance(self.data, v1.Json):
+        if (
+            isinstance(self.data, coco.Json)
+            or isinstance(self.data, v1.Json)
+            or isinstance(self.data, v2.Json)
+        ):
             fp.write(self.data.model_dump_json(indent=indent, exclude_none=True))
         elif isinstance(self.data, dict):
             generic_json_type = TypeAdapter(generic.Json)
@@ -113,6 +117,8 @@ class Embedded(BaseModel):
         if isinstance(self.data, coco.Json):
             return self.data.model_dump_json()
         elif isinstance(self.data, v1.Json):
+            return self.data.model_dump_json()
+        elif isinstance(self.data, v2.Json):
             return self.data.model_dump_json()
         elif isinstance(self.data, dict):
             return json.dumps(self.data)

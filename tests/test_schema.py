@@ -157,6 +157,33 @@ def test_embedded_ts_v1_legacy_json(ts_v1_legacy_json_path: Path):
     assert result.ext == TS_FILE_EXT
 
 
+def test_embedded_ts_v2_json(ts_v2_json_path: Path):
+    with open(ts_v2_json_path) as f:
+        data = json.load(f)
+    embedded: dict[str, dict[str, Any] | str] = {
+        "data": data,
+        "mime_type": TS_MIME_TYPE,
+    }
+    result = Embedded.model_validate(embedded)
+    assert isinstance(result, Embedded)
+    assert result.mime_type == TS_MIME_TYPE
+    assert isinstance(result.data, v1.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == TS_FILE_EXT
+    result = Embedded(data=data, mime_type=TS_MIME_TYPE)
+    assert isinstance(result, Embedded)
+    assert result.mime_type == TS_MIME_TYPE
+    assert isinstance(result.data, v2.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == TS_FILE_EXT
+    result = Embedded(data=data)
+    assert isinstance(result, Embedded)
+    assert result.mime_type == TS_MIME_TYPE
+    assert isinstance(result.data, v1.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == TS_FILE_EXT
+
+
 def test_embedded_coco_json(coco_json_path: Path):
     with open(coco_json_path) as f:
         data = json.load(f)

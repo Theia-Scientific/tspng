@@ -27,6 +27,16 @@
         "x": {"e": 0.0, "n": 0.0, "px": 0},
         "y": {"e": 0.0, "n": 0.0, "px": 0}
     },
+    "image": {
+        "original": {
+            "media": {
+                "name": "Example.tif",
+                "path": "path/from/upload/Example.tif"
+            },
+            "wh": [100, 100]
+        },
+        "uuid": "00000000-0000-0000000"
+    },
     "model": {
         "created": "20260909T164600Z",
         "description": "/YOLO/26/COCO/L-seg.pt",
@@ -62,7 +72,7 @@
     },
     "units": {
         "abbr": "px",
-        "e_to_px": 1.0,
+        "e_per_px": 1.0,
         "name": "pixel"
     },
     "version": "2.0"

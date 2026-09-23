@@ -113,7 +113,7 @@ def extract_from_files(paths: Sequence[os.PathLike[str]]) -> dict[str, Metadata]
     Returns:
         (dict): Dictionary containing metadata of each file
     """
-    nested_dict = {}
+    nested_dict: dict[str, Metadata] = {}
     for path in paths:
         nested_dict[str(path)] = extract_from_file(path)
     return nested_dict
@@ -138,11 +138,11 @@ def extract_from_folder(path: os.PathLike[str]) -> dict[str, Metadata]:
     if not os.path.isdir(path):
         LOGGER.error(f"The '{path}' is not a directory.")
         raise NotADirectoryError(errno.ENOTDIR, os.strerror(errno.ENOTDIR), path)
-    file_list = []
-    for file in os.listdir(path):
-        root_ext = os.path.splitext(file)
-        if root_ext[1] == PNG_FILE_EXT:
-            file_list.append(os.path.join(path, file))
+    file_list = [
+        Path(os.path.join(path, file))
+        for file in os.listdir(path)
+        if os.path.splitext(file)[1] == PNG_FILE_EXT
+    ]
     if file_list == []:
         LOGGER.error(f"The '{path}' does not contain PNG files.")
         raise PathDoesNotContainPngs(path)

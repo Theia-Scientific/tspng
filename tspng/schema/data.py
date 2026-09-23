@@ -11,14 +11,14 @@ import os
 from datetime import datetime as DateTime
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile, PngInfo
-from pydantic import BaseModel, ConfigDict, model_validator, TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field, model_validator, TypeAdapter
 from tspng.schema import coco, generic, text, ts
-from tspng.schema.ts import v1
+from tspng.schema.ts import v1, v2
 from typing import Self, TypeAlias
 
 LOGGER: logging.Logger = logging.getLogger(__name__)
 
-Data: TypeAlias = v1.Json | coco.Json | generic.Json | str
+Data: TypeAlias = v2.Json | v1.Json | coco.Json | generic.Json | str
 
 
 class MetadataNotFound(Exception):
@@ -34,7 +34,7 @@ class NotPngFormat(Exception):
 
 
 class Embedded(BaseModel):
-    data: Data
+    data: Data = Field(union_mode="left_to_right")
     mime_type: str | None = None
 
     def dump(
@@ -50,17 +50,21 @@ class Embedded(BaseModel):
             fp = dst
         else:
             fp = open(dst, "w")
-        if isinstance(self.data, coco.Json) or isinstance(self.data, v1.Json):
-            fp.write(self.data.model_dump_json(indent=indent, exclude_none=True))
+        if (
+            isinstance(self.data, coco.Json)
+            or isinstance(self.data, v1.Json)
+            or isinstance(self.data, v2.Json)
+        ):
+            _ = fp.write(self.data.model_dump_json(indent=indent, exclude_none=True))
         elif isinstance(self.data, dict):
             generic_json_type = TypeAdapter(generic.Json)
-            fp.write(
+            _ = fp.write(
                 generic_json_type.dump_json(
                     self.data, indent=indent, exclude_none=True
                 ).decode("utf8")
             )
         else:
-            fp.write(self.data)
+            _ = fp.write(self.data)
         if not isinstance(dst, io.StringIO):
             fp.close()
         return self
@@ -70,6 +74,8 @@ class Embedded(BaseModel):
         if isinstance(self.data, coco.Json):
             return coco.FILE_EXT
         elif isinstance(self.data, v1.Json):
+            return ts.FILE_EXT
+        elif isinstance(self.data, v2.Json):
             return ts.FILE_EXT
         elif isinstance(self.data, dict):
             return generic.FILE_EXT
@@ -114,6 +120,8 @@ class Embedded(BaseModel):
             return self.data.model_dump_json()
         elif isinstance(self.data, v1.Json):
             return self.data.model_dump_json()
+        elif isinstance(self.data, v2.Json):
+            return self.data.model_dump_json()
         elif isinstance(self.data, dict):
             return json.dumps(self.data)
         else:
@@ -127,6 +135,8 @@ class Embedded(BaseModel):
             if isinstance(value, coco.Json):
                 self.mime_type = coco.MIME_TYPE
             elif isinstance(value, v1.Json):
+                self.mime_type = ts.MIME_TYPE
+            elif isinstance(value, v2.Json):
                 self.mime_type = ts.MIME_TYPE
             elif isinstance(value, dict):
                 self.mime_type = generic.MIME_TYPE

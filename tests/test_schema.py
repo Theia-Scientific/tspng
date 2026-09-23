@@ -12,7 +12,13 @@ from pytest_mock import MockerFixture
 from tspng.schema import coco, generic, text
 from tspng.schema.data import Embedded, Meta as Metadata, MetadataNotFound, NotPngFormat
 from tspng.schema.ts import FILE_EXT as TS_FILE_EXT, MIME_TYPE as TS_MIME_TYPE, v1, v2
-from typing import Any, Callable
+from typing import Any, Protocol
+
+
+class MetadataCreator(Protocol):
+    def __call__(
+        self, data: str, creation_time: DateTime | str = ..., mime_type: str = ...
+    ) -> Metadata: ...
 
 
 @pytest.fixture
@@ -24,7 +30,7 @@ def empty_jpeg_path(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def mock_metadata() -> Callable[[str, str], Metadata]:
+def mock_metadata() -> MetadataCreator:
     def create_metadata(
         data: str,
         creation_time: DateTime | str = "20260910T121212.000Z",
@@ -153,6 +159,183 @@ def test_embedded_ts_v1_legacy_json(ts_v1_legacy_json_path: Path):
     assert isinstance(result, Embedded)
     assert result.mime_type == TS_MIME_TYPE
     assert isinstance(result.data, v1.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == TS_FILE_EXT
+
+
+def test_embedded_ts_v2_json(ts_v2_json_path: Path):
+    with open(ts_v2_json_path) as f:
+        data = json.load(f)
+    embedded: dict[str, dict[str, Any] | str] = {
+        "data": data,
+        "mime_type": TS_MIME_TYPE,
+    }
+    result = Embedded.model_validate(embedded)
+    assert isinstance(result, Embedded)
+    assert result.mime_type == TS_MIME_TYPE
+    assert isinstance(result.data, v2.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == TS_FILE_EXT
+    result = Embedded(data=data, mime_type=TS_MIME_TYPE)
+    assert isinstance(result, Embedded)
+    assert result.mime_type == TS_MIME_TYPE
+    assert isinstance(result.data, v2.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == TS_FILE_EXT
+    result = Embedded(data=data)
+    assert isinstance(result, Embedded)
+    assert result.mime_type == TS_MIME_TYPE
+    assert isinstance(result.data, v2.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == TS_FILE_EXT
+
+
+def test_embedded_v2_model(ts_v2_json_path: Path):
+    with open(ts_v2_json_path) as f:
+        data = json.load(f)
+    annotations = [
+        v2.Annotation(
+            confidence=annotation["confidence"],
+            database_id=annotation["database_id"],
+            height=v2.Number(
+                e=annotation["height"]["e"],
+                n=annotation["height"]["n"],
+                px=annotation["height"]["px"],
+            ),
+            label=v2.Class(
+                id=annotation["label"]["id"], name=annotation["label"]["name"]
+            ),
+            ignore=annotation["ignore"],
+            index=annotation["index"],
+            segmentation=annotation["segmentation"],
+            tracking_id=annotation["tracking_id"],
+            uuid=annotation["uuid"],
+            width=v2.Number(
+                e=annotation["width"]["e"],
+                n=annotation["width"]["n"],
+                px=annotation["width"]["px"],
+            ),
+            x=v2.Number(
+                e=annotation["x"]["e"], n=annotation["x"]["n"], px=annotation["x"]["px"]
+            ),
+            y=v2.Number(
+                e=annotation["y"]["e"], n=annotation["y"]["n"], px=annotation["y"]["px"]
+            ),
+        )
+        for annotation in data["annotations"]
+    ]
+    fov = v2.FieldOfView(
+        height=v2.Number(
+            e=data["field_of_view"]["height"]["e"],
+            n=data["field_of_view"]["height"]["n"],
+            px=data["field_of_view"]["height"]["px"],
+        ),
+        width=v2.Number(
+            e=data["field_of_view"]["width"]["e"],
+            n=data["field_of_view"]["width"]["n"],
+            px=data["field_of_view"]["width"]["px"],
+        ),
+        x=v2.Number(
+            e=data["field_of_view"]["x"]["e"],
+            n=data["field_of_view"]["x"]["n"],
+            px=data["field_of_view"]["x"]["px"],
+        ),
+        y=v2.Number(
+            e=data["field_of_view"]["y"]["e"],
+            n=data["field_of_view"]["y"]["n"],
+            px=data["field_of_view"]["y"]["px"],
+        ),
+    )
+    image = v2.Image(
+        original=v2.Original(
+            media=v2.Media(
+                name=data["image"]["original"]["media"]["name"],
+                path=data["image"]["original"]["media"]["path"],
+            ),
+            wh=data["image"]["original"]["wh"],
+        ),
+        uuid=data["image"]["uuid"],
+    )
+    model = v2.Model(
+        created=data["model"]["created"],
+        description=data["model"]["description"],
+        family=data["model"]["family"],
+        id=data["model"]["id"],
+        parameters=data["model"]["parameters"],
+        title=data["model"]["title"],
+        uuid=data["model"]["uuid"],
+        variant=data["model"]["variant"],
+    )
+    rulers = [
+        v2.Ruler(
+            begin=v2.Point(
+                x=v2.Number(
+                    e=ruler["begin"]["x"]["e"],
+                    n=ruler["begin"]["x"]["n"],
+                    px=ruler["begin"]["x"]["px"],
+                ),
+                y=v2.Number(
+                    e=ruler["begin"]["y"]["e"],
+                    n=ruler["begin"]["y"]["n"],
+                    px=ruler["begin"]["y"]["px"],
+                ),
+            ),
+            color=ruler["color"],
+            end=v2.Point(
+                x=v2.Number(
+                    e=ruler["end"]["x"]["e"],
+                    n=ruler["end"]["x"]["n"],
+                    px=ruler["end"]["x"]["px"],
+                ),
+                y=v2.Number(
+                    e=ruler["end"]["y"]["e"],
+                    n=ruler["end"]["y"]["n"],
+                    px=ruler["end"]["y"]["px"],
+                ),
+            ),
+            length=v2.Number(
+                e=ruler["length"]["e"],
+                n=ruler["length"]["n"],
+                px=ruler["length"]["px"],
+            ),
+        )
+        for ruler in data["rulers"]
+    ]
+    scale_bar = v2.ScaleBar(
+        length=v2.Number(
+            e=data["scale_bar"]["length"]["e"],
+            n=data["scale_bar"]["length"]["n"],
+            px=data["scale_bar"]["length"]["px"],
+        ),
+        x=v2.Number(
+            e=data["scale_bar"]["x"]["e"],
+            n=data["scale_bar"]["x"]["n"],
+            px=data["scale_bar"]["x"]["px"],
+        ),
+        y=v2.Number(
+            e=data["scale_bar"]["y"]["e"],
+            n=data["scale_bar"]["y"]["n"],
+            px=data["scale_bar"]["y"]["px"],
+        ),
+    )
+    units = v2.Units(
+        abbr=data["units"]["abbr"],
+        e_per_px=data["units"]["e_per_px"],
+        name=data["units"]["name"],
+    )
+    data = v2.Json(
+        annotations=annotations,
+        field_of_view=fov,
+        image=image,
+        model=model,
+        rulers=rulers,
+        scale_bar=scale_bar,
+        units=units,
+    )
+    result = Embedded(data=data)
+    assert isinstance(result, Embedded)
+    assert result.mime_type == TS_MIME_TYPE
+    assert isinstance(result.data, v2.Json)
     assert result.text == result.data.model_dump_json()
     assert result.ext == TS_FILE_EXT
 
@@ -296,7 +479,9 @@ def test_embedded_dump_to_buffer(
     assert text_dst.getvalue() == text_data
 
 
-def test_metadata_datetime_creation_time(empty_png_path: Path, mock_metadata):
+def test_metadata_datetime_creation_time(
+    empty_png_path: Path, mock_metadata: MetadataCreator
+):
     data = "Hello, World!"
     now = DateTime.now()
     metadata = mock_metadata(data, creation_time=now)
@@ -307,6 +492,7 @@ def test_metadata_datetime_creation_time(empty_png_path: Path, mock_metadata):
     assert isinstance(saved_im, PngImageFile)
     meta = saved_im.text
     assert meta is not None
+    assert isinstance(meta, dict)
     keys = meta.keys()
     assert "Creation Time" in keys
     actual = meta["Creation Time"]
@@ -314,7 +500,7 @@ def test_metadata_datetime_creation_time(empty_png_path: Path, mock_metadata):
     assert actual == now.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
 
 
-def test_metadata(empty_png_path: Path, mock_metadata):
+def test_metadata(empty_png_path: Path, mock_metadata: MetadataCreator):
     data = "Hello, World!"
     metadata = mock_metadata(data)
     im = Image.open(empty_png_path)
@@ -324,6 +510,7 @@ def test_metadata(empty_png_path: Path, mock_metadata):
     assert isinstance(saved_im, PngImageFile)
     meta = saved_im.text
     assert meta is not None
+    assert isinstance(meta, dict)
     keys = meta.keys()
     assert "Author" in keys
     assert "Comment" in keys
@@ -339,7 +526,7 @@ def test_metadata(empty_png_path: Path, mock_metadata):
     assert result == data
 
 
-def test_metadata_extra_keys(empty_png_path: Path, mock_metadata):
+def test_metadata_extra_keys(empty_png_path: Path, mock_metadata: MetadataCreator):
     data = "Hello, World!"
     info = mock_metadata(data).png_info
     info.add_text("Location", "New York City")
@@ -351,6 +538,7 @@ def test_metadata_extra_keys(empty_png_path: Path, mock_metadata):
     assert isinstance(saved_im, PngImageFile)
     meta = saved_im.text
     assert meta is not None
+    assert isinstance(meta, dict)
     keys = meta.keys()
     assert "Author" in keys
     assert "Comment" in keys

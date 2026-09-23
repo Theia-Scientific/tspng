@@ -61,8 +61,8 @@ class Number(BaseModel):
 
 
 class Original(BaseModel):
-    dimensions: tuple[int, int]
     media: Media
+    wh: tuple[int, int]
 
 
 class Point(BaseModel):
@@ -85,16 +85,16 @@ class ScaleBar(BaseModel):
 
 class Units(BaseModel):
     abbr: str = "px"
-    e_to_px: float = 1.0
+    e_per_px: float = 1.0
     name: str = "pixel"
 
 
 class Json(BaseModel):
-    version: Literal["2.0"]
-
     annotations: list[Annotation]
     field_of_view: FieldOfView
+    image: Image
     model: Model
     rulers: list[Ruler] = []
-    scale_bar: ScaleBar
+    scale_bar: ScaleBar | None
     units: Units
+    version: Literal["2.0"] = "2.0"

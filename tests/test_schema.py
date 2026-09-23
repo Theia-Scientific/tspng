@@ -12,7 +12,13 @@ from pytest_mock import MockerFixture
 from tspng.schema import coco, generic, text
 from tspng.schema.data import Embedded, Meta as Metadata, MetadataNotFound, NotPngFormat
 from tspng.schema.ts import FILE_EXT as TS_FILE_EXT, MIME_TYPE as TS_MIME_TYPE, v1, v2
-from typing import Any, Callable
+from typing import Any, Protocol
+
+
+class MetadataCreator(Protocol):
+    def __call__(
+        self, data: str, creation_time: DateTime | str = ..., mime_type: str = ...
+    ) -> Metadata: ...
 
 
 @pytest.fixture
@@ -24,7 +30,7 @@ def empty_jpeg_path(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def mock_metadata() -> Callable[[str, str], Metadata]:
+def mock_metadata() -> MetadataCreator:
     def create_metadata(
         data: str,
         creation_time: DateTime | str = "20260910T121212.000Z",
@@ -473,7 +479,9 @@ def test_embedded_dump_to_buffer(
     assert text_dst.getvalue() == text_data
 
 
-def test_metadata_datetime_creation_time(empty_png_path: Path, mock_metadata):
+def test_metadata_datetime_creation_time(
+    empty_png_path: Path, mock_metadata: MetadataCreator
+):
     data = "Hello, World!"
     now = DateTime.now()
     metadata = mock_metadata(data, creation_time=now)
@@ -491,7 +499,7 @@ def test_metadata_datetime_creation_time(empty_png_path: Path, mock_metadata):
     assert actual == now.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
 
 
-def test_metadata(empty_png_path: Path, mock_metadata):
+def test_metadata(empty_png_path: Path, mock_metadata: MetadataCreator):
     data = "Hello, World!"
     metadata = mock_metadata(data)
     im = Image.open(empty_png_path)
@@ -501,6 +509,7 @@ def test_metadata(empty_png_path: Path, mock_metadata):
     assert isinstance(saved_im, PngImageFile)
     meta = saved_im.text
     assert meta is not None
+    assert isinstance(meta, dict)
     keys = meta.keys()
     assert "Author" in keys
     assert "Comment" in keys
@@ -516,7 +525,7 @@ def test_metadata(empty_png_path: Path, mock_metadata):
     assert result == data
 
 
-def test_metadata_extra_keys(empty_png_path: Path, mock_metadata):
+def test_metadata_extra_keys(empty_png_path: Path, mock_metadata: MetadataCreator):
     data = "Hello, World!"
     info = mock_metadata(data).png_info
     info.add_text("Location", "New York City")
@@ -528,6 +537,7 @@ def test_metadata_extra_keys(empty_png_path: Path, mock_metadata):
     assert isinstance(saved_im, PngImageFile)
     meta = saved_im.text
     assert meta is not None
+    assert isinstance(meta, dict)
     keys = meta.keys()
     assert "Author" in keys
     assert "Comment" in keys

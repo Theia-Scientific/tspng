@@ -184,6 +184,156 @@ def test_embedded_ts_v2_json(ts_v2_json_path: Path):
     assert result.ext == TS_FILE_EXT
 
 
+def test_embedded_v2_model(ts_v2_json_path: Path):
+    with open(ts_v2_json_path) as f:
+        data = json.load(f)
+    annotations = [
+        v2.Annotation(
+            confidence=annotation["confidence"],
+            database_id=annotation["database_id"],
+            height=v2.Number(
+                e=annotation["height"]["e"],
+                n=annotation["height"]["n"],
+                px=annotation["height"]["px"],
+            ),
+            label=v2.Class(
+                id=annotation["label"]["id"], name=annotation["label"]["name"]
+            ),
+            ignore=annotation["ignore"],
+            index=annotation["index"],
+            segmentation=annotation["segmentation"],
+            tracking_id=annotation["tracking_id"],
+            uuid=annotation["uuid"],
+            width=v2.Number(
+                e=annotation["width"]["e"],
+                n=annotation["width"]["n"],
+                px=annotation["width"]["px"],
+            ),
+            x=v2.Number(
+                e=annotation["x"]["e"], n=annotation["x"]["n"], px=annotation["x"]["px"]
+            ),
+            y=v2.Number(
+                e=annotation["y"]["e"], n=annotation["y"]["n"], px=annotation["y"]["px"]
+            ),
+        )
+        for annotation in data["annotations"]
+    ]
+    fov = v2.FieldOfView(
+        height=v2.Number(
+            e=data["field_of_view"]["height"]["e"],
+            n=data["field_of_view"]["height"]["n"],
+            px=data["field_of_view"]["height"]["px"],
+        ),
+        width=v2.Number(
+            e=data["field_of_view"]["width"]["e"],
+            n=data["field_of_view"]["width"]["n"],
+            px=data["field_of_view"]["width"]["px"],
+        ),
+        x=v2.Number(
+            e=data["field_of_view"]["x"]["e"],
+            n=data["field_of_view"]["x"]["n"],
+            px=data["field_of_view"]["x"]["px"],
+        ),
+        y=v2.Number(
+            e=data["field_of_view"]["y"]["e"],
+            n=data["field_of_view"]["y"]["n"],
+            px=data["field_of_view"]["y"]["px"],
+        ),
+    )
+    image = v2.Image(
+        original=v2.Original(
+            media=v2.Media(
+                name=data["image"]["original"]["media"]["name"],
+                path=data["image"]["original"]["media"]["path"],
+            ),
+            wh=data["image"]["original"]["wh"],
+        ),
+        uuid=data["image"]["uuid"],
+    )
+    model = v2.Model(
+        created=data["model"]["created"],
+        description=data["model"]["description"],
+        family=data["model"]["family"],
+        id=data["model"]["id"],
+        parameters=data["model"]["parameters"],
+        title=data["model"]["title"],
+        uuid=data["model"]["uuid"],
+        variant=data["model"]["variant"],
+    )
+    rulers = [
+        v2.Ruler(
+            begin=v2.Point(
+                x=v2.Number(
+                    e=ruler["begin"]["x"]["e"],
+                    n=ruler["begin"]["x"]["n"],
+                    px=ruler["begin"]["x"]["px"],
+                ),
+                y=v2.Number(
+                    e=ruler["begin"]["y"]["e"],
+                    n=ruler["begin"]["y"]["n"],
+                    px=ruler["begin"]["y"]["px"],
+                ),
+            ),
+            color=ruler["color"],
+            end=v2.Point(
+                x=v2.Number(
+                    e=ruler["end"]["x"]["e"],
+                    n=ruler["end"]["x"]["n"],
+                    px=ruler["end"]["x"]["px"],
+                ),
+                y=v2.Number(
+                    e=ruler["end"]["y"]["e"],
+                    n=ruler["end"]["y"]["n"],
+                    px=ruler["end"]["y"]["px"],
+                ),
+            ),
+            length=v2.Number(
+                e=ruler["length"]["e"],
+                n=ruler["length"]["n"],
+                px=ruler["length"]["px"],
+            ),
+        )
+        for ruler in data["rulers"]
+    ]
+    scale_bar = v2.ScaleBar(
+        length=v2.Number(
+            e=data["scale_bar"]["length"]["e"],
+            n=data["scale_bar"]["length"]["n"],
+            px=data["scale_bar"]["length"]["px"],
+        ),
+        x=v2.Number(
+            e=data["scale_bar"]["x"]["e"],
+            n=data["scale_bar"]["x"]["n"],
+            px=data["scale_bar"]["x"]["px"],
+        ),
+        y=v2.Number(
+            e=data["scale_bar"]["y"]["e"],
+            n=data["scale_bar"]["y"]["n"],
+            px=data["scale_bar"]["y"]["px"],
+        ),
+    )
+    units = v2.Units(
+        abbr=data["units"]["abbr"],
+        e_per_px=data["units"]["e_per_px"],
+        name=data["units"]["name"],
+    )
+    data = v2.Json(
+        annotations=annotations,
+        field_of_view=fov,
+        image=image,
+        model=model,
+        rulers=rulers,
+        scale_bar=scale_bar,
+        units=units,
+    )
+    result = Embedded(data=data)
+    assert isinstance(result, Embedded)
+    assert result.mime_type == TS_MIME_TYPE
+    assert isinstance(result.data, v2.Json)
+    assert result.text == result.data.model_dump_json()
+    assert result.ext == TS_FILE_EXT
+
+
 def test_embedded_coco_json(coco_json_path: Path):
     with open(coco_json_path) as f:
         data = json.load(f)

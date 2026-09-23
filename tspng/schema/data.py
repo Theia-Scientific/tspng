@@ -11,7 +11,7 @@ import os
 from datetime import datetime as DateTime
 from PIL import Image
 from PIL.PngImagePlugin import PngImageFile, PngInfo
-from pydantic import BaseModel, ConfigDict, model_validator, TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field, model_validator, TypeAdapter
 from tspng.schema import coco, generic, text, ts
 from tspng.schema.ts import v1, v2
 from typing import Self, TypeAlias
@@ -34,7 +34,7 @@ class NotPngFormat(Exception):
 
 
 class Embedded(BaseModel):
-    data: Data
+    data: Data = Field(union_mode="left_to_right")
     mime_type: str | None = None
 
     def dump(
@@ -74,6 +74,8 @@ class Embedded(BaseModel):
         if isinstance(self.data, coco.Json):
             return coco.FILE_EXT
         elif isinstance(self.data, v1.Json):
+            return ts.FILE_EXT
+        elif isinstance(self.data, v2.Json):
             return ts.FILE_EXT
         elif isinstance(self.data, dict):
             return generic.FILE_EXT

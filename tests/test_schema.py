@@ -167,7 +167,7 @@ def test_embedded_ts_v2_json(ts_v2_json_path: Path):
     result = Embedded.model_validate(embedded)
     assert isinstance(result, Embedded)
     assert result.mime_type == TS_MIME_TYPE
-    assert isinstance(result.data, v1.Json)
+    assert isinstance(result.data, v2.Json)
     assert result.text == result.data.model_dump_json()
     assert result.ext == TS_FILE_EXT
     result = Embedded(data=data, mime_type=TS_MIME_TYPE)
@@ -179,7 +179,7 @@ def test_embedded_ts_v2_json(ts_v2_json_path: Path):
     result = Embedded(data=data)
     assert isinstance(result, Embedded)
     assert result.mime_type == TS_MIME_TYPE
-    assert isinstance(result.data, v1.Json)
+    assert isinstance(result.data, v2.Json)
     assert result.text == result.data.model_dump_json()
     assert result.ext == TS_FILE_EXT
 

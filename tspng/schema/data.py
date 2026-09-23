@@ -55,16 +55,16 @@ class Embedded(BaseModel):
             or isinstance(self.data, v1.Json)
             or isinstance(self.data, v2.Json)
         ):
-            fp.write(self.data.model_dump_json(indent=indent, exclude_none=True))
+            _ = fp.write(self.data.model_dump_json(indent=indent, exclude_none=True))
         elif isinstance(self.data, dict):
             generic_json_type = TypeAdapter(generic.Json)
-            fp.write(
+            _ = fp.write(
                 generic_json_type.dump_json(
                     self.data, indent=indent, exclude_none=True
                 ).decode("utf8")
             )
         else:
-            fp.write(self.data)
+            _ = fp.write(self.data)
         if not isinstance(dst, io.StringIO):
             fp.close()
         return self

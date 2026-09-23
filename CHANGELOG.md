@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.1 (2026-09-23)
+
+### Bug fixes
+
+- Fixed v2 schema ([#99](https://github.com/Theia-Scientific/tspng/pull/99))
+
 ## 2.0.0 (2026-09-18)
 
 ### Features and enhancements

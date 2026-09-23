@@ -134,6 +134,8 @@ class Embedded(BaseModel):
                 self.mime_type = coco.MIME_TYPE
             elif isinstance(value, v1.Json):
                 self.mime_type = ts.MIME_TYPE
+            elif isinstance(value, v2.Json):
+                self.mime_type = ts.MIME_TYPE
             elif isinstance(value, dict):
                 self.mime_type = generic.MIME_TYPE
             else:

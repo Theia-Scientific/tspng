@@ -113,7 +113,7 @@ def extract_from_files(paths: Sequence[os.PathLike[str]]) -> dict[str, Metadata]
     Returns:
         (dict): Dictionary containing metadata of each file
     """
-    nested_dict = {}
+    nested_dict: dict[str, Metadata] = {}
     for path in paths:
         nested_dict[str(path)] = extract_from_file(path)
     return nested_dict

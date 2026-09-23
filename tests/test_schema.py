@@ -492,6 +492,7 @@ def test_metadata_datetime_creation_time(
     assert isinstance(saved_im, PngImageFile)
     meta = saved_im.text
     assert meta is not None
+    assert isinstance(meta, dict)
     keys = meta.keys()
     assert "Creation Time" in keys
     actual = meta["Creation Time"]

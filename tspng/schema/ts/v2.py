@@ -90,8 +90,6 @@ class Units(BaseModel):
 
 
 class Json(BaseModel):
-    version: Literal["2.0"]
-
     annotations: list[Annotation]
     field_of_view: FieldOfView
     image: Image
@@ -99,3 +97,4 @@ class Json(BaseModel):
     rulers: list[Ruler] = []
     scale_bar: ScaleBar | None
     units: Units
+    version: Literal["2.0"] = "2.0"

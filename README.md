@@ -3,6 +3,8 @@
 [![CI](https://github.com/Theia-Scientific/theia-png/actions/workflows/ci.yml/badge.svg)](https://github.com/Theia-Scientific/theia-png/actions/workflows/ci.yml)
 [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1iC5KLoQUY4D54D9SH4YB2pJ0rTXXq2Fs?usp=sharing)
 [![codecov](https://codecov.io/gh/Theia-Scientific/tspng/graph/badge.svg?token=psDVCL46ta)](https://codecov.io/gh/Theia-Scientific/tspng)
+[![PyPI Version](https://img.shields.io/pypi/v/tspng)](https://pypi.org/project/tspng/)
+[![GitHub Release](https://img.shields.io/github/v/release/Theia-Scientific/tspng)](https://github.com/Theia-Scientific/tspng/releases)
 
 A Python package for manipulating Portable Network Graphics (PNG) files with
 embedded [JavaScript Object Notation] (JSON) metadata from Machine Learning (ML)

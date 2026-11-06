@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.0 (2026-11-06)
+
+### Features and enhancements
+
+- Added PyPI and GitHub Release badges ([#101](https://github.com/Theia-Scientific/tspng/pull/101))
+
 ## 2.0.1 (2026-09-23)
 
 ### Bug fixes
